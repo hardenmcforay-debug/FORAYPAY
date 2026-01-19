@@ -74,7 +74,14 @@ export default function RealtimeTrips({ initialOperator, initialTodayCount, init
       }
 
       if (validationsRes.data) {
-        setRecentValidations(validationsRes.data as Validation[])
+        // Transform data to match Validation interface
+        const transformed = validationsRes.data.map((v: any) => ({
+          id: v.id,
+          validated_at: v.validated_at,
+          is_valid: v.is_valid,
+          tickets: Array.isArray(v.tickets) && v.tickets.length > 0 ? v.tickets[0] : v.tickets,
+        }))
+        setRecentValidations(transformed as Validation[])
       }
     } catch (error) {
       console.error('Error fetching validations:', error)

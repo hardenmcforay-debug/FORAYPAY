@@ -2,7 +2,7 @@ import Layout from '@/components/layout/Layout'
 import Card from '@/components/ui/Card'
 import { createClient } from '@/lib/supabase/server'
 import { createClient as createServiceClient } from '@supabase/supabase-js'
-import { Ticket } from 'lucide-react'
+import { Ticket, CheckCircle, TrendingUp, Calendar, Clock, Package } from 'lucide-react'
 import RealtimeDashboard from '@/components/operator/RealtimeDashboard'
 
 export default async function OperatorDashboard() {

@@ -150,7 +150,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Step 2: Create user in Supabase Auth
-    const { data: authData, error: authError } = await supabase.auth.admin.createUser({
+    const { data: authData, error: authCreateError } = await supabase.auth.admin.createUser({
       email: sanitizedAdminEmail,
       password: sanitizedAdminPassword,
       email_confirm: true,
@@ -159,7 +159,7 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    if (authError) {
+    if (authCreateError) {
       // Cleanup: delete the company if auth creation fails
       await supabase.from('companies').delete().eq('id', company.id)
       return NextResponse.json(
@@ -177,7 +177,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Step 3: Create user record in users table
-    const { error: userError } = await supabase
+    const { error: userCreateError } = await supabase
       .from('users')
       .insert({
         id: authData.user.id,
@@ -189,7 +189,7 @@ export async function POST(request: NextRequest) {
         is_active: true,
       })
 
-    if (userError) {
+    if (userCreateError) {
       // Cleanup: delete auth user and company
       await supabase.auth.admin.deleteUser(authData.user.id)
       await supabase.from('companies').delete().eq('id', company.id)
