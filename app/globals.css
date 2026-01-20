@@ -66,6 +66,29 @@ html {
   box-shadow: none !important;
 }
 
+/* Stabilize hero section on mobile to prevent layout shifts while scrolling */
+@media (max-width: 1023px) {
+  /* Prevent hero section from jumping during scroll */
+  section[class*="relative"] {
+    will-change: auto;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+  
+  /* Stabilize logo container on mobile */
+  .hero-logo-container {
+    will-change: auto;
+    transform: translateZ(0);
+    contain: layout;
+  }
+  
+  /* Prevent headline from shifting */
+  .hero-logo-container + div {
+    will-change: auto;
+    transform: translateZ(0);
+  }
+}
+
 .hero-gradient-bg {
   background: linear-gradient(to bottom, 
     white 0%, 
