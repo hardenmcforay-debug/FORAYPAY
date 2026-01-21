@@ -102,7 +102,7 @@ export async function POST(request: NextRequest) {
     // Verify route belongs to operator's company and is assigned to operator (if route_id is set)
     const { data: route, error: routeError } = await supabaseAdmin
       .from('routes')
-      .select('id, company_id, fare_amount, name, origin, destination')
+      .select('id, company_id, fare_amount, name, origin, destination, monime_route_id')
       .eq('id', route_id)
       .eq('company_id', operator.company_id)
       .eq('is_active', true)
