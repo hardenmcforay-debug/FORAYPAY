@@ -5,8 +5,6 @@ import { cookies } from 'next/headers'
 
 /**
  * Get routes available to the current operator
- * Returns only the route assigned to the operator (if any)
- * Operators can only generate tickets for their assigned route
  */
 export async function GET(request: NextRequest) {
   try {
@@ -81,24 +79,20 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // Get only the route assigned to this operator
-    // Operators can only generate tickets for their assigned route
-    if (!operator.route_id) {
-      // Operator has no assigned route - return empty array
-      return NextResponse.json({
-        success: true,
-        routes: [],
-        company_id: operator.company_id,
-      })
-    }
-
-    // Get only the assigned route
-    const { data: routes, error: routesError } = await supabaseAdmin
+    // Get routes - if operator has assigned route, only return that route
+    // Otherwise, return all active routes for the company
+    let query = supabaseAdmin
       .from('routes')
       .select('id, name, origin, destination, fare_amount')
-      .eq('id', operator.route_id)
       .eq('company_id', operator.company_id)
       .eq('is_active', true)
+      .order('name', { ascending: true })
+
+    if (operator.route_id) {
+      query = query.eq('id', operator.route_id)
+    }
+
+    const { data: routes, error: routesError } = await query
 
     if (routesError) {
       return NextResponse.json(

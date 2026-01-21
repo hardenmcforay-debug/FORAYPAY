@@ -24,23 +24,6 @@ interface MoniMeRoute {
   [key: string]: any // Allow additional properties
 }
 
-interface GenerateCodesRequest {
-  quantity: number
-  route_id?: string
-  fare_amount: number
-  metadata?: Record<string, any>
-}
-
-interface GenerateCodesResponse {
-  success: boolean
-  codes?: Array<{
-    order_number: string
-    code: string
-    expires_at?: string
-  }>
-  error?: string
-}
-
 interface MoniMeClient {
   createRoute(route: MoniMeRoute, spaceId?: string): Promise<any>
   updateRoute(routeId: string, route: MoniMeRoute, spaceId?: string): Promise<any>
@@ -48,7 +31,6 @@ interface MoniMeClient {
   getBalance(spaceId?: string): Promise<{ success: boolean; balance?: number; currency?: string; available_balance?: number; pending_balance?: number; error?: string }>
   verifyTransaction(transactionId: string, spaceId?: string): Promise<any>
   processRefund(refundData: { transaction_id: string; amount: number; reason?: string }, spaceId?: string): Promise<{ success: boolean; refund_id?: string; refund_amount?: number; error?: string }>
-  generateMultipleCodes(request: GenerateCodesRequest, spaceId?: string): Promise<GenerateCodesResponse>
 }
 
 export function createMoniMeClient(): MoniMeClient {
@@ -154,26 +136,6 @@ export function createMoniMeClient(): MoniMeClient {
         return {
           success: false,
           error: error.message || 'Failed to process refund',
-        }
-      }
-    },
-
-    async generateMultipleCodes(request: GenerateCodesRequest, spaceId?: string): Promise<GenerateCodesResponse> {
-      try {
-        const result = await makeRequest('POST', '/codes/generate', {
-          quantity: request.quantity,
-          route_id: request.route_id,
-          fare_amount: request.fare_amount,
-          metadata: request.metadata,
-        }, spaceId)
-        return {
-          success: true,
-          codes: result.codes || result.data || [],
-        }
-      } catch (error: any) {
-        return {
-          success: false,
-          error: error.message || 'Failed to generate codes',
         }
       }
     },
