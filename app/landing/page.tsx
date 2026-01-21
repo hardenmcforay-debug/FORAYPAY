@@ -227,71 +227,60 @@ export default async function LandingPage() {
 
       {/* Problem Statement */}
       <section className="py-20 bg-sky-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+        <div className="lg:container lg:mx-auto p-5 lg:px-14">
+          <div className="text-center justify-center">
+            <h2 className="text-3xl font-semibold text-gray-900 mb-4">
               Transport Companies Lose Revenue Every Day
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="mt-3 text-lg lg:w-1/2 lg:mx-auto text-gray-700">
               Cash handling creates opportunities for leakage, disputes, and lack of transparency
             </p>
           </div>
-          <div className="max-w-7xl mx-auto border-2 border-gray-50 rounded-t-[2.5rem] pt-8 md:pt-16 px-4 md:px-10 pb-4 md:pb-10 bg-gray-50 shadow-lg relative">
-            <div className="overflow-hidden mt-6">
-              {cashHandlingImageUrl && (
-                <div className="w-full rounded-2xl overflow-hidden">
-                  <Image
-                    src={cashHandlingImageUrl}
-                    alt="Cash-based transport operations create daily revenue leakage"
-                    width={2048}
-                    height={1152}
-                    className="w-full h-auto rounded-2xl"
-                    quality={80}
-                    loading="lazy"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1024px"
-                  />
-                </div>
-              )}
+          <div className="overflow-hidden mt-6">
+            {cashHandlingImageUrl && (
+              <Image
+                src={cashHandlingImageUrl}
+                alt="Cash-based transport operations create daily revenue leakage"
+                width={2048}
+                height={1152}
+                className="w-full h-auto rounded-lg mt-6"
+                quality={80}
+                loading="lazy"
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1024px"
+              />
+            )}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
+              <div className="text-center lg:text-start mt-4 lg:mt-0">
+                <DollarSign className="h-10 w-10 text-primary-600 mr-2 inline-block" aria-hidden="true" style={{ fontSize: '40px' }} />
+                <p className="mt-3 text-lg font-semibold text-gray-900">
+                  Cash handling leakage
+                </p>
+                <p className="mt-3 text-gray-700">
+                  Loose cash, manual counting, and paper tickets make it easy for money to
+                  disappear before it ever reaches your bank account.
+                </p>
+              </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
-                <div className="text-center lg:text-left mt-4 lg:mt-0">
-                  <div className="flex justify-center lg:justify-start">
-                    <DollarSign className="h-10 w-10 text-primary-600" aria-hidden="true" />
-                  </div>
-                  <p className="mt-3 text-lg font-semibold text-gray-900">
-                    Cash handling leakage
-                  </p>
-                  <p className="mt-3 text-gray-700">
-                    Loose cash, manual counting, and paper tickets make it easy for money to
-                    disappear before it ever reaches your bank account.
-                  </p>
-                </div>
+              <div className="text-center lg:text-start mt-4 lg:mt-0">
+                <TrendingUp className="h-10 w-10 text-primary-600 mr-2 inline-block" aria-hidden="true" style={{ fontSize: '40px' }} />
+                <p className="mt-3 text-lg font-semibold text-gray-900">
+                  Under-reported trips
+                </p>
+                <p className="mt-3 text-gray-700">
+                  Without a digital trail, park operators can under-report passenger counts,
+                  routes, and fares—eroding your daily revenue.
+                </p>
+              </div>
 
-                <div className="text-center lg:text-left mt-4 lg:mt-0">
-                  <div className="flex justify-center lg:justify-start">
-                    <TrendingUp className="h-10 w-10 text-primary-600" aria-hidden="true" />
-                  </div>
-                  <p className="mt-3 text-lg font-semibold text-gray-900">
-                    Under-reported trips
-                  </p>
-                  <p className="mt-3 text-gray-700">
-                    Without a digital trail, park operators can under-report passenger counts,
-                    routes, and fares—eroding your daily revenue.
-                  </p>
-                </div>
-
-                <div className="text-center lg:text-left mt-4 lg:mt-0">
-                  <div className="flex justify-center lg:justify-start">
-                    <BarChart3 className="h-10 w-10 text-primary-600" aria-hidden="true" />
-                  </div>
-                  <p className="mt-3 text-lg font-semibold text-gray-900">
-                    No real-time visibility
-                  </p>
-                  <p className="mt-3 text-gray-700">
-                    When everything is offline and manual, you can&apos;t see what&apos;s
-                    happening in your parks today—only what was reported yesterday.
-                  </p>
-                </div>
+              <div className="text-center lg:text-start mt-4 lg:mt-0">
+                <BarChart3 className="h-10 w-10 text-primary-600 mr-2 inline-block" aria-hidden="true" style={{ fontSize: '40px' }} />
+                <p className="mt-3 text-lg font-semibold text-gray-900">
+                  No real-time visibility
+                </p>
+                <p className="mt-3 text-gray-700">
+                  When everything is offline and manual, you can&apos;t see what&apos;s
+                  happening in your parks today—only what was reported yesterday.
+                </p>
               </div>
             </div>
           </div>
