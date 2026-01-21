@@ -80,7 +80,7 @@ export default async function LandingPage() {
       <LandingNav logoUrl={navLogoUrl} />
 
       {/* Hero Section */}
-      <section className="relative min-h-[500px] sm:min-h-[600px] md:min-h-[700px] lg:min-h-[800px] flex items-start justify-center overflow-x-hidden">
+      <section className="hero-section relative min-h-[500px] sm:min-h-[600px] md:min-h-[700px] lg:min-h-[800px] flex items-start justify-center overflow-x-hidden">
         {/* White background */}
         <div className="absolute inset-0 bg-white"></div>
         <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-4 sm:-mt-8 md:-mt-12 pb-12 sm:pb-20 md:pb-24">

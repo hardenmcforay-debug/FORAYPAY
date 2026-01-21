@@ -66,6 +66,34 @@ html {
   box-shadow: none !important;
 }
 
+/* Stabilize hero section to prevent layout shifts */
+.hero-section {
+  contain: layout style paint;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Stabilize hero logo container */
+.hero-logo-container {
+  contain: layout;
+  will-change: auto;
+  transform: translateZ(0);
+}
+
+/* Prevent headline from shifting during scroll */
+@media (max-width: 1023px) {
+  .hero-section {
+    min-height: 500px !important;
+  }
+  
+  .hero-logo-container + div {
+    position: relative;
+    z-index: 20;
+    transform: translateZ(0);
+  }
+}
+
 .hero-gradient-bg {
   background: linear-gradient(to bottom, 
     white 0%, 
