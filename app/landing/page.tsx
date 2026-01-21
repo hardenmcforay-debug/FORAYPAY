@@ -237,62 +237,62 @@ export default async function LandingPage() {
             </p>
           </div>
           <div className="max-w-7xl mx-auto border-2 border-gray-50 rounded-t-[2.5rem] pt-8 md:pt-16 px-4 md:px-10 pb-4 md:pb-10 bg-gray-50 shadow-lg relative">
-            <div className="grid grid-cols-3 gap-2 md:gap-12">
-            {[
-              {
-                icon: DollarSign,
-                title: 'Cash Handling',
-                description: 'Physical cash is vulnerable to theft, loss, and human error',
-                color: 'text-error-600',
-                bgColor: 'bg-error-50',
-                imageUrl: cashHandlingImageUrl,
-                imageAlt: 'Cash handling problem - people examining petty cash box',
-              },
-              {
-                icon: TrendingUp,
-                title: 'Under-Reporting',
-                description: 'Park operators may under-report passenger counts and revenue',
-                color: 'text-warning-600',
-                bgColor: 'bg-warning-50',
-                imageUrl: underReportingImageUrl,
-                imageAlt: 'Under-reporting problem - revenue tracking issues',
-              },
-              {
-                icon: BarChart3,
-                title: 'No Visibility',
-                description: 'No real-time data on revenue, routes, or passenger counts',
-                color: 'text-gray-600',
-                bgColor: 'bg-gray-50',
-                imageUrl: noVisibilityImageUrl,
-                imageAlt: 'No visibility problem - lack of data and transparency',
-              },
-            ].map((problem, index) => {
-              const Icon = problem.icon
-              
-              return (
-                <div key={index} className="bg-gray-50 rounded-lg p-3 md:p-10 overflow-hidden max-w-lg mx-auto">
-                  {problem.imageUrl && (
-                    <div className="mb-2 md:mb-4 -mt-3 md:-mt-10 -mx-3 md:-mx-10 rounded-t-2xl overflow-hidden">
-                      <Image
-                        src={problem.imageUrl}
-                        alt={problem.imageAlt}
-                        width={450}
-                        height={550}
-                        className="w-full h-auto object-contain"
-                        quality={75}
-                        loading="lazy"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 450px"
-                      />
-                    </div>
-                  )}
-                  <div className={`${problem.bgColor} w-8 h-8 md:w-12 md:h-12 rounded-lg flex items-center justify-center mb-2 md:mb-4`}>
-                    <Icon className={`h-4 w-4 md:h-6 md:w-6 ${problem.color}`} />
-                  </div>
-                  <h3 className="text-xs md:text-lg font-semibold text-gray-900 mb-1 md:mb-2">{problem.title}</h3>
-                  <p className="text-[10px] md:text-base text-gray-600 leading-tight">{problem.description}</p>
+            <div className="overflow-hidden mt-6">
+              {cashHandlingImageUrl && (
+                <div className="w-full rounded-2xl overflow-hidden">
+                  <Image
+                    src={cashHandlingImageUrl}
+                    alt="Cash-based transport operations create daily revenue leakage"
+                    width={2048}
+                    height={1152}
+                    className="w-full h-auto rounded-2xl"
+                    quality={80}
+                    loading="lazy"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1024px"
+                  />
                 </div>
-              )
-            })}
+              )}
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
+                <div className="text-center lg:text-left mt-4 lg:mt-0">
+                  <div className="flex justify-center lg:justify-start">
+                    <DollarSign className="h-10 w-10 text-primary-600" aria-hidden="true" />
+                  </div>
+                  <p className="mt-3 text-lg font-semibold text-gray-900">
+                    Cash handling leakage
+                  </p>
+                  <p className="mt-3 text-gray-700">
+                    Loose cash, manual counting, and paper tickets make it easy for money to
+                    disappear before it ever reaches your bank account.
+                  </p>
+                </div>
+
+                <div className="text-center lg:text-left mt-4 lg:mt-0">
+                  <div className="flex justify-center lg:justify-start">
+                    <TrendingUp className="h-10 w-10 text-primary-600" aria-hidden="true" />
+                  </div>
+                  <p className="mt-3 text-lg font-semibold text-gray-900">
+                    Under-reported trips
+                  </p>
+                  <p className="mt-3 text-gray-700">
+                    Without a digital trail, park operators can under-report passenger counts,
+                    routes, and fares—eroding your daily revenue.
+                  </p>
+                </div>
+
+                <div className="text-center lg:text-left mt-4 lg:mt-0">
+                  <div className="flex justify-center lg:justify-start">
+                    <BarChart3 className="h-10 w-10 text-primary-600" aria-hidden="true" />
+                  </div>
+                  <p className="mt-3 text-lg font-semibold text-gray-900">
+                    No real-time visibility
+                  </p>
+                  <p className="mt-3 text-gray-700">
+                    When everything is offline and manual, you can&apos;t see what&apos;s
+                    happening in your parks today—only what was reported yesterday.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
