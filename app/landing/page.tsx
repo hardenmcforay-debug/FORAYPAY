@@ -237,18 +237,44 @@ export default async function LandingPage() {
             </p>
           </div>
           <div className="overflow-hidden mt-6">
-            {cashHandlingImageUrl && (
-              <Image
-                src={cashHandlingImageUrl}
-                alt="Cash-based transport operations create daily revenue leakage"
-                width={2048}
-                height={1152}
-                className="w-full h-auto rounded-lg mt-6"
-                quality={80}
-                loading="lazy"
-                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 80vw, 1024px"
-              />
-            )}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+              {cashHandlingImageUrl && (
+                <Image
+                  src={cashHandlingImageUrl}
+                  alt="Cash-based transport operations create daily revenue leakage"
+                  width={2048}
+                  height={1152}
+                  className="w-full h-auto rounded-lg"
+                  quality={80}
+                  loading="lazy"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 33vw, 33vw"
+                />
+              )}
+              {underReportingImageUrl && (
+                <Image
+                  src={underReportingImageUrl}
+                  alt="Under-reporting problem - revenue tracking issues"
+                  width={2048}
+                  height={1152}
+                  className="w-full h-auto rounded-lg"
+                  quality={80}
+                  loading="lazy"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 33vw, 33vw"
+                />
+              )}
+              {noVisibilityImageUrl && (
+                <Image
+                  src={noVisibilityImageUrl}
+                  alt="No visibility problem - lack of data and transparency"
+                  width={2048}
+                  height={1152}
+                  className="w-full h-auto rounded-lg"
+                  quality={80}
+                  loading="lazy"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 33vw, 33vw"
+                />
+              )}
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
               <div className="text-center lg:text-start mt-4 lg:mt-0">
                 <DollarSign className="h-10 w-10 text-primary-600 mr-2 inline-block" aria-hidden="true" style={{ fontSize: '40px' }} />
