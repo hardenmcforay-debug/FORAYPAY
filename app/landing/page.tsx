@@ -237,10 +237,10 @@ export default async function LandingPage() {
             </p>
           </div>
           <div className="overflow-hidden mt-6">
-            <div className="border-2 border-gray-200 rounded-lg p-4 md:p-6">
+            <div className="border-2 border-white rounded-lg p-4 md:p-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
                 {cashHandlingImageUrl && (
-                  <div className="border-2 border-gray-300 rounded-lg overflow-hidden">
+                  <div className="border-2 border-white rounded-lg overflow-hidden">
                     <Image
                       src={cashHandlingImageUrl}
                       alt="Cash-based transport operations create daily revenue leakage"
@@ -254,7 +254,7 @@ export default async function LandingPage() {
                   </div>
                 )}
                 {underReportingImageUrl && (
-                  <div className="border-2 border-gray-300 rounded-lg overflow-hidden">
+                  <div className="border-2 border-white rounded-lg overflow-hidden">
                     <Image
                       src={underReportingImageUrl}
                       alt="Under-reporting problem - revenue tracking issues"
@@ -268,7 +268,7 @@ export default async function LandingPage() {
                   </div>
                 )}
                 {noVisibilityImageUrl && (
-                  <div className="border-2 border-gray-300 rounded-lg overflow-hidden">
+                  <div className="border-2 border-white rounded-lg overflow-hidden">
                     <Image
                       src={noVisibilityImageUrl}
                       alt="No visibility problem - lack of data and transparency"
@@ -282,39 +282,39 @@ export default async function LandingPage() {
                   </div>
                 )}
               </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
-              <div className="text-center lg:text-start mt-4 lg:mt-0">
-                <DollarSign className="h-10 w-10 text-primary-600 mr-2 inline-block" aria-hidden="true" style={{ fontSize: '40px' }} />
-                <p className="mt-3 text-lg font-semibold text-gray-900">
-                  Cash handling leakage
-                </p>
-                <p className="mt-3 text-gray-700">
-                  Loose cash, manual counting, and paper tickets make it easy for money to
-                  disappear before it ever reaches your bank account.
-                </p>
-              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
+                <div className="text-center lg:text-start mt-4 lg:mt-0">
+                  <DollarSign className="h-10 w-10 text-primary-600 mr-2 inline-block" aria-hidden="true" style={{ fontSize: '40px' }} />
+                  <p className="mt-3 text-lg font-semibold text-gray-900">
+                    Cash handling leakage
+                  </p>
+                  <p className="mt-3 text-gray-700">
+                    Loose cash, manual counting, and paper tickets make it easy for money to
+                    disappear before it ever reaches your bank account.
+                  </p>
+                </div>
 
-              <div className="text-center lg:text-start mt-4 lg:mt-0">
-                <TrendingUp className="h-10 w-10 text-primary-600 mr-2 inline-block" aria-hidden="true" style={{ fontSize: '40px' }} />
-                <p className="mt-3 text-lg font-semibold text-gray-900">
-                  Under-reported trips
-                </p>
-                <p className="mt-3 text-gray-700">
-                  Without a digital trail, park operators can under-report passenger counts,
-                  routes, and fares—eroding your daily revenue.
-                </p>
-              </div>
+                <div className="text-center lg:text-start mt-4 lg:mt-0">
+                  <TrendingUp className="h-10 w-10 text-primary-600 mr-2 inline-block" aria-hidden="true" style={{ fontSize: '40px' }} />
+                  <p className="mt-3 text-lg font-semibold text-gray-900">
+                    Under-reported trips
+                  </p>
+                  <p className="mt-3 text-gray-700">
+                    Without a digital trail, park operators can under-report passenger counts,
+                    routes, and fares—eroding your daily revenue.
+                  </p>
+                </div>
 
-              <div className="text-center lg:text-start mt-4 lg:mt-0">
-                <BarChart3 className="h-10 w-10 text-primary-600 mr-2 inline-block" aria-hidden="true" style={{ fontSize: '40px' }} />
-                <p className="mt-3 text-lg font-semibold text-gray-900">
-                  No real-time visibility
-                </p>
-                <p className="mt-3 text-gray-700">
-                  When everything is offline and manual, you can&apos;t see what&apos;s
-                  happening in your parks today—only what was reported yesterday.
-                </p>
+                <div className="text-center lg:text-start mt-4 lg:mt-0">
+                  <BarChart3 className="h-10 w-10 text-primary-600 mr-2 inline-block" aria-hidden="true" style={{ fontSize: '40px' }} />
+                  <p className="mt-3 text-lg font-semibold text-gray-900">
+                    No real-time visibility
+                  </p>
+                  <p className="mt-3 text-gray-700">
+                    When everything is offline and manual, you can&apos;t see what&apos;s
+                    happening in your parks today—only what was reported yesterday.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
