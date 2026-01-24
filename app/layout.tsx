@@ -1,12 +1,9 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'] })
-
 export const metadata: Metadata = {
-  title: 'Foraypay - Digital Transport Ticketing',
-  description: 'One Tap. One Ticket. - B2B digital transport ticketing and revenue control platform',
+  title: 'ForayPay - One Tap. One Ticket.',
+  description: 'Digital transport ticketing and revenue-control platform for Sierra Leone',
 }
 
 export default function RootLayout({
@@ -16,7 +13,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body>{children}</body>
     </html>
   )
 }

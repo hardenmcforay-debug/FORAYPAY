@@ -1,177 +1,103 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
-import {
-  LayoutDashboard,
-  Building2,
-  Route,
-  Users,
-  FileText,
+import { getImageUrl } from '@/lib/supabase/storage'
+import { 
+  LayoutDashboard, 
+  Building2, 
+  Route, 
+  Users, 
+  TrendingUp,
   Settings,
   Ticket,
-  CheckCircle,
-  BarChart3,
-  Shield,
-  LogOut,
-  Calendar,
-  Mail,
+  FileText,
+  ClipboardList,
+  QrCode,
+  Mail
 } from 'lucide-react'
-import { createClient } from '@/lib/supabase/client'
-import { useRouter } from 'next/navigation'
-import Image from 'next/image'
-import { useState, useEffect } from 'react'
-import { getValidImageUrl } from '@/lib/utils/image-helpers'
+import { UserRole } from '@/types/database'
 
 interface SidebarProps {
-  role: 'platform_admin' | 'company_admin' | 'park_operator'
-  onNavigate?: () => void
+  role: UserRole
+  companyId?: string | null
 }
 
-export default function Sidebar({ role, onNavigate }: SidebarProps) {
+const platformAdminNav = [
+  { name: 'Dashboard', href: '/platform', icon: LayoutDashboard },
+  { name: 'Companies', href: '/platform/companies', icon: Building2 },
+  { name: 'Contact Requests', href: '/platform/contact-requests', icon: Mail },
+  { name: 'Audit Logs', href: '/platform/audit-logs', icon: ClipboardList },
+  { name: 'Settings', href: '/platform/settings', icon: Settings },
+]
+
+const companyAdminNav = [
+  { name: 'Dashboard', href: '/company', icon: LayoutDashboard },
+  { name: 'Routes', href: '/company/routes', icon: Route },
+  { name: 'Park Operators', href: '/company/operators', icon: Users },
+  { name: 'Reports', href: '/company/reports', icon: FileText },
+  { name: 'Settings', href: '/company/settings', icon: Settings },
+]
+
+const parkOperatorNav = [
+  { name: 'Dashboard', href: '/operator', icon: LayoutDashboard },
+  { name: 'Generate Tickets', href: '/operator/generate', icon: QrCode },
+  { name: 'Validate Tickets', href: '/operator/validate', icon: Ticket },
+  { name: 'Trip Dashboard', href: '/operator/trips', icon: TrendingUp },
+]
+
+export default function Sidebar({ role, companyId }: SidebarProps) {
   const pathname = usePathname()
-  const router = useRouter()
-  const supabase = createClient()
-  const [logoError, setLogoError] = useState(false)
-  const [useImgTag, setUseImgTag] = useState(false)
-  const [logoUrl, setLogoUrl] = useState<string | null>(null)
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut()
-    router.push('/login')
-  }
-
-  // Fetch logo from Supabase storage
-  useEffect(() => {
-    // Try nav-logo.png first, then fallback to logo.png
-    let fetchedUrl = getValidImageUrl(supabase, 'landing-images', 'logo/nav-logo.png', true)
-    if (!fetchedUrl) {
-      fetchedUrl = getValidImageUrl(supabase, 'landing-images', 'logo/logo.png', true)
-    }
-    if (fetchedUrl) {
-      setLogoUrl(fetchedUrl)
-    } else {
-      // Fallback to public folder
-      setLogoUrl('/logo.png')
-    }
-  }, [supabase])
-
-  // Use Supabase URL if available, otherwise fallback to public folder
-  const logoPath = logoUrl || '/logo.png'
-
-  const platformAdminLinks = [
-    { href: '/platform/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { href: '/platform/companies', label: 'Companies', icon: Building2 },
-    { href: '/platform/contact-requests', label: 'Contact Requests', icon: Mail },
-    { href: '/platform/commission-rules', label: 'Commission Rules', icon: FileText },
-    { href: '/platform/audit-logs', label: 'Audit Logs', icon: Shield },
-    { href: '/platform/users', label: 'Users', icon: Users },
-    { href: '/platform/settings', label: 'Settings', icon: Settings },
-  ]
-
-  const companyAdminLinks = [
-    { href: '/company/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { href: '/company/routes', label: 'Routes', icon: Route },
-    { href: '/company/operators', label: 'Park Operators', icon: Users },
-    { href: '/company/reports', label: 'Reports', icon: BarChart3 },
-    { href: '/company/transactions', label: 'Transactions', icon: FileText },
-    { href: '/company/settings', label: 'Settings', icon: Settings },
-  ]
-
-  const operatorLinks = [
-    { href: '/operator/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { href: '/operator/validate', label: 'Validate Ticket', icon: CheckCircle },
-    { href: '/operator/tickets', label: 'Generate Tickets', icon: Ticket },
-    { href: '/operator/trips', label: 'Active Trips', icon: Ticket },
-    { href: '/operator/history', label: 'History', icon: FileText },
-  ]
-
-  const links = role === 'platform_admin' 
-    ? platformAdminLinks 
-    : role === 'company_admin' 
-    ? companyAdminLinks 
-    : operatorLinks
+  
+  const navItems = 
+    role === 'platform_admin' ? platformAdminNav :
+    role === 'company_admin' ? companyAdminNav :
+    parkOperatorNav
 
   return (
-    <div className="flex flex-col h-full bg-white border-r border-gray-200">
-      <div className="flex items-center justify-center h-16 px-4 border-b border-gray-200 gap-2">
-        {!logoError ? (
-          useImgTag ? (
-            <img
-              src={logoPath}
-              alt="Foraypay Logo"
-              className="w-8 h-8 object-contain flex-shrink-0"
-              loading="eager"
-              decoding="async"
-              onError={() => {
-                console.log('Sidebar logo image failed to load, falling back to icon')
-                setLogoError(true)
-              }}
+    <aside className="w-64 bg-white border-r border-gray-200 h-screen sticky top-0">
+      <div className="p-6 border-b border-gray-200">
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 rounded-lg flex items-center justify-center overflow-hidden relative">
+            <Image 
+              src={getImageUrl('logo.png')} 
+              alt="ForayPay Logo" 
+              width={80} 
+              height={80} 
+              quality={100}
+              className="object-contain w-full h-full"
             />
-          ) : (
-            <div className="relative w-8 h-8 flex-shrink-0">
-              <Image
-                src={logoPath}
-                alt="Foraypay Logo"
-                fill
-                className="object-contain"
-                onError={() => {
-                  console.log('Sidebar Next.js Image failed, trying regular img tag')
-                  setUseImgTag(true)
-                }}
-                priority
-                quality={85}
-                sizes="32px"
-                loading="eager"
-              />
-            </div>
-          )
-        ) : (
-          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary-600 flex-shrink-0">
-            <Ticket className="h-5 w-5 text-white" />
           </div>
-        )}
-        <h1 className="text-xl font-bold">
-          <span className="text-primary-600 font-bold">Foray</span>
-          <span className="text-success-600">pay</span>
-        </h1>
+          <span className="text-xl font-bold">
+            <span className="text-primary-600">Foray</span>
+            <span className="text-success-600">Pay</span>
+          </span>
+        </div>
       </div>
       
-      <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
-        {links.map((link) => {
-          const Icon = link.icon
-          const isActive = pathname === link.href || pathname?.startsWith(link.href + '/')
-          
+      <nav className="p-4 space-y-1">
+        {navItems.map((item) => {
+          const isActive = pathname === item.href || pathname.startsWith(item.href + '/')
           return (
             <Link
-              key={link.href}
-              href={link.href}
-              onClick={onNavigate}
+              key={item.href}
+              href={item.href}
               className={cn(
-                'flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors',
+                'flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors',
                 isActive
-                  ? 'bg-primary-50 text-primary-700'
+                  ? 'bg-primary-50 text-primary-700 font-medium'
                   : 'text-gray-700 hover:bg-gray-50'
               )}
             >
-              <Icon className="mr-3 h-5 w-5" />
-              {link.label}
+              <item.icon className="w-5 h-5" />
+              <span>{item.name}</span>
             </Link>
           )
         })}
       </nav>
-
-      <div className="p-4 border-t border-gray-200">
-        <button
-          onClick={handleLogout}
-          className="flex items-center w-full px-4 py-3 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-        >
-          <LogOut className="mr-3 h-5 w-5" />
-          Logout
-        </button>
-      </div>
-    </div>
+    </aside>
   )
 }
 

@@ -1,350 +1,165 @@
-# Foraypay - Digital Transport Ticketing Platform
+# ForayPay - Digital Transport Ticketing Platform
 
-**One Tap. One Ticket.**
+A B2B digital transport ticketing and revenue-control platform for Sierra Leone.
 
-A B2B digital transport ticketing and revenue-control platform for Sierra Leone. This platform enables transport companies to replace cash transactions with verifiable digital payments while providing real-time revenue visibility and control.
+**Slogan:** "One Tap. One Ticket."
 
-## 🎯 Overview
+## Overview
 
-Foraypay is a multi-tenant SaaS platform that helps transport companies:
-- Eliminate cash handling and revenue leakage
-- Gain real-time visibility into passenger counts and revenue
-- Reduce disputes through verifiable digital tickets
-- Maintain control over park operators and routes
+ForayPay is a multi-tenant platform that enables transport companies to:
+- Replace cash payments with verifiable digital transactions
+- Gain real-time visibility into revenue and passenger counts
+- Reduce revenue leakage through automated commission settlement
+- Maintain strict control over ticket validation
 
-## 🏗️ Architecture
+## Tech Stack
 
-### Multi-Tenant System
-- **One Platform, Many Companies**: Each company operates as an isolated tenant
-- **Strict Data Isolation**: All queries are filtered by `company_id`
-- **Per-Company Configuration**: Commission rates, MoniMe accounts, routes, and operators are company-specific
+- **Framework:** Next.js 14 (App Router)
+- **Database & Auth:** Supabase
+- **Styling:** Tailwind CSS
+- **Icons:** Lucide React
+- **Charts:** Recharts
+- **Language:** TypeScript
 
-### Technology Stack
-- **Frontend**: Next.js 14 (App Router), React, TypeScript
-- **Styling**: Tailwind CSS
-- **Backend**: Next.js API Routes
-- **Database**: Supabase (PostgreSQL)
-- **Authentication**: Supabase Auth
-- **Charts**: Recharts
-- **Icons**: Lucide React
-
-## 📁 Project Structure
-
-```
-FORAYPAY/
-├── app/                          # Next.js App Router pages
-│   ├── api/                      # API routes
-│   │   ├── webhooks/             # MoniMe webhook handler
-│   │   └── tickets/              # Ticket operations
-│   ├── company/                  # Company admin pages
-│   │   ├── dashboard/            # Revenue dashboard
-│   │   ├── routes/               # Route management
-│   │   ├── operators/            # Park operator management
-│   │   ├── reports/              # Analytics and reports
-│   │   └── transactions/         # Transaction history
-│   ├── operator/                 # Park operator pages
-│   │   ├── dashboard/            # Operator dashboard
-│   │   ├── validate/             # Ticket validation interface
-│   │   └── history/              # Validation history
-│   ├── passenger/                # Passenger pages
-│   │   └── retrieve/             # Ticket retrieval
-│   ├── platform/                 # Platform admin pages
-│   │   ├── dashboard/            # Platform overview
-│   │   └── companies/            # Company management
-│   ├── login/                    # Authentication
-│   ├── layout.tsx                # Root layout
-│   ├── page.tsx                  # Home/redirect page
-│   └── globals.css               # Global styles
-├── components/                   # React components
-│   ├── ui/                       # Reusable UI components
-│   ├── layout/                   # Layout components
-│   └── features/                 # Feature-specific components
-├── lib/                          # Utilities and helpers
-│   ├── supabase/                 # Supabase client setup
-│   ├── utils.ts                  # Utility functions
-│   └── types.ts                  # TypeScript types
-├── database/                     # Database schema
-│   └── schema.sql                # PostgreSQL schema
-├── middleware.ts                 # Next.js middleware
-├── tailwind.config.ts            # Tailwind configuration
-├── tsconfig.json                 # TypeScript configuration
-└── package.json                  # Dependencies
-
-```
-
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
-- Node.js 18+ and npm/yarn
-- Supabase account and project
-- MoniMe API credentials (for payment integration)
+
+- Node.js 18+ 
+- npm or yarn
+- Supabase account
 
 ### Installation
 
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd FORAYPAY
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Set up environment variables**
-   Create a `.env.local` file in the root directory:
-   ```env
-   NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-   SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
-   ```
-
-4. **Set up the database**
-   - Go to your Supabase project dashboard
-   - Navigate to SQL Editor
-   - Run the SQL script from `database/schema.sql`
-   - This will create all necessary tables, indexes, and RLS policies
-
-5. **Run the development server**
-   ```bash
-   npm run dev
-   ```
-
-6. **Open your browser**
-   Navigate to [http://localhost:3000](http://localhost:3000)
-
-## 🚀 Deployment
-
-### Quick Deploy to Vercel (Recommended)
-
-1. Push your code to GitHub
-2. Go to [vercel.com](https://vercel.com) and import your repository
-3. Add environment variables in Vercel Dashboard
-4. Click Deploy - Done!
-
-**See `QUICK_DEPLOY.md` for step-by-step instructions.**
-
-### Other Deployment Options
-
-- **Self-Hosted**: See `DEPLOYMENT_GUIDE.md` for VPS deployment
-- **Docker**: See `DEPLOYMENT_GUIDE.md` for containerized deployment
-
-### Required Environment Variables
-
-```env
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+1. Clone the repository
+2. Install dependencies:
+```bash
+npm install
 ```
 
-Get these from: Supabase Dashboard → Project Settings → API
+3. Set up environment variables:
+Create a `.env.local` file:
+```
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+MONIME_API_URL=https://api.monime.com
+MONIME_API_KEY=your_monime_api_key
+MONIME_PLATFORM_ACCOUNT_ID=your_platform_monime_account_id
+MONIME_WEBHOOK_SECRET=your_monime_webhook_secret
+```
 
-## 🔐 User Roles
+4. Set up the database:
+Run the SQL schema from `supabase/schema.sql` in your Supabase SQL editor.
 
-### Platform Admin
-- Manages all companies on the platform
-- Sets commission rules
-- Views system-wide audit logs
-- Manages platform users
+5. Run the development server:
+```bash
+npm run dev
+```
 
-### Company Admin
-- Views revenue dashboards (by route and total)
-- Manages routes and pricing
-- Manages park operators
-- Views reports and analytics
-- Configures MoniMe account
+Open [http://localhost:3000](http://localhost:3000) to see the application.
 
-### Park Operator
-- Validates tickets using OTP codes
-- Views trip passenger counts
-- Views validation history
-- Cannot edit financial data
+## Project Structure
 
-### Passenger
-- Retrieves tickets by phone number or transaction ID
-- Views ticket status and details
+```
+/
+├── app/                    # Next.js app directory
+│   ├── (auth)/            # Auth pages (login)
+│   ├── (dashboard)/       # Protected dashboard routes
+│   │   ├── platform/      # Platform admin dashboard
+│   │   ├── company/       # Company admin dashboard
+│   │   └── operator/      # Park operator dashboard
+│   ├── api/               # API routes
+│   │   └── webhooks/      # Webhook handlers
+│   └── ticket/            # Public ticket retrieval
+├── components/            # React components
+│   ├── ui/               # Reusable UI components
+│   ├── dashboard/        # Dashboard-specific components
+│   └── layout/           # Layout components
+├── lib/                  # Utilities and helpers
+│   ├── supabase/         # Supabase client setup
+│   └── utils/            # Helper functions
+└── types/                # TypeScript type definitions
+```
 
-## 💳 Payment Flow (Offline Payment)
+## Key Features
 
-1. **Routes & Prices Provided**
-   - Routes are synced from ForayPay to MoniMe
-   - Routes and prices are provided by MoniMe to passengers
-   - Passengers see routes and prices in MoniMe app
+### Multi-Tenant Architecture
+- Strict data isolation per company
+- Row-level security policies
+- Per-company configuration
 
-2. **Passenger Payment (OFFLINE)**
-   - Passenger views routes offline (cached in MoniMe app)
-   - **Passenger pays fare using MoniMe offline payment** - NO INTERNET REQUIRED
-   - Payment is processed via MoniMe's offline payment system
-   - MoniMe generates unique order number
-   - MoniMe queues payment information locally
+### Payment Integration
+- MoniMe payment webhook handling
+- OTP-based ticket validation
+- Idempotent transaction processing
 
-3. **Payment Sync & Webhook**
-   - When MoniMe has internet connection, it syncs offline payments
-   - **MoniMe sends payment information to ForayPay company via webhook**
-   - Webhook received at `/api/webhooks/monime`
-   - System verifies transaction authenticity
-   - Server-side ticket is generated
-   - Ticket linked to: MoniMe order number, transaction ID, phone number, route
-   - **Database is the source of truth**
+### Role-Based Access
+- **Platform Admin:** Manage all companies (login at `/admin/login`)
+- **Company Admin:** Manage routes, operators, view revenue
+- **Park Operator:** Validate tickets, view trip data
 
-4. **Ticket Validation**
-   - Park operator enters MoniMe order number
-   - System verifies ticket status in database
-   - Ticket marked as USED
-   - All actions logged in audit_logs
-
-5. **Commission Settlement**
-   - Commission calculated automatically
-   - Recorded in commission_settlements table
-   - Auto-settled in MVP (Phase 1)
-
-## 🔒 Security Features
-
-- **Row Level Security (RLS)**: Database-level data isolation
-- **Role-Based Access Control**: Strict permission system
-- **Idempotent Webhooks**: Prevents duplicate ticket creation
-- **Audit Logging**: All actions are logged
-- **Tenant Isolation**: No cross-company data visibility
-
-## 📊 Key Features
-
-### For Companies
+### Revenue Control
 - Real-time revenue dashboards
 - Route-based revenue breakdown
-- Transaction history
-- Park operator management
-- Commission tracking
+- Automated commission calculation
+- Audit logging
 
-### For Park Operators
-- Simple order number validation interface
-- Real-time passenger count
-- Validation history
-- Route-specific validation (if assigned)
+### High-Performance Architecture
+- **Handles 10,000+ concurrent transactions** without crashes
+- **Handles 10,000+ concurrent ticket creations** from multiple companies
+- **Handles 10,000+ concurrent ticket validations** from multiple companies
+- Async queue processing for webhook handling
+- Batch ticket creation (100 tickets per batch)
+- Optimized ticket validation with optimistic locking
+- Operator data caching (90%+ cache hit rate)
+- Connection pooling for database efficiency
+- Batch operations for audit logs
+- Rate limiting and circuit breakers
+- Optimized database indexes and constraints
+- Automatic conflict resolution for concurrent writes
+- RLS (Row Level Security) policies for data isolation
+- Two-tier security model (application + database level)
+- See [SCALABILITY_GUIDE.md](./SCALABILITY_GUIDE.md), [TICKET_CREATION_SCALABILITY.md](./TICKET_CREATION_SCALABILITY.md), [TICKET_VALIDATION_SCALABILITY.md](./TICKET_VALIDATION_SCALABILITY.md), and [TICKET_VALIDATION_RLS.md](./TICKET_VALIDATION_RLS.md) for details
 
-### For Platform
-- Multi-tenant management
-- Commission rule configuration
-- System-wide audit logs
-- Company onboarding
+### Security Features
+- **Comprehensive Input Validation** - UUID, email, phone, OTP, password validation
+- **Secure Error Handling** - No information disclosure, sanitized error messages
+- **Security Headers** - XSS protection, clickjacking prevention, MIME sniffing protection
+- **Webhook Security** - HMAC signature verification, secret validation
+- **Strong Password Policy** - Minimum 8 characters with complexity requirements
+- **SQL Injection Prevention** - Parameterized queries, input sanitization
+- **XSS Prevention** - HTML sanitization, Content-Security-Policy
+- **Authentication & Authorization** - Role-based access control, company isolation
+- **Audit Logging** - All critical actions logged
+- See [SECURITY_AUDIT_REPORT.md](./SECURITY_AUDIT_REPORT.md) and [SECURITY_HARDENING_SUMMARY.md](./SECURITY_HARDENING_SUMMARY.md) for details
 
-## 🧪 Testing
+## Database Schema
 
-### Manual Testing Checklist
-- [ ] User authentication (all roles)
-- [ ] Ticket creation via webhook
-- [ ] Ticket validation by operator
-- [ ] Ticket retrieval by passenger
-- [ ] Revenue dashboard accuracy
-- [ ] Route management
-- [ ] Operator management
-- [ ] Commission calculation
-- [ ] Audit logging
+See `supabase/schema.sql` for complete database schema including:
+- Companies (multi-tenant)
+- Users (role-based)
+- Routes
+- Park Operators
+- Tickets
+- Transactions
+- Audit Logs
 
-## 🚢 Deployment
+## API Endpoints
 
-### Production Deployment Guide
-
-**📋 See `MONIME-PRODUCTION-CONFIG.md` for complete production setup instructions**, including:
-- Production environment variables configuration
-- MoniMe webhook setup
-- Database production setup
-- Security considerations
-- Deployment checklist
-- Troubleshooting production issues
-
-### Vercel (Recommended)
-1. Push code to GitHub
-2. Import project in Vercel
-3. Add environment variables (see `MONIME-PRODUCTION-CONFIG.md`)
-4. Deploy
-
-### Other Platforms
-The application can be deployed to any platform supporting Next.js:
-- Netlify
-- AWS Amplify
-- Railway
-- DigitalOcean App Platform
-
-## 📝 API Endpoints
-
-### Webhooks
 - `POST /api/webhooks/monime` - MoniMe payment webhook
+- `POST /api/tickets/validate` - Validate ticket with OTP
+- `GET /api/tickets/retrieve` - Retrieve ticket by phone
+- `GET /api/revenue` - Revenue data (company-scoped)
 
-### Tickets
-- `POST /api/tickets/validate` - Validate ticket by MoniMe order number (authenticated)
-- `POST /api/tickets/retrieve` - Retrieve ticket by phone/transaction ID
+## Security
 
-## 🔧 Configuration
+- Row Level Security (RLS) enabled on all tables
+- All queries filtered by company_id
+- Platform admin bypass for system management
+- Audit logging for all critical actions
 
-### Commission Rates
-Set per company in the `companies` table. Default: 2.5%
+## License
 
-### Ticket Expiration
-Tickets expire 24 hours after creation (configurable in webhook handler)
-
-### MoniMe Integration
-Configure MoniMe account ID per company in the `companies.monime_account_id` field
-
-## 📚 Database Schema
-
-Key tables:
-- `companies` - Tenant/company data
-- `users` - User accounts with roles
-- `routes` - Transport routes
-- `park_operators` - Operator accounts
-- `tickets` - Generated tickets
-- `transactions` - Payment records
-- `validations` - Validation history
-- `commission_settlements` - Commission tracking
-- `audit_logs` - System audit trail
-- `monime_webhooks` - Webhook event log
-
-See `database/schema.sql` for complete schema.
-
-## 🐛 Troubleshooting
-
-### Common Issues
-
-**Issue**: Cannot connect to Supabase
-- Check environment variables
-- Verify Supabase project is active
-- Check network connectivity
-
-**Issue**: Webhook not processing
-- Verify webhook URL is accessible
-- Check webhook_id uniqueness
-- Review error logs in `monime_webhooks` table
-
-**Issue**: Tickets not validating
-- Check ticket status (must be 'pending')
-- Verify OTP code matches
-- Check operator route assignment
-
-## 📄 License
-
-[Your License Here]
-
-## 👥 Support
-
-For support, email support@foraypay.com or create an issue in the repository.
-
-## 🗺️ Roadmap
-
-### Phase 1 (MVP) - ✅ Current
-- Basic ticketing system
-- Payment integration
-- Operator validation
-- Revenue dashboards
-
-### Phase 2 (Future)
-- Mobile apps
-- Offline mode
-- Advanced analytics
-- SMS notifications
-- Multi-language support
-
----
-
-**Built with ❤️ for Sierra Leone's transport industry**
+Proprietary - ForayPay Platform
 

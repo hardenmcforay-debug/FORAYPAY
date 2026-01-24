@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
   --foreground-rgb: 0, 0, 0;
@@ -10,27 +10,44 @@
   --background-end-rgb: 255, 255, 255;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  font-family: 'Inter', system-ui, sans-serif;
 }
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-  font-family: 'Inter', system-ui, sans-serif;
+  background: #f9fafb;
 }
 
-html {
-  scroll-behavior: smooth;
+/* Improve image rendering quality */
+img {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  image-rendering: high-quality;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+/* Ensure Next.js Image components render clearly */
+.next-image-wrapper img {
+  image-rendering: auto;
+  image-rendering: -webkit-optimize-contrast;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
 @layer utilities {
@@ -58,80 +75,81 @@ html {
   background: #94a3b8;
 }
 
-/* Remove borders and outlines from logo images */
-.hero-logo-container img,
-.hero-logo-container [data-next-image] {
-  outline: none !important;
-  border: none !important;
-  box-shadow: none !important;
+/* Grid pattern background */
+.bg-grid-pattern {
+  background-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
 }
 
-/* Stabilize hero section on mobile phones only - prevent layout shifts during scroll */
-@media (max-width: 767px) {
-  .hero-section {
-    contain: layout style paint;
-    transform: translateZ(0);
-    backface-visibility: hidden;
-    -webkit-font-smoothing: antialiased;
-    min-height: 500px !important;
+/* Card animations */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-
-  /* Stabilize hero logo container on mobile */
-  .hero-logo-container {
-    contain: layout;
-    will-change: auto;
-    transform: translateZ(0);
-  }
-
-  /* Prevent headline from shifting during scroll on mobile */
-  .hero-logo-container + div {
-    position: relative;
-    z-index: 20;
-    transform: translateZ(0);
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-.hero-gradient-bg {
-  background: linear-gradient(to bottom, 
-    white 0%, 
-    white calc(384px - 30px), 
-    rgba(255, 255, 255, 0.8) calc(384px - 15px),
-    rgba(186, 230, 253, 0.5) 384px,
-    rgba(186, 230, 253, 0.8) calc(384px + 15px),
-    #bae6fd calc(384px + 30px),
-    #bae6fd 100%
-  );
+.animate-fade-in-up {
+  animation: fade-in-up 0.5s ease-out forwards;
 }
 
-@media (min-width: 768px) {
-  .hero-gradient-bg {
-    background: linear-gradient(to bottom, 
-      white 0%, 
-      white calc(512px - 30px), 
-      rgba(255, 255, 255, 0.8) calc(512px - 15px),
-      rgba(186, 230, 253, 0.5) 512px,
-      rgba(186, 230, 253, 0.8) calc(512px + 15px),
-      #bae6fd calc(512px + 30px),
-      #bae6fd 100%
-    );
+/* Staggered animation delays */
+.animate-delay-100 {
+  animation-delay: 0.1s;
+  opacity: 0;
+}
+
+.animate-delay-200 {
+  animation-delay: 0.2s;
+  opacity: 0;
+}
+
+.animate-delay-300 {
+  animation-delay: 0.3s;
+  opacity: 0;
+}
+
+.animate-delay-400 {
+  animation-delay: 0.4s;
+  opacity: 0;
+}
+
+/* Blob animation for hero background */
+@keyframes blob {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
   }
 }
 
-@media (min-width: 1024px) {
-  .hero-gradient-bg {
-    background: linear-gradient(to bottom, 
-      white 0%, 
-      white calc(640px - 30px), 
-      rgba(255, 255, 255, 0.8) calc(640px - 15px),
-      rgba(186, 230, 253, 0.5) 640px,
-      rgba(186, 230, 253, 0.8) calc(640px + 15px),
-      #bae6fd calc(640px + 30px),
-      #bae6fd 100%
-    );
-  }
+.animate-blob {
+  animation: blob 7s infinite;
 }
 
-@keyframes float {
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+/* Float animations for hero images */
+@keyframes float-1 {
   0%, 100% {
     transform: translateY(0px);
   }
@@ -140,1319 +158,65 @@ html {
   }
 }
 
-.animate-fade-in-up {
-  animation: float 3s ease-in-out infinite;
-}
-
-@keyframes gradient-border {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-@keyframes star-twinkle {
+@keyframes float-2 {
   0%, 100% {
-    transform: scale(1) rotate(0deg);
-    opacity: 1;
-  }
-  25% {
-    transform: scale(1.15) rotate(5deg);
-    opacity: 0.9;
+    transform: translateY(0px) translateX(0px);
   }
   50% {
-    transform: scale(1.1) rotate(-5deg);
-    opacity: 1;
+    transform: translateY(-15px) translateX(10px);
   }
-  75% {
-    transform: scale(1.2) rotate(3deg);
-    opacity: 0.95;
-  }
-}
-
-.animate-star-twinkle {
-  animation: star-twinkle 2s ease-in-out infinite;
-}
-
-/* Realistic star styling */
-.star-realistic {
-  filter: drop-shadow(0 4px 6px rgba(245, 158, 11, 0.4)) 
-          drop-shadow(0 2px 4px rgba(245, 158, 11, 0.3))
-          drop-shadow(0 0 8px rgba(245, 158, 11, 0.2));
-}
-
-/* Payment graphic animations */
-@keyframes arrow-flow {
-  0% { 
-    stroke-dashoffset: 0; 
-    opacity: 0.3; 
-  }
-  50% { 
-    opacity: 0.8; 
-  }
-  100% { 
-    stroke-dashoffset: -20; 
-    opacity: 0.3; 
-  }
-}
-
-@keyframes otp-pulse {
-  0%, 100% { 
-    opacity: 1; 
-    transform: scale(1); 
-  }
-  50% { 
-    opacity: 0.7; 
-    transform: scale(0.98); 
-  }
-}
-
-@keyframes wave-flow {
-  0% { 
-    stroke-dashoffset: 0; 
-  }
-  100% { 
-    stroke-dashoffset: -40; 
-  }
-}
-
-.arrow-path {
-  stroke-dasharray: 5 5;
-  animation: arrow-flow 2s linear infinite;
-}
-
-.otp-group {
-  animation: otp-pulse 2s ease-in-out infinite;
-}
-
-.wave-path {
-  stroke-dasharray: 10 10;
-  animation: wave-flow 3s linear infinite;
-}
-
-.phone-group {
-  transition: transform 0.3s ease;
-}
-
-.group:hover .phone-group {
-  transform: translate(80px, 20px) scale(1.1);
-}
-
-.group:hover .otp-group {
-  animation: none;
-  transform: translate(165px, 35px) scale(1.15);
-  transition: transform 0.3s ease;
-}
-
-/* Ticket Generated graphic animations */
-@keyframes ticket-slide-in {
-  0% { 
-    opacity: 0; 
-    transform: translate(20px, 15px) translateX(-20px); 
-  }
-  100% { 
-    opacity: 1; 
-    transform: translate(20px, 15px) translateX(0); 
-  }
-}
-
-@keyframes chain-pulse {
-  0%, 100% { 
-    opacity: 0.6; 
-    transform: scale(1); 
-  }
-  50% { 
-    opacity: 0.9; 
-    transform: scale(1.05); 
-  }
-}
-
-@keyframes shield-glow {
-  0%, 100% { 
-    opacity: 0.7; 
-    filter: drop-shadow(0 0 2px #10B981); 
-  }
-  50% { 
-    opacity: 0.95; 
-    filter: drop-shadow(0 0 8px #10B981); 
-  }
-}
-
-@keyframes qr-scan {
-  0% { 
-    transform: translate(12px, 20px) translateY(0); 
-  }
-  50% { 
-    transform: translate(12px, 20px) translateY(20px); 
-  }
-  100% { 
-    transform: translate(12px, 20px) translateY(0); 
-  }
-}
-
-@keyframes processing-spin {
-  0% { 
-    transform: rotate(0deg); 
-    opacity: 0.3; 
-  }
-  50% { 
-    opacity: 0.6; 
-  }
-  100% { 
-    transform: rotate(360deg); 
-    opacity: 0.3; 
-  }
-}
-
-.ticket-group {
-  animation: ticket-slide-in 0.8s ease-out;
-  transition: transform 0.3s ease;
-}
-
-.group:hover .ticket-group {
-  transform: translate(20px, 15px) scale(1.08);
-}
-
-.chain-group {
-  animation: chain-pulse 2s ease-in-out infinite;
-}
-
-.verify-group {
-  animation: shield-glow 2.5s ease-in-out infinite;
-  transition: transform 0.3s ease;
-}
-
-.group:hover .verify-group {
-  transform: translate(200px, 20px) scale(1.15);
-}
-
-.processing-circle {
-  animation: processing-spin 2s linear infinite;
-  transform-origin: center;
-}
-
-.qr-scanner {
-  animation: qr-scan 3s ease-in-out infinite;
-}
-
-/* Operator Validates graphic animations */
-@keyframes operator-slide {
-  0% { 
-    opacity: 0; 
-    transform: translate(15px, 20px) translateX(-15px); 
-  }
-  100% { 
-    opacity: 1; 
-    transform: translate(15px, 20px) translateX(0); 
-  }
-}
-
-@keyframes otp-input-pulse {
-  0%, 100% { 
-    opacity: 0.7; 
-    transform: scale(1); 
-  }
-  50% { 
-    opacity: 0.9; 
-    transform: scale(1.02); 
-  }
-}
-
-@keyframes validate-glow {
-  0%, 100% { 
-    opacity: 0.7; 
-    filter: drop-shadow(0 0 2px #F59E0B); 
-  }
-  50% { 
-    opacity: 0.95; 
-    filter: drop-shadow(0 0 8px #F59E0B); 
-  }
-}
-
-@keyframes gate-open {
-  0% { 
-    transform: translate(220px, 15px) rotate(0deg); 
-  }
-  50% { 
-    transform: translate(220px, 15px) rotate(-15deg); 
-  }
-  100% { 
-    transform: translate(220px, 15px) rotate(0deg); 
-  }
-}
-
-.operator-group {
-  animation: operator-slide 0.8s ease-out;
-  transition: transform 0.3s ease;
-}
-
-.group:hover .operator-group {
-  transform: translate(15px, 20px) scale(1.08);
-}
-
-.ticket-validate-group {
-  transition: transform 0.3s ease;
-}
-
-.group:hover .ticket-validate-group {
-  transform: translate(50px, 15px) scale(1.05);
-}
-
-.otp-input-group {
-  animation: otp-input-pulse 2s ease-in-out infinite;
-  transition: transform 0.3s ease;
-}
-
-.group:hover .otp-input-group {
-  animation: none;
-  transform: translate(105px, 25px) scale(1.1);
-}
-
-.validate-check-group {
-  animation: validate-glow 2.5s ease-in-out infinite;
-  transition: transform 0.3s ease;
-}
-
-.group:hover .validate-check-group {
-  transform: translate(180px, 20px) scale(1.15);
-}
-
-.gate-group {
-  animation: gate-open 3s ease-in-out infinite;
-  transition: transform 0.3s ease;
-}
-
-.group:hover .gate-group {
-  transform: translate(220px, 15px) scale(1.1);
-}
-
-/* Revenue Tracked graphic animations */
-@keyframes dashboard-fade-in {
-  0% { 
-    opacity: 0; 
-    transform: translate(10px, 10px) translateY(-10px); 
-  }
-  100% { 
-    opacity: 1; 
-    transform: translate(10px, 10px) translateY(0); 
-  }
-}
-
-@keyframes realtime-pulse {
-  0%, 100% { 
-    opacity: 0.3; 
-    transform: scale(1); 
-  }
-  50% { 
-    opacity: 0.7; 
-    transform: scale(1.2); 
-  }
-}
-
-@keyframes stats-bounce {
-  0%, 100% { 
-    transform: translateY(0); 
-  }
-  50% { 
-    transform: translateY(-2px); 
-  }
-}
-
-@keyframes growth-pulse {
-  0%, 100% { 
-    opacity: 0.7; 
-    transform: scale(1); 
-  }
-  50% { 
-    opacity: 1; 
-    transform: scale(1.1); 
-  }
-}
-
-@keyframes chart-grow {
-  0% { 
-    transform: scaleY(0); 
-    opacity: 0; 
-  }
-  100% {
-    transform: scaleY(1); 
-    opacity: 1; 
-  }
-}
-
-/* Passenger Pays graphic automatic animations */
-@keyframes phone-float {
-  0%, 100% { 
-    transform: translate(60px, 10px) translateY(0px); 
-  }
-  50% { 
-    transform: translate(60px, 10px) translateY(-5px); 
-  }
-}
-
-@keyframes phone-pulse {
-  0%, 100% { 
-    opacity: 1; 
-    filter: drop-shadow(0 0 3px rgba(37, 99, 235, 0.3)); 
-  }
-  50% { 
-    opacity: 0.95; 
-    filter: drop-shadow(0 0 8px rgba(37, 99, 235, 0.6)); 
-  }
-}
-
-@keyframes pay-button-pulse {
-  0%, 100% { 
-    opacity: 0.9; 
-    transform: scale(1); 
-  }
-  50% { 
-    opacity: 1; 
-    transform: scale(1.02); 
-  }
-}
-
-@keyframes otp-slide-in {
-  0% { 
-    opacity: 0; 
-    transform: translate(160px, 25px) translateX(20px) scale(0.9); 
-  }
-  60% { 
-    opacity: 0.8; 
-    transform: translate(160px, 25px) translateX(-2px) scale(1.02); 
-  }
-  100% { 
-    opacity: 1; 
-    transform: translate(160px, 25px) translateX(0) scale(1); 
-  }
-}
-
-@keyframes otp-glow {
-  0%, 100% { 
-    filter: drop-shadow(0 0 2px rgba(16, 185, 129, 0.4)); 
-  }
-  50% { 
-    filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.8)); 
-  }
-}
-
-@keyframes otp-digits-pulse {
-  0%, 100% { 
-    opacity: 1; 
-    letter-spacing: 2px; 
-  }
-  50% { 
-    opacity: 0.9; 
-    letter-spacing: 3px; 
-  }
-}
-
-/* Apply automatic animations */
-.passenger-phone-group {
-  animation: phone-float 3s ease-in-out infinite, phone-pulse 2s ease-in-out infinite;
-}
-
-.passenger-pay-button {
-  animation: pay-button-pulse 1.5s ease-in-out infinite;
-}
-
-.passenger-otp-group {
-  animation: otp-slide-in 2s ease-out forwards, otp-glow 2s ease-in-out infinite 2s;
-}
-
-.passenger-otp-digits {
-  animation: otp-digits-pulse 2s ease-in-out infinite 2s;
-}
-
-/* Ticket Generated graphic automatic animations */
-@keyframes ticket-slide-up {
-  0% { 
-    opacity: 0; 
-    transform: translate(80px, 8px) translateY(20px) scale(0.9); 
-  }
-  100% { 
-    opacity: 1; 
-    transform: translate(80px, 8px) translateY(0) scale(1); 
-  }
-}
-
-@keyframes ticket-glow {
-  0%, 100% { 
-    filter: drop-shadow(0 0 2px rgba(16, 185, 129, 0.3)); 
-  }
-  50% { 
-    filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.6)); 
-  }
-}
-
-@keyframes qr-scan-line {
-  0% { 
-    transform: translate(15px, 25px) translateY(0); 
-    opacity: 0.3; 
-  }
-  50% { 
-    transform: translate(15px, 25px) translateY(30px); 
-    opacity: 0.6; 
-  }
-  100% { 
-    transform: translate(15px, 25px) translateY(0); 
-    opacity: 0.3; 
-  }
-}
-
-@keyframes processing-spin {
-  0% { 
-    transform: rotate(0deg); 
-  }
-  100% { 
-    transform: rotate(360deg); 
-  }
-}
-
-@keyframes chain-pulse {
-  0%, 100% { 
-    opacity: 0.3; 
-    transform: scale(1); 
-  }
-  50% { 
-    opacity: 0.5; 
-    transform: scale(1.05); 
-  }
-}
-
-/* Apply automatic animations */
-.ticket-ticket-group {
-  animation: ticket-slide-up 1.5s ease-out forwards, ticket-glow 2s ease-in-out infinite 1.5s;
-}
-
-.ticket-qr-pattern {
-  animation: qr-scan-line 2s ease-in-out infinite 1.5s;
-}
-
-.ticket-processing-spin {
-  animation: processing-spin 2s linear infinite;
-}
-
-.ticket-chain-group {
-  animation: chain-pulse 2s ease-in-out infinite 2s;
-}
-
-/* Operator Validates graphic automatic animations */
-@keyframes operator-device-slide {
-  0% { 
-    opacity: 0; 
-    transform: translate(40px, 15px) translateX(-15px); 
-  }
-  100% { 
-    opacity: 1; 
-    transform: translate(40px, 15px) translateX(0); 
-  }
-}
-
-@keyframes operator-device-pulse {
-  0%, 100% { 
-    filter: drop-shadow(0 0 2px rgba(245, 158, 11, 0.2)); 
-  }
-  50% { 
-    filter: drop-shadow(0 0 5px rgba(245, 158, 11, 0.4)); 
-  }
-}
-
-@keyframes otp-input-focus {
-  0%, 100% { 
-    opacity: 1; 
-    transform: scale(1); 
-  }
-  50% { 
-    opacity: 0.95; 
-    transform: scale(1.02); 
-  }
-}
-
-@keyframes otp-box-pulse {
-  0%, 100% { 
-    fill: #FEF3C7; 
-    stroke: #F59E0B; 
-  }
-  50% { 
-    fill: #FDE68A; 
-    stroke: #D97706; 
-  }
-}
-
-@keyframes validate-check-appear {
-  0% { 
-    opacity: 0; 
-    transform: translate(190px, 25px) scale(0); 
-  }
-  60% { 
-    opacity: 0.8; 
-    transform: translate(190px, 25px) scale(1.2); 
-  }
-  100% { 
-    opacity: 1; 
-    transform: translate(190px, 25px) scale(1); 
-  }
-}
-
-@keyframes gate-open-animation {
-  0% { 
-    transform: translate(230px, 15px) rotate(0deg); 
-  }
-  50% { 
-    transform: translate(230px, 15px) rotate(-20deg); 
-  }
-  100% { 
-    transform: translate(230px, 15px) rotate(0deg); 
-  }
-}
-
-@keyframes gate-light-pulse {
-  0%, 100% { 
-    opacity: 0.7; 
-    r: 3; 
-  }
-  50% { 
-    opacity: 1; 
-    r: 4; 
-  }
-}
-
-/* Apply automatic animations */
-.operator-device-group {
-  animation: operator-device-slide 1.2s ease-out forwards, operator-device-pulse 2s ease-in-out infinite 1.2s;
-}
-
-.operator-otp-input-group {
-  animation: otp-input-focus 1.5s ease-in-out infinite 1.5s;
-}
-
-.operator-otp-box {
-  animation: otp-box-pulse 1s ease-in-out infinite;
-}
-
-.operator-validate-check {
-  animation: validate-check-appear 1.5s ease-out forwards 2s;
-}
-
-.operator-gate-barrier {
-  animation: gate-open-animation 2s ease-in-out infinite 2.5s;
-}
-
-.operator-gate-light {
-  animation: gate-light-pulse 1.5s ease-in-out infinite 2.5s;
-}
-
-/* Revenue Tracked graphic automatic animations - 3D effects */
-@keyframes revenue-monitor-float {
-  0%, 100% { 
-    transform: translate(50px, 10px) translateY(0px) rotateX(0deg); 
-  }
-  50% { 
-    transform: translate(50px, 10px) translateY(-3px) rotateX(2deg); 
-  }
-}
-
-@keyframes revenue-monitor-glow {
-  0%, 100% { 
-    filter: drop-shadow(0 0 3px rgba(220, 38, 38, 0.2)); 
-  }
-  50% { 
-    filter: drop-shadow(0 0 8px rgba(220, 38, 38, 0.4)); 
-  }
-}
-
-@keyframes revenue-bar-grow {
-  0% { 
-    transform: scaleY(0); 
-    opacity: 0; 
-  }
-  100% { 
-    transform: scaleY(1); 
-    opacity: 0.8; 
-  }
-}
-
-@keyframes revenue-bar-pulse {
-  0%, 100% { 
-    opacity: 0.8; 
-    transform: scaleY(1); 
-  }
-  50% { 
-    opacity: 1; 
-    transform: scaleY(1.05); 
-  }
-}
-
-@keyframes revenue-pulse-outer {
-  0%, 100% { 
-    opacity: 0.2; 
-    r: 10; 
-  }
-  50% { 
-    opacity: 0.4; 
-    r: 12; 
-  }
 }
 
-@keyframes revenue-pulse-middle {
-  0%, 100% { 
-    opacity: 0.4; 
-    r: 7; 
+@keyframes float-3 {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px);
   }
-  50% { 
-    opacity: 0.6; 
-    r: 8; 
+  50% {
+    transform: translateY(15px) translateX(-10px);
   }
 }
 
-@keyframes revenue-stats-float {
-  0%, 100% { 
-    transform: translate(160px, 15px) translateY(0px); 
-  }
-  50% { 
-    transform: translate(160px, 15px) translateY(-2px); 
-  }
-}
-
-@keyframes revenue-growth-bounce {
-  0%, 100% { 
-    transform: translate(250px, 20px) translateY(0px); 
-  }
-  50% { 
-    transform: translate(250px, 20px) translateY(-3px); 
-  }
-}
-
-/* Apply automatic animations */
-.revenue-monitor-group {
-  animation: revenue-monitor-float 3s ease-in-out infinite, revenue-monitor-glow 2s ease-in-out infinite;
-}
-
-.revenue-bar {
-  animation: revenue-bar-grow 0.8s ease-out forwards, revenue-bar-pulse 2s ease-in-out infinite 0.8s;
-}
-
-.revenue-bar-group:nth-child(1) .revenue-bar { animation-delay: 0s, 0.8s; }
-.revenue-bar-group:nth-child(2) .revenue-bar { animation-delay: 0.1s, 0.9s; }
-.revenue-bar-group:nth-child(3) .revenue-bar { animation-delay: 0.2s, 1s; }
-.revenue-bar-group:nth-child(4) .revenue-bar { animation-delay: 0.3s, 1.1s; }
-.revenue-bar-group:nth-child(5) .revenue-bar { animation-delay: 0.4s, 1.2s; }
-.revenue-bar-group:nth-child(6) .revenue-bar { animation-delay: 0.5s, 1.3s; }
-.revenue-bar-group:nth-child(7) .revenue-bar { animation-delay: 0.6s, 1.4s; }
-
-.revenue-pulse-outer {
-  animation: revenue-pulse-outer 2s ease-in-out infinite;
-}
-
-.revenue-pulse-middle {
-  animation: revenue-pulse-middle 1.5s ease-in-out infinite;
-}
-
-.revenue-stats-group {
-  animation: revenue-stats-float 2.5s ease-in-out infinite 1s;
-}
-
-.revenue-growth-group {
-  animation: revenue-growth-bounce 2s ease-in-out infinite 1.5s;
-}
-
-.dashboard-group {
-  animation: dashboard-fade-in 0.8s ease-out;
-  transition: transform 0.3s ease;
-}
-
-.group:hover .dashboard-group {
-  transform: translate(10px, 10px) scale(1.05);
-}
-
-.realtime-group {
-  animation: realtime-pulse 2s ease-in-out infinite;
-  transition: transform 0.3s ease;
-}
-
-.group:hover .realtime-group {
-  transform: translate(90px, 30px) scale(1.15);
-}
-
-.stats-group {
-  animation: stats-bounce 3s ease-in-out infinite;
-  transition: transform 0.3s ease;
-}
-
-.group:hover .stats-group {
-  transform: translate(150px, 15px) scale(1.08);
-}
-
-.growth-group {
-  animation: growth-pulse 2.5s ease-in-out infinite;
-  transition: transform 0.3s ease;
-}
-
-.group:hover .growth-group {
-  transform: translate(235px, 20px) scale(1.2);
-}
-
-/* Digital Transactions graphic automatic animations */
-@keyframes digital-cash-fade {
-  0% { 
-    opacity: 0.4; 
-    transform: translate(20px, 30px) scale(1); 
-  }
-  50% { 
-    opacity: 0.2; 
-    transform: translate(20px, 30px) scale(0.9); 
-  }
-  100% { 
-    opacity: 0.1; 
-    transform: translate(20px, 30px) scale(0.8); 
-  }
-}
-
-@keyframes digital-conversion-flow {
-  0% { 
-    stroke-dashoffset: 0; 
-    opacity: 0.6; 
-  }
-  50% { 
-    stroke-dashoffset: -40; 
-    opacity: 1; 
-  }
-  100% { 
-    stroke-dashoffset: -80; 
-    opacity: 0.6; 
-  }
-}
-
-@keyframes digital-cards-float {
-  0%, 100% { 
-    transform: translate(120px, 15px) translateY(0px) rotate(0deg); 
-  }
-  50% { 
-    transform: translate(120px, 15px) translateY(-3px) rotate(1deg); 
-  }
-}
-
-@keyframes digital-mobile-pulse {
-  0%, 100% { 
-    transform: translate(180px, 20px) scale(1); 
-    filter: drop-shadow(0 0 2px rgba(37, 99, 235, 0.3)); 
-  }
-  50% { 
-    transform: translate(180px, 20px) scale(1.02); 
-    filter: drop-shadow(0 0 6px rgba(37, 99, 235, 0.6)); 
-  }
-}
-
-@keyframes digital-particle-float {
-  0%, 100% { 
-    transform: translateY(0px); 
-    opacity: 0.6; 
-  }
-  50% { 
-    transform: translateY(-8px); 
-    opacity: 1; 
-  }
-}
-
-@keyframes digital-percentage-spin {
-  0%, 100% { 
-    transform: translate(250px, 10px) rotate(0deg) scale(1); 
-  }
-  50% { 
-    transform: translate(250px, 10px) rotate(5deg) scale(1.05); 
-  }
-}
-
-/* Apply automatic animations */
-.digital-cash-eliminate {
-  animation: digital-cash-fade 3s ease-in-out infinite;
-}
-
-.digital-conversion-arrow {
-  stroke-dasharray: 10 5;
-  animation: digital-conversion-flow 2s linear infinite;
-}
-
-.digital-cards-group {
-  animation: digital-cards-float 3s ease-in-out infinite;
-}
-
-.digital-mobile-group {
-  animation: digital-mobile-pulse 2s ease-in-out infinite;
-}
-
-.digital-particle-1 {
-  animation: digital-particle-float 2s ease-in-out infinite;
-  animation-delay: 0s;
-}
-
-.digital-particle-2 {
-  animation: digital-particle-float 2s ease-in-out infinite;
-  animation-delay: 0.3s;
-}
-
-.digital-particle-3 {
-  animation: digital-particle-float 2s ease-in-out infinite;
-  animation-delay: 0.6s;
-}
-
-.digital-particle-4 {
-  animation: digital-particle-float 2s ease-in-out infinite;
-  animation-delay: 0.9s;
+.animate-float-1 {
+  animation: float-1 6s ease-in-out infinite;
 }
 
-.digital-percentage-badge {
-  animation: digital-percentage-spin 3s ease-in-out infinite;
+.animate-float-2 {
+  animation: float-2 5s ease-in-out infinite;
 }
 
-/* Revenue Visibility graphic automatic animations */
-@keyframes visibility-screen-float {
-  0%, 100% { 
-    transform: translate(50px, 10px) translateY(0px); 
-  }
-  50% { 
-    transform: translate(50px, 10px) translateY(-3px); 
-  }
-}
-
-@keyframes visibility-screen-glow {
-  0%, 100% { 
-    filter: drop-shadow(0 0 3px rgba(16, 185, 129, 0.2)); 
-  }
-  50% { 
-    filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.4)); 
-  }
+.animate-float-3 {
+  animation: float-3 7s ease-in-out infinite;
 }
 
-@keyframes visibility-chart-draw {
-  0% { 
-    stroke-dasharray: 200;
-    stroke-dashoffset: 200;
+/* Star rating animations */
+@keyframes star-fade-in {
+  from {
     opacity: 0;
+    transform: scale(0) rotate(-180deg);
   }
-  100% { 
-    stroke-dasharray: 200;
-    stroke-dashoffset: 0;
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes star-pulse {
+  0%, 100% {
+    transform: scale(1);
     opacity: 1;
   }
-}
-
-@keyframes visibility-data-pulse {
-  0%, 100% { 
-    r: 3; 
-    opacity: 1; 
-  }
-  50% { 
-    r: 4; 
-    opacity: 0.8; 
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
   }
 }
 
-@keyframes visibility-pulse-outer {
-  0%, 100% { 
-    r: 12; 
-    opacity: 0.2; 
-  }
-  50% { 
-    r: 16; 
-    opacity: 0.4; 
-  }
-}
-
-@keyframes visibility-pulse-middle {
-  0%, 100% { 
-    r: 9; 
-    opacity: 0.3; 
-  }
-  50% { 
-    r: 12; 
-    opacity: 0.5; 
-  }
-}
-
-@keyframes visibility-stream-flow {
-  0% { 
-    transform: translateY(0px); 
-    opacity: 0.6; 
-  }
-  100% { 
-    transform: translateY(20px); 
-    opacity: 0; 
-  }
-}
-
-@keyframes visibility-eye-blink {
-  0%, 90%, 100% { 
-    transform: translate(250px, 15px) scaleY(1); 
-  }
-  95% { 
-    transform: translate(250px, 15px) scaleY(0.1); 
-  }
-}
-
-/* Apply automatic animations */
-.visibility-screen-group {
-  animation: visibility-screen-float 3s ease-in-out infinite, visibility-screen-glow 2s ease-in-out infinite;
-}
-
-.visibility-chart-line {
-  animation: visibility-chart-draw 2s ease-out forwards;
-  stroke-dasharray: 200;
-  stroke-dashoffset: 200;
-}
-
-.visibility-data-point {
-  animation: visibility-data-pulse 1.5s ease-in-out infinite;
-}
-
-.visibility-pulse-outer {
-  animation: visibility-pulse-outer 2s ease-in-out infinite;
-}
-
-.visibility-pulse-middle {
-  animation: visibility-pulse-middle 1.5s ease-in-out infinite;
-}
-
-.visibility-stream-particle-0 {
-  animation: visibility-stream-flow 2s linear infinite;
-  animation-delay: 0s;
-}
-
-.visibility-stream-particle-1 {
-  animation: visibility-stream-flow 2s linear infinite;
-  animation-delay: 0.4s;
-}
-
-.visibility-stream-particle-2 {
-  animation: visibility-stream-flow 2s linear infinite;
-  animation-delay: 0.8s;
-}
-
-.visibility-stream-particle-3 {
-  animation: visibility-stream-flow 2s linear infinite;
-  animation-delay: 1.2s;
-}
-
-.visibility-stream-particle-4 {
-  animation: visibility-stream-flow 2s linear infinite;
-  animation-delay: 1.6s;
-}
-
-.visibility-eye-icon {
-  animation: visibility-eye-blink 4s ease-in-out infinite;
-}
-
-/* Zero Revenue Leakage graphic automatic animations */
-@keyframes leakage-shield-float {
-  0%, 100% { 
-    transform: translate(60px, 15px) translateY(0px) rotate(0deg); 
-  }
-  50% { 
-    transform: translate(60px, 15px) translateY(-3px) rotate(2deg); 
-  }
-}
-
-@keyframes leakage-shield-glow {
-  0%, 100% { 
-    filter: drop-shadow(0 0 3px rgba(245, 158, 11, 0.3)); 
-  }
-  50% { 
-    filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.6)); 
-  }
-}
-
-@keyframes leakage-vault-pulse {
-  0%, 100% { 
-    transform: translate(120px, 20px) scale(1); 
-    filter: drop-shadow(0 0 2px rgba(31, 41, 55, 0.3)); 
-  }
-  50% { 
-    transform: translate(120px, 20px) scale(1.02); 
-    filter: drop-shadow(0 0 6px rgba(31, 41, 55, 0.5)); 
-  }
-}
-
-@keyframes leakage-lock-rotate {
-  0%, 100% { 
-    transform: rotate(0deg); 
-  }
-  25% { 
-    transform: rotate(-5deg); 
-  }
-  75% { 
-    transform: rotate(5deg); 
-  }
-}
-
-@keyframes leakage-zero-pulse {
-  0%, 100% { 
-    transform: translate(200px, 25px) scale(1); 
-    r: 15; 
-  }
-  50% { 
-    transform: translate(200px, 25px) scale(1.1); 
-    r: 16; 
-  }
-}
-
-@keyframes leakage-badge-appear {
-  0% { 
-    opacity: 0; 
-    transform: scale(0); 
-  }
-  100% { 
-    opacity: 0.4; 
-    transform: scale(1); 
-  }
-}
-
-@keyframes leakage-sealed-pulse {
-  0%, 100% { 
-    stroke-dashoffset: 0; 
-    opacity: 0.5; 
-  }
-  50% { 
-    stroke-dashoffset: -6; 
-    opacity: 0.8; 
-  }
-}
-
-/* Apply automatic animations */
-.leakage-shield-group {
-  animation: leakage-shield-float 3s ease-in-out infinite, leakage-shield-glow 2s ease-in-out infinite;
-}
-
-.leakage-vault-group {
-  animation: leakage-vault-pulse 2.5s ease-in-out infinite;
-}
-
-.leakage-vault-group circle {
-  animation: leakage-lock-rotate 3s ease-in-out infinite;
-}
-
-.leakage-zero-indicator {
-  animation: leakage-zero-pulse 2s ease-in-out infinite;
-}
-
-.leakage-badge-0 {
-  animation: leakage-badge-appear 1s ease-out forwards;
-  animation-delay: 0.5s;
-}
-
-.leakage-badge-1 {
-  animation: leakage-badge-appear 1s ease-out forwards;
-  animation-delay: 0.8s;
-}
-
-.leakage-badge-2 {
-  animation: leakage-badge-appear 1s ease-out forwards;
-  animation-delay: 1.1s;
-}
-
-.leakage-sealed-lines {
-  animation: leakage-sealed-pulse 2s ease-in-out infinite;
-}
-
-/* 24/7 Access & Control graphic automatic animations */
-@keyframes access-clock-rotate {
-  0% { 
-    transform: translate(40px, 20px) rotate(0deg); 
-  }
-  100% { 
-    transform: translate(40px, 20px) rotate(360deg); 
-  }
-}
-
-@keyframes access-clock-glow {
-  0%, 100% { 
-    filter: drop-shadow(0 0 3px rgba(220, 38, 38, 0.3)); 
-  }
-  50% { 
-    filter: drop-shadow(0 0 8px rgba(220, 38, 38, 0.6)); 
-  }
-}
-
-@keyframes access-globe-rotate {
-  0% { 
-    transform: translate(120px, 15px) rotate(0deg); 
-  }
-  100% { 
-    transform: translate(120px, 15px) rotate(360deg); 
-  }
-}
-
-@keyframes access-globe-pulse {
-  0%, 100% { 
-    filter: drop-shadow(0 0 2px rgba(37, 99, 235, 0.3)); 
-  }
-  50% { 
-    filter: drop-shadow(0 0 6px rgba(37, 99, 235, 0.6)); 
-  }
-}
-
-@keyframes access-point-pulse {
-  0%, 100% { 
-    r: 2; 
-    opacity: 0.8; 
-  }
-  50% { 
-    r: 3; 
-    opacity: 1; 
-  }
-}
-
-@keyframes access-dashboard-float {
-  0%, 100% { 
-    transform: translate(180px, 20px) translateY(0px); 
-  }
-  50% { 
-    transform: translate(180px, 20px) translateY(-2px); 
-  }
-}
-
-@keyframes access-control-btn-pulse {
-  0%, 100% { 
-    opacity: 0.3; 
-    transform: scale(1); 
-  }
-  50% { 
-    opacity: 0.5; 
-    transform: scale(1.05); 
-  }
-}
-
-@keyframes access-status-pulse {
-  0%, 100% { 
-    opacity: 0.6; 
-    r: 4; 
-  }
-  50% { 
-    opacity: 1; 
-    r: 5; 
-  }
-}
-
-@keyframes access-arrows-flow {
-  0% { 
-    stroke-dashoffset: 0; 
-    opacity: 0.6; 
-  }
-  100% { 
-    stroke-dashoffset: -20; 
-    opacity: 0.8; 
-  }
-}
-
-/* Apply automatic animations */
-.access-clock-group {
-  animation: access-clock-glow 2s ease-in-out infinite;
-}
-
-.access-clock-hands {
-  animation: access-clock-rotate 60s linear infinite;
-  transform-origin: 20px 20px;
-}
-
-.access-globe-group {
-  animation: access-globe-rotate 20s linear infinite, access-globe-pulse 3s ease-in-out infinite;
-}
-
-.access-point-1 {
-  animation: access-point-pulse 2s ease-in-out infinite;
-  animation-delay: 0s;
-}
-
-.access-point-2 {
-  animation: access-point-pulse 2s ease-in-out infinite;
-  animation-delay: 0.7s;
-}
-
-.access-point-3 {
-  animation: access-point-pulse 2s ease-in-out infinite;
-  animation-delay: 1.4s;
-}
-
-.access-dashboard-group {
-  animation: access-dashboard-float 3s ease-in-out infinite;
-}
-
-.access-control-btn-1 {
-  animation: access-control-btn-pulse 2s ease-in-out infinite;
-  animation-delay: 0s;
-}
-
-.access-control-btn-2 {
-  animation: access-control-btn-pulse 2s ease-in-out infinite;
-  animation-delay: 0.3s;
-}
-
-.access-control-btn-3 {
-  animation: access-control-btn-pulse 2s ease-in-out infinite;
-  animation-delay: 0.6s;
-}
-
-.access-status-indicator {
-  animation: access-status-pulse 1.5s ease-in-out infinite;
-}
-
-.access-arrows {
-  stroke-dasharray: 5 5;
-  animation: access-arrows-flow 2s linear infinite;
-}
-
-/* Card animations for company admin dashboard */
-@keyframes card-fade-in-up {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes card-hover-lift {
-  0% {
-    transform: translateY(0);
-  }
-  100% {
-    transform: translateY(-4px);
-  }
-}
-
-.animate-card-fade-in {
-  animation: card-fade-in-up 0.5s ease-out forwards;
+.animate-star-fade-in {
+  animation: star-fade-in 0.6s ease-out forwards;
   opacity: 0;
 }
 
-.animate-card-fade-in-delay-1 {
-  animation: card-fade-in-up 0.5s ease-out 0.1s forwards;
-  opacity: 0;
-}
-
-.animate-card-fade-in-delay-2 {
-  animation: card-fade-in-up 0.5s ease-out 0.2s forwards;
-  opacity: 0;
-}
-
-.animate-card-fade-in-delay-3 {
-  animation: card-fade-in-up 0.5s ease-out 0.3s forwards;
-  opacity: 0;
-}
-
-.card-hover-lift {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.card-hover-lift:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+.animate-star-pulse {
+  animation: star-pulse 2s ease-in-out infinite;
 }
 

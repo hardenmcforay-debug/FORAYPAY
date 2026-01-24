@@ -1,58 +1,89 @@
 'use client'
 
-import { Menu, User } from 'lucide-react'
-import Button from '@/components/ui/Button'
+import { useState, useEffect } from 'react'
+import { LogOut, User } from 'lucide-react'
+import { createSupabaseClient } from '@/lib/supabase/client'
+import { useRouter } from 'next/navigation'
+import Button from '@/components/ui/button'
+import { getLoginPath } from '@/lib/auth-client'
 
 interface HeaderProps {
-  user: {
-    full_name: string
-    email: string
-    role: string
-  }
-  onMenuClick?: () => void
+  userEmail?: string
+  userName?: string
 }
 
-export default function Header({ user, onMenuClick }: HeaderProps) {
-  const roleLabels = {
-    platform_admin: 'Platform Admin',
-    company_admin: 'Company Admin',
-    park_operator: 'Park Operator',
+export default function Header({ userEmail: propUserEmail, userName }: HeaderProps) {
+  const router = useRouter()
+  const supabase = createSupabaseClient()
+  const [userEmail, setUserEmail] = useState<string>(propUserEmail || '')
+
+  // Fetch email from auth to always show the latest
+  useEffect(() => {
+    const fetchEmail = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user?.email) {
+        setUserEmail(user.email)
+      } else if (propUserEmail) {
+        setUserEmail(propUserEmail)
+      }
+    }
+
+    fetchEmail()
+
+    // Listen for auth state changes (e.g., email updates)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session?.user?.email) {
+        setUserEmail(session.user.email)
+      }
+    })
+
+    return () => {
+      subscription.unsubscribe()
+    }
+  }, [supabase, propUserEmail])
+
+  const handleLogout = async () => {
+    // Get user role before signing out
+    const { data: { user } } = await supabase.auth.getUser()
+    let userRole: string | undefined
+    if (user) {
+      const { data: profile } = await supabase
+        .from('users')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+      userRole = profile?.role
+    }
+    
+    await supabase.auth.signOut()
+    
+    // Redirect to appropriate login page based on role
+    const loginPath = getLoginPath(userRole as any)
+    router.push(loginPath)
   }
 
   return (
-    <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 sm:px-6 gap-3">
-      <div className="flex items-center min-w-0 gap-3">
-        <div className="md:hidden">
-          <Button
-            type="button"
-            variant="ghost"
-            className="px-2"
-            onClick={onMenuClick}
-            disabled={!onMenuClick}
-            aria-label="Open navigation"
-          >
-            <Menu className="h-5 w-5" />
-          </Button>
-        </div>
-        <h2 className="text-base sm:text-lg font-semibold text-gray-900 truncate">
-          {roleLabels[user.role as keyof typeof roleLabels]}
-        </h2>
+    <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6">
+      <div className="flex items-center gap-4">
+        <h1 className="text-lg font-semibold text-gray-900">
+          {userName || 'Dashboard'}
+        </h1>
       </div>
       
-      <div className="flex items-center gap-3">
-        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-          <div className="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-primary-100 shrink-0">
-            <User className="h-5 w-5 text-primary-600" />
-          </div>
-          <div className="text-right min-w-0">
-            <p className="text-sm font-medium text-gray-900 truncate max-w-[10rem] sm:max-w-[16rem]">
-              {user.full_name}
-            </p>
-            <p className="hidden sm:block text-xs text-gray-500 truncate max-w-[16rem]">
-              {user.email}
-            </p>
-          </div>
+      <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 text-sm text-gray-600">
+          <User className="w-4 h-4" />
+          <span>{userEmail}</span>
         </div>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={handleLogout}
+          className="flex items-center gap-2"
+        >
+          <LogOut className="w-4 h-4" />
+          Logout
+        </Button>
       </div>
     </header>
   )
