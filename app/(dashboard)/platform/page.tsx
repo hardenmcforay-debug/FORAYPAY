@@ -263,23 +263,23 @@ export default function PlatformDashboard() {
       userEmail={userEmail}
       userName="Platform Admin"
     >
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
+      <div className="space-y-4 sm:space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Platform Dashboard</h1>
-            <p className="text-gray-600 mt-2">Overview of all companies and system metrics</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Platform Dashboard</h1>
+            <p className="text-sm sm:text-base text-gray-600 mt-1 sm:mt-2">Overview of all companies and system metrics</p>
           </div>
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-100">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-2 px-2 sm:px-3 py-2 rounded-lg bg-gray-100">
               {isOnline ? (
                 <>
                   <Wifi className="w-4 h-4 text-success-600" />
-                  <span className="text-sm text-gray-700">Online</span>
+                  <span className="text-xs sm:text-sm text-gray-700">Online</span>
                 </>
               ) : (
                 <>
                   <WifiOff className="w-4 h-4 text-error-600" />
-                  <span className="text-sm text-error-700">Offline</span>
+                  <span className="text-xs sm:text-sm text-error-700">Offline</span>
                 </>
               )}
             </div>
@@ -287,31 +287,35 @@ export default function PlatformDashboard() {
               variant="outline"
               onClick={handleRefresh}
               disabled={refreshing || !isOnline}
+              size="sm"
+              className="text-xs sm:text-sm"
             >
-              <RefreshCw className={`w-4 h-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
-              Refresh
+              <RefreshCw className={`w-4 h-4 sm:mr-2 ${refreshing ? 'animate-spin' : ''}`} />
+              <span className="hidden sm:inline">Refresh</span>
             </Button>
             <Button
               variant="outline"
               onClick={handleExport}
               disabled={companyTicketStats.length === 0}
+              size="sm"
+              className="text-xs sm:text-sm"
             >
-              <Download className="w-4 h-4 mr-2" />
-              Export
+              <Download className="w-4 h-4 sm:mr-2" />
+              <span className="hidden sm:inline">Export</span>
             </Button>
           </div>
         </div>
 
         {/* Date Range Filter */}
         <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-4">
-              <Calendar className="w-5 h-5 text-gray-500" />
-              <label className="text-sm font-medium text-gray-700">Time Period:</label>
+          <CardContent className="p-4 sm:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+              <Calendar className="w-5 h-5 text-gray-500 flex-shrink-0" />
+              <label className="text-sm font-medium text-gray-700 whitespace-nowrap">Time Period:</label>
               <select
                 value={dateRange}
                 onChange={(e) => setDateRange(e.target.value as '24h' | '7d' | '30d' | '90d' | 'all')}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm sm:text-base w-full sm:w-auto"
               >
                 <option value="24h">Last 24 Hours</option>
                 <option value="7d">Last 7 Days</option>
@@ -323,58 +327,58 @@ export default function PlatformDashboard() {
           </CardContent>
         </Card>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="p-4 sm:p-6">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">Active Companies</p>
-                  <p className="text-3xl font-bold text-gray-900">{stats.activeCompanies}</p>
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs sm:text-sm text-gray-600 mb-1">Active Companies</p>
+                  <p className="text-2xl sm:text-3xl font-bold text-gray-900">{stats.activeCompanies}</p>
                 </div>
-                <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center">
-                  <Building2 className="w-6 h-6 text-primary-600" />
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0 ml-2">
+                  <Building2 className="w-5 h-5 sm:w-6 sm:h-6 text-primary-600" />
                 </div>
               </div>
             </CardContent>
           </Card>
 
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="p-4 sm:p-6">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">Total Revenue</p>
-                  <p className="text-3xl font-bold text-gray-900">{formatCurrency(stats.totalRevenue)}</p>
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs sm:text-sm text-gray-600 mb-1">Total Revenue</p>
+                  <p className="text-2xl sm:text-3xl font-bold text-gray-900 truncate">{formatCurrency(stats.totalRevenue)}</p>
                 </div>
-                <div className="w-12 h-12 bg-success-100 rounded-lg flex items-center justify-center">
-                  <TrendingUp className="w-6 h-6 text-success-600" />
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-success-100 rounded-lg flex items-center justify-center flex-shrink-0 ml-2">
+                  <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-success-600" />
                 </div>
               </div>
             </CardContent>
           </Card>
 
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="p-4 sm:p-6">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">Platform Commission</p>
-                  <p className="text-3xl font-bold text-gray-900">{formatCurrency(stats.totalCommission)}</p>
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs sm:text-sm text-gray-600 mb-1">Platform Commission</p>
+                  <p className="text-2xl sm:text-3xl font-bold text-gray-900 truncate">{formatCurrency(stats.totalCommission)}</p>
                 </div>
-                <div className="w-12 h-12 bg-warning-100 rounded-lg flex items-center justify-center">
-                  <DollarSign className="w-6 h-6 text-warning-600" />
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-warning-100 rounded-lg flex items-center justify-center flex-shrink-0 ml-2">
+                  <DollarSign className="w-5 h-5 sm:w-6 sm:h-6 text-warning-600" />
                 </div>
               </div>
             </CardContent>
           </Card>
 
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="p-4 sm:p-6">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">Total Tickets Issued</p>
-                  <p className="text-3xl font-bold text-gray-900">{stats.totalTickets}</p>
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs sm:text-sm text-gray-600 mb-1">Total Tickets Issued</p>
+                  <p className="text-2xl sm:text-3xl font-bold text-gray-900">{stats.totalTickets}</p>
                 </div>
-                <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center">
-                  <Ticket className="w-6 h-6 text-primary-600" />
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0 ml-2">
+                  <Ticket className="w-5 h-5 sm:w-6 sm:h-6 text-primary-600" />
                 </div>
               </div>
             </CardContent>

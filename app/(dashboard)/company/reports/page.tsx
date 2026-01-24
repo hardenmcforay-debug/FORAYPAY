@@ -364,8 +364,9 @@ export default function ReportsPage() {
           <CardContent>
             {filteredTransactions.length > 0 ? (
               <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
+                <div className="table-wrapper">
+                  <table className="w-full min-w-full">
+                    <thead>
                     <tr className="border-b border-gray-200">
                       <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Date</th>
                       <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Route</th>
@@ -398,8 +399,9 @@ export default function ReportsPage() {
                         </td>
                       </tr>
                     ))}
-                  </tbody>
-                </table>
+                    </tbody>
+                  </table>
+                </div>
               </div>
             ) : (
               <p className="text-gray-600 text-center py-8">No transactions found for the selected period</p>

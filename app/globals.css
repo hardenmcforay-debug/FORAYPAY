@@ -23,6 +23,26 @@ body {
   font-family: 'Inter', system-ui, sans-serif;
 }
 
+/* Responsive utilities */
+@media (max-width: 640px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* Responsive table wrapper */
+.table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 768px) {
+  .table-wrapper table {
+    min-width: 600px;
+  }
+}
+
 body {
   color: rgb(var(--foreground-rgb));
   background: #f9fafb;

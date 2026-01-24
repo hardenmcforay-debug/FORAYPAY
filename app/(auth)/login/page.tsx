@@ -202,9 +202,9 @@ export default function LoginPage() {
       <header className="border-b bg-white sticky top-0 z-50">
       </header>
 
-      <div className="flex items-center justify-center min-h-[calc(100vh-73px)] px-4 py-12">
+      <div className="flex items-center justify-center min-h-[calc(100vh-73px)] px-4 sm:px-6 py-8 sm:py-12">
         <div className="w-full max-w-7xl">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             {/* Left Side - Picture Space */}
             <div className="hidden lg:block -mt-[450px]">
               <div className="w-full h-full min-h-[300px] max-h-[400px] overflow-hidden bg-white">
@@ -241,10 +241,10 @@ export default function LoginPage() {
                     <span className="text-success-600">Pay</span>
                   </span>
                 </div>
-                <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-3">
                   Welcome Back
                 </h1>
-                <p className="text-lg text-gray-600">
+                <p className="text-base sm:text-lg text-gray-600">
                   Sign in to access your dashboard
                 </p>
               </div>
@@ -254,7 +254,7 @@ export default function LoginPage() {
             <label className="block text-sm font-semibold text-gray-900 mb-3 text-center">
               Select your role
             </label>
-            <div className="flex justify-center items-center gap-3 max-w-xl mx-auto">
+            <div className="flex flex-col sm:flex-row justify-center items-center gap-3 max-w-xl mx-auto">
               {roles.map((role) => {
                 const Icon = role.icon
                 const isSelected = selectedRole === role.id

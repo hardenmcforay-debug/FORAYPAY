@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { LogOut, User } from 'lucide-react'
+import { LogOut, User, Menu, X } from 'lucide-react'
 import { createSupabaseClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import Button from '@/components/ui/button'
@@ -10,9 +10,11 @@ import { getLoginPath } from '@/lib/auth-client'
 interface HeaderProps {
   userEmail?: string
   userName?: string
+  onMenuToggle?: () => void
+  isMenuOpen?: boolean
 }
 
-export default function Header({ userEmail: propUserEmail, userName }: HeaderProps) {
+export default function Header({ userEmail: propUserEmail, userName, onMenuToggle, isMenuOpen }: HeaderProps) {
   const router = useRouter()
   const supabase = createSupabaseClient()
   const [userEmail, setUserEmail] = useState<string>(propUserEmail || '')
@@ -63,26 +65,40 @@ export default function Header({ userEmail: propUserEmail, userName }: HeaderPro
   }
 
   return (
-    <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6">
-      <div className="flex items-center gap-4">
-        <h1 className="text-lg font-semibold text-gray-900">
+    <header className="h-14 sm:h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 sm:px-6 lg:pl-6">
+      <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
+        {/* Hamburger Menu Button - Only on mobile/tablet */}
+        {onMenuToggle && (
+          <button
+            onClick={onMenuToggle}
+            className="lg:hidden p-2 -ml-2 hover:bg-gray-100 rounded-lg transition-colors"
+            aria-label="Toggle menu"
+          >
+            {isMenuOpen ? (
+              <X className="w-5 h-5 text-gray-700" />
+            ) : (
+              <Menu className="w-5 h-5 text-gray-700" />
+            )}
+          </button>
+        )}
+        <h1 className="text-base sm:text-lg font-semibold text-gray-900 break-words min-w-0">
           {userName || 'Dashboard'}
         </h1>
       </div>
       
-      <div className="flex items-center gap-4">
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <User className="w-4 h-4" />
-          <span>{userEmail}</span>
+      <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+        <div className="hidden sm:flex items-center gap-2 text-sm text-gray-600">
+          <User className="w-4 h-4 flex-shrink-0" />
+          <span className="truncate max-w-[150px] lg:max-w-none">{userEmail}</span>
         </div>
         <Button
           variant="ghost"
           size="sm"
           onClick={handleLogout}
-          className="flex items-center gap-2"
+          className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm"
         >
           <LogOut className="w-4 h-4" />
-          Logout
+          <span className="hidden sm:inline">Logout</span>
         </Button>
       </div>
     </header>
