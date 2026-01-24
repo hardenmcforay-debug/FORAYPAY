@@ -7,7 +7,7 @@ import Input from '@/components/ui/input'
 import Button from '@/components/ui/button'
 import { getDashboardPath } from '@/lib/auth-client'
 import Image from 'next/image'
-import { Shield, Lock, Mail, Ban, AlertTriangle } from 'lucide-react'
+import { Shield, Lock, Mail, Ban, AlertTriangle, MessageCircle, Phone } from 'lucide-react'
 import { UserRole } from '@/types/database'
 import { getImageUrl } from '@/lib/supabase/storage'
 
@@ -122,7 +122,42 @@ export default function AdminLoginPage() {
       <header className="border-b bg-white sticky top-0 z-50">
       </header>
 
-      <div className="flex items-center justify-center min-h-[calc(100vh-73px)] px-4 sm:px-6 py-8 sm:py-12">
+      <div className="flex items-center justify-center min-h-[calc(100vh-73px)] px-4 sm:px-6 py-8 sm:py-12 relative">
+        {/* Contact Us Section - Top Left */}
+        <div className="absolute top-2 left-2 sm:top-4 sm:left-4 md:top-6 md:left-6 lg:top-[420px] lg:left-6 z-10 max-w-[calc(100vw-1rem)] sm:max-w-none">
+          <div className="bg-white rounded-lg shadow-lg border border-gray-200 px-1.5 py-1 sm:px-3 sm:py-2 md:p-4 max-w-[140px] sm:max-w-[200px] md:max-w-[240px] lg:max-w-[260px] w-full">
+            <h3 className="text-[9px] sm:text-[11px] md:text-sm font-semibold text-gray-900 mb-0.5 sm:mb-2 md:mb-3 flex items-center gap-0.5 sm:gap-1.5 md:gap-2">
+              <MessageCircle className="w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-4 md:h-4 text-primary-600 flex-shrink-0" />
+              <span className="whitespace-nowrap">Contact Us</span>
+            </h3>
+            <p className="text-[8px] sm:text-[9px] md:text-xs text-gray-600 mb-0.5 sm:mb-1.5 md:mb-3 leading-[1.15] sm:leading-tight md:leading-relaxed">
+              If you experience any issues or have suggestions for improvements, please contact us.
+            </p>
+            <div className="space-y-0.5 sm:space-y-1 md:space-y-2">
+              <a
+                href="https://wa.me/23277364962"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 sm:gap-1.5 md:gap-2 text-[9px] sm:text-[10px] md:text-sm text-gray-700 hover:text-success-600 transition-colors group"
+              >
+                <div className="w-4 h-4 sm:w-6 sm:h-6 md:w-8 md:h-8 bg-success-100 rounded-lg flex items-center justify-center group-hover:bg-success-200 transition-colors flex-shrink-0">
+                  <Phone className="w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 text-success-600" />
+                </div>
+                <span className="font-medium text-[9px] sm:text-[10px] md:text-sm">WhatsApp</span>
+              </a>
+              <a
+                href="mailto:tiktokcforay@gmail.com"
+                className="flex items-center gap-1 sm:gap-1.5 md:gap-2 text-[9px] sm:text-[10px] md:text-sm text-gray-700 hover:text-primary-600 transition-colors group"
+              >
+                <div className="w-4 h-4 sm:w-6 sm:h-6 md:w-8 md:h-8 bg-primary-100 rounded-lg flex items-center justify-center group-hover:bg-primary-200 transition-colors flex-shrink-0">
+                  <Mail className="w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 text-primary-600" />
+                </div>
+                <span className="font-medium break-all text-[8px] sm:text-[9px] md:text-sm">tiktokcforay@gmail.com</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
         <div className="w-full max-w-7xl">
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             {/* Left Side - Picture Space */}

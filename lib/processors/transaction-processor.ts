@@ -7,8 +7,7 @@
 
 import { getSupabasePool } from '@/lib/supabase/pool'
 import { getAuditLogBatcher } from '@/lib/queue/audit-log-batcher'
-import { initiateInternalTransfer } from '@/lib/monime/transfer'
-import { getMoniMeCircuitBreaker } from '@/lib/utils/circuit-breaker'
+import { getTransferQueue } from '@/lib/queue/transfer-queue'
 import { calculateCommission, calculateNetAmount } from '@/lib/utils'
 import { QueuedTransaction } from '@/lib/queue/transaction-queue'
 import { createTicket } from '@/lib/processors/ticket-creator'
@@ -153,64 +152,37 @@ export async function processTransaction(
       },
     })
 
-    // 8. Process commission transfer asynchronously (non-blocking)
+    // 8. Queue commission transfer for async processing (non-blocking)
     if (commission > 0 && company.monime_account_id) {
       const platformAccountId = process.env.MONIME_PLATFORM_ACCOUNT_ID
 
       if (platformAccountId) {
-        // Use circuit breaker for external API call
-        circuitBreaker
-          .execute(() =>
-            initiateInternalTransfer(
-              company.monime_account_id!,
-              platformAccountId,
-              commission,
-              ticket.id,
-              `Commission for ticket ${ticket.id} (Transaction: ${payload.transaction_id})`
-            )
-          )
-          .then((transferResult) => {
-            if (transferResult.success) {
-              auditBatcher.add({
-                company_id: companyId,
-                action: 'commission_transfer_success',
-                details: {
-                  ticket_id: ticketId,
-                  transaction_id: payload.transaction_id,
-                  transfer_id: transferResult.transfer_id,
-                  commission: commission,
-                  from_account: company.monime_account_id,
-                  to_account: platformAccountId,
-                },
-              })
-            } else {
-              auditBatcher.add({
-                company_id: companyId,
-                action: 'commission_transfer_failed',
-                details: {
-                  ticket_id: ticketId,
-                  transaction_id: payload.transaction_id,
-                  commission: commission,
-                  error: transferResult.error,
-                  from_account: company.monime_account_id,
-                  to_account: platformAccountId,
-                },
-              })
-            }
+        try {
+          const transferQueue = getTransferQueue()
+          transferQueue.enqueue({
+            ticket_id: ticketId,
+            transaction_id: payload.transaction_id,
+            company_id: companyId,
+            from_account_id: company.monime_account_id,
+            to_account_id: platformAccountId,
+            amount: commission,
+            reference: ticketId,
+            description: `Commission for ticket ${ticketId} (Transaction: ${payload.transaction_id})`,
           })
-          .catch((error) => {
-            console.error('Transfer processing error:', error)
-            auditBatcher.add({
-              company_id: companyId,
-              action: 'commission_transfer_failed',
-              details: {
-                ticket_id: ticketId,
-                transaction_id: payload.transaction_id,
-                commission: commission,
-                error: error.message,
-              },
-            })
+        } catch (error: any) {
+          // If queue not initialized, log error but don't fail transaction
+          console.error('Failed to queue transfer:', error)
+          auditBatcher.add({
+            company_id: companyId,
+            action: 'commission_transfer_queue_failed',
+            details: {
+              ticket_id: ticketId,
+              transaction_id: payload.transaction_id,
+              commission: commission,
+              error: error.message || 'Transfer queue not initialized',
+            },
           })
+        }
       }
     }
 

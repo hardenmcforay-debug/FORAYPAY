@@ -2,7 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { MoniMeWebhookPayload } from '@/types/database'
 import { getSupabasePool } from '@/lib/supabase/pool'
 import { getTransactionQueue } from '@/lib/queue/transaction-queue'
+import { getTransferQueue } from '@/lib/queue/transfer-queue'
 import { processTransaction } from '@/lib/processors/transaction-processor'
+import { processTransferBatch } from '@/lib/processors/transfer-processor'
 import { getWebhookRateLimiter } from '@/lib/utils/rate-limiter'
 import { verifyMoniMeWebhook } from '@/lib/security/webhook-verifier'
 import { validateAmount, validatePhone, validateOTP } from '@/lib/security/input-validator'
@@ -103,7 +105,17 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    // 6. Queue transaction for async processing
+    // 6. Initialize transfer queue (for commission transfers)
+    getTransferQueue({
+      processBatch: async (batch) => {
+        // Process transfers in parallel batches
+        await processTransferBatch(batch)
+      },
+      batchSize: 100, // Process 100 transfers per batch
+      flushInterval: 2000, // Flush every 2 seconds
+    })
+
+    // 7. Queue transaction for async processing
     const transactionQueue = getTransactionQueue({
       processBatch: async (batch) => {
         // Process batch in parallel
@@ -119,7 +131,7 @@ export async function POST(request: NextRequest) {
       payload: payload,
     })
 
-    // 7. Return immediately (transaction will be processed asynchronously)
+    // 8. Return immediately (transaction will be processed asynchronously)
     const processingTime = Date.now() - startTime
     
     return NextResponse.json({
