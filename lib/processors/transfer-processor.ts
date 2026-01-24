@@ -49,20 +49,21 @@ export async function processTransfer(
       .eq('transaction_id', queuedTransfer.transaction_id)
       .single()
 
-    if (existingTransfer) {
+    const existing = existingTransfer as any
+    if (existing) {
       // Transfer already exists
-      if (existingTransfer.status === 'completed') {
+      if (existing.status === 'completed') {
         return {
           queuedTransfer,
           result: {
             success: true,
-            transfer_id: existingTransfer.transfer_id || undefined,
+            transfer_id: existing.transfer_id || undefined,
           },
         }
       }
 
       // If pending or failed, we can retry
-      if (existingTransfer.status === 'pending' || existingTransfer.status === 'failed') {
+      if (existing.status === 'pending' || existing.status === 'failed') {
         // Check if we should retry based on retry count
         if (queuedTransfer.retries >= 5) {
           return {
@@ -95,16 +96,18 @@ export async function processTransfer(
 
     if (existingTransfer) {
       // Update existing record
-      const { data: updated, error: updateError } = await supabase
-        .from('commission_transfers')
+      const updateQuery = ((supabase
+        .from('commission_transfers') as any)
         .update({
           ...transferRecord,
           retry_count: queuedTransfer.retries,
           updated_at: new Date().toISOString(),
         })
-        .eq('id', existingTransfer.id)
+        .eq('id', existing.id)
         .select('id')
-        .single()
+        .single())
+      
+      const { data: updated, error: updateError } = await updateQuery
 
       if (updateError) {
         throw new Error(`Failed to update transfer record: ${updateError.message}`)
@@ -115,7 +118,7 @@ export async function processTransfer(
       // Create new record
       const { data: created, error: createError } = await supabase
         .from('commission_transfers')
-        .insert(transferRecord)
+        .insert(transferRecord as any)
         .select('id')
         .single()
 
@@ -123,7 +126,7 @@ export async function processTransfer(
         throw new Error(`Failed to create transfer record: ${createError.message}`)
       }
 
-      transferDbId = created.id
+      transferDbId = (created as any).id
     }
 
     // 3. Execute transfer using circuit breaker
@@ -139,15 +142,15 @@ export async function processTransfer(
 
     // 4. Update transfer record with result
     if (transferResult.success) {
-      await supabase
-        .from('commission_transfers')
+      await ((supabase
+        .from('commission_transfers') as any)
         .update({
           status: 'completed',
           transfer_id: transferResult.transfer_id,
           completed_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         })
-        .eq('id', transferDbId)
+        .eq('id', transferDbId))
 
       // Audit log
       auditBatcher.add({
@@ -177,15 +180,15 @@ export async function processTransfer(
                          transferResult.error?.includes('network') ||
                          queuedTransfer.retries < 5
 
-      await supabase
-        .from('commission_transfers')
+      await ((supabase
+        .from('commission_transfers') as any)
         .update({
           status: 'failed',
           error_message: transferResult.error,
           retry_count: queuedTransfer.retries + 1,
           updated_at: new Date().toISOString(),
         })
-        .eq('id', transferDbId)
+        .eq('id', transferDbId))
 
       // Audit log
       auditBatcher.add({
@@ -224,15 +227,15 @@ export async function processTransfer(
         .single()
 
       if (existingTransfer) {
-        await supabase
-          .from('commission_transfers')
+        await ((supabase
+          .from('commission_transfers') as any)
           .update({
             status: 'failed',
             error_message: error.message || 'Unknown error',
             retry_count: queuedTransfer.retries + 1,
             updated_at: new Date().toISOString(),
           })
-          .eq('id', existingTransfer.id)
+          .eq('id', (existingTransfer as any).id))
       }
     } catch (dbError) {
       console.error('Failed to update transfer record:', dbError)

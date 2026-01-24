@@ -90,13 +90,14 @@ export async function POST(request: NextRequest) {
 
     // 5. Quick idempotency check (using connection pool)
     const supabase = getSupabasePool().getAdminClient()
-    const { data: existingTicket } = await supabase
+    const ticketCheck = await supabase
       .from('tickets')
       .select('id')
       .eq('monime_transaction_id', payload.transaction_id)
-      .single()
+      .maybeSingle()
 
-    if (existingTicket) {
+    if (ticketCheck.data && !ticketCheck.error) {
+      const existingTicket = ticketCheck.data as { id: string }
       // Already processed - return immediately
       return NextResponse.json({
         success: true,

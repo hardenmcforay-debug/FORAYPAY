@@ -8,7 +8,7 @@
 import { getSupabasePool } from '@/lib/supabase/pool'
 import { calculateCommission, calculateNetAmount } from '@/lib/utils'
 
-interface TicketCreationData {
+export interface TicketCreationData {
   company_id: string
   route_id: string
   passenger_phone: string
@@ -48,8 +48,9 @@ export async function createTicket(
       .single()
 
     if (existingTicket) {
+      const ticket = existingTicket as { id: string }
       return {
-        ticket_id: existingTicket.id,
+        ticket_id: ticket.id,
         transaction_id: data.monime_transaction_id,
         success: true,
       }
@@ -70,7 +71,7 @@ export async function createTicket(
         monime_transaction_id: data.monime_transaction_id,
         monime_otp: data.monime_otp,
         status: 'pending',
-      })
+      } as any)
       .select('id')
       .single()
 
@@ -84,22 +85,23 @@ export async function createTicket(
           .eq('monime_transaction_id', data.monime_transaction_id)
           .single()
 
-        if (existing) {
-          return {
-            ticket_id: existing.id,
-            transaction_id: data.monime_transaction_id,
-            success: true,
-          }
+      if (existing) {
+        const ticket = existing as { id: string }
+        return {
+          ticket_id: ticket.id,
+          transaction_id: data.monime_transaction_id,
+          success: true,
         }
+      }
       }
 
       throw new Error(`Ticket creation failed: ${ticketResult.error.message}`)
     }
 
-    const ticket = ticketResult.data
+    const ticket = ticketResult.data as { id: string }
 
     // 4. Create transaction record (non-blocking, can fail without affecting ticket)
-    supabase
+    Promise.resolve(supabase
       .from('transactions')
       .insert({
         company_id: data.company_id,
@@ -108,11 +110,11 @@ export async function createTicket(
         commission: commission,
         net_amount: netAmount,
         status: 'completed',
-      })
+      } as any))
       .then(() => {
         // Success - transaction created
       })
-      .catch((error) => {
+      .catch((error: any) => {
         // Log error but don't fail ticket creation
         console.error('Transaction creation failed (non-critical):', error)
       })
@@ -160,7 +162,7 @@ export async function createTicketsBatch(
       .in('monime_transaction_id', transactionIds)
 
     const existingMap = new Map(
-      existingTickets?.map(t => [t.monime_transaction_id, t.id]) || []
+      (existingTickets as any)?.map((t: any) => [t.monime_transaction_id, t.id]) || []
     )
 
     // Filter out already existing tickets
@@ -170,11 +172,11 @@ export async function createTicketsBatch(
 
     // Add existing tickets to successful results
     for (const ticket of tickets) {
-      const existingId = existingMap.get(ticket.monime_transaction_id)
+      const existingId = existingMap.get((ticket as any).monime_transaction_id)
       if (existingId) {
         results.successful.push({
-          ticket_id: existingId,
-          transaction_id: ticket.monime_transaction_id,
+          ticket_id: existingId as string,
+          transaction_id: (ticket as any).monime_transaction_id,
           success: true,
         })
       }
@@ -197,7 +199,7 @@ export async function createTicketsBatch(
     // 3. Bulk insert tickets (PostgreSQL handles this efficiently)
     const { data: createdTickets, error: insertError } = await supabase
       .from('tickets')
-      .insert(ticketInserts)
+      .insert(ticketInserts as any)
       .select('id, monime_transaction_id')
 
     if (insertError) {
@@ -218,7 +220,7 @@ export async function createTicketsBatch(
 
     // 4. Create transaction records in batch
     if (createdTickets && createdTickets.length > 0) {
-      const transactionInserts = createdTickets.map((ticket, index) => {
+      const transactionInserts = (createdTickets as any[]).map((ticket: any, index: number) => {
         const originalTicket = newTickets[index]
         const commission = calculateCommission(originalTicket.amount, originalTicket.commission_rate)
         const netAmount = calculateNetAmount(originalTicket.amount, commission)
@@ -234,18 +236,18 @@ export async function createTicketsBatch(
       })
 
       // Insert transactions (non-blocking)
-      supabase
+      Promise.resolve(supabase
         .from('transactions')
-        .insert(transactionInserts)
+        .insert(transactionInserts as any))
         .then(() => {
           console.log(`Created ${transactionInserts.length} transaction records`)
         })
-        .catch((error) => {
+        .catch((error: any) => {
           console.error('Batch transaction creation failed (non-critical):', error)
         })
 
       // Add successful results
-      for (const ticket of createdTickets) {
+      for (const ticket of (createdTickets as any[])) {
         results.successful.push({
           ticket_id: ticket.id,
           transaction_id: ticket.monime_transaction_id,

@@ -33,7 +33,6 @@ export async function processTransaction(
   const payload: TransactionPayload = queuedTransaction.payload
   const supabase = getSupabasePool().getAdminClient()
   const auditBatcher = getAuditLogBatcher()
-  const circuitBreaker = getMoniMeCircuitBreaker()
 
   try {
     // 1. Check idempotency (ticket already exists)
@@ -44,8 +43,9 @@ export async function processTransaction(
       .single()
 
     if (existingTicket) {
+      const ticket = existingTicket as { id: string }
       return {
-        ticket_id: existingTicket.id,
+        ticket_id: ticket.id,
         transaction_id: payload.transaction_id,
         success: true,
       }
@@ -63,18 +63,20 @@ export async function processTransaction(
       throw new Error('Invalid or expired payment code')
     }
 
-    if (paymentCode.used_tickets >= paymentCode.total_tickets) {
+    const code = paymentCode as any
+
+    if (code.used_tickets >= code.total_tickets) {
       // Mark as expired
-      await supabase
-        .from('payment_codes')
+      await ((supabase
+        .from('payment_codes') as any)
         .update({ status: 'expired' })
-        .eq('id', paymentCode.id)
+        .eq('id', code.id))
 
       throw new Error('Payment code has reached its usage limit')
     }
 
-    const companyId = paymentCode.company_id
-    const routeId = paymentCode.route_id
+    const companyId = code.company_id
+    const routeId = code.route_id
 
     if (!companyId || !routeId) {
       throw new Error('Invalid payment code configuration')
@@ -95,16 +97,16 @@ export async function processTransaction(
         .single(),
     ])
 
-    if (!companyResult.data) {
+    const company = (companyResult as any).data
+    const route = (routeResult as any).data
+
+    if (!company) {
       throw new Error('Company not found')
     }
 
-    if (!routeResult.data) {
+    if (!route) {
       throw new Error('Route not found')
     }
-
-    const company = companyResult.data
-    const route = routeResult.data
 
     // 4. Calculate commission
     const commission = calculateCommission(payload.amount, company.commission_rate)
@@ -128,14 +130,14 @@ export async function processTransaction(
     const ticketId = ticketResult.ticket_id
 
     // 6. Update payment code usage (optimistic update)
-    const newUsedCount = paymentCode.used_tickets + 1
-    await supabase
-      .from('payment_codes')
+    const newUsedCount = code.used_tickets + 1
+    await ((supabase
+      .from('payment_codes') as any)
       .update({
         used_tickets: newUsedCount,
-        status: newUsedCount >= paymentCode.total_tickets ? 'expired' : 'active',
+        status: newUsedCount >= code.total_tickets ? 'expired' : 'active',
       })
-      .eq('id', paymentCode.id)
+      .eq('id', code.id))
 
     // 7. Batch audit log (non-blocking)
     auditBatcher.add({

@@ -42,8 +42,8 @@ class SupabaseConnectionPool {
           persistSession: false,
         },
         db: {
-          schema: 'public',
-        },
+          schema: 'public' as any,
+        } as any,
         // Connection pooling optimizations
         global: {
           headers: {

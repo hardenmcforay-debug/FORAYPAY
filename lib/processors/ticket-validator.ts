@@ -56,7 +56,8 @@ async function getOperatorData(
     .eq('user_id', userId)
     .single()
 
-  if (!operator || !operator.company_id) {
+  const operatorData = operator as any
+  if (!operatorData || !operatorData.company_id) {
     return null
   }
 
@@ -64,22 +65,22 @@ async function getOperatorData(
   const { data: company } = await supabase
     .from('companies')
     .select('status')
-    .eq('id', operator.company_id)
+    .eq('id', operatorData.company_id)
     .single()
 
-  const operatorData: OperatorCache = {
-    id: operator.id,
-    company_id: operator.company_id,
-    assigned_routes: operator.assigned_routes,
-    status: operator.status,
-    company_status: company?.status || null,
+  const operatorCacheData: OperatorCache = {
+    id: operatorData.id,
+    company_id: operatorData.company_id,
+    assigned_routes: operatorData.assigned_routes,
+    status: operatorData.status,
+    company_status: (company as any)?.status || null,
     cached_at: Date.now(),
   }
 
   // Cache the result
-  operatorCache.set(userId, operatorData)
+  operatorCache.set(userId, operatorCacheData)
 
-  return operatorData
+  return operatorCacheData
 }
 
 /**
@@ -118,7 +119,7 @@ export async function validateTicket(
         .eq('company_id', request.company_id)
         .single()
 
-      if (existingTicket && existingTicket.status === 'used') {
+      if (existingTicket && (existingTicket as any).status === 'used') {
         return {
           success: false,
           error: 'Ticket already validated',
@@ -134,18 +135,20 @@ export async function validateTicket(
 
     // 3. Optimistic update with status check (prevents race conditions)
     // This ensures only one validation succeeds even with concurrent requests
-    const { data: updatedTicket, error: updateError } = await supabase
-      .from('tickets')
+    const updateQuery = (supabase
+      .from('tickets') as any)
       .update({
         status: 'used',
         used_at: new Date().toISOString(),
         validated_by: request.operator_id,
       })
-      .eq('id', ticket.id)
+      .eq('id', (ticket as any).id)
       .eq('status', 'pending') // CRITICAL: Only update if still pending
       .eq('company_id', request.company_id) // Security: Ensure company matches
       .select('id')
       .single()
+    
+    const { data: updatedTicket, error: updateError } = await updateQuery
 
     if (updateError || !updatedTicket) {
       // Ticket was already validated by another request (race condition)
@@ -162,7 +165,7 @@ export async function validateTicket(
       user_id: request.user_id,
       action: 'ticket_validated',
       details: {
-        ticket_id: ticket.id,
+        ticket_id: (ticket as any).id,
         otp: request.otp,
         operator_id: request.operator_id,
       },
@@ -170,7 +173,7 @@ export async function validateTicket(
 
     return {
       success: true,
-      ticket_id: ticket.id,
+      ticket_id: (ticket as any).id,
     }
   } catch (error: any) {
     console.error('Ticket validation error:', error)

@@ -32,8 +32,8 @@ class AuditLogBatcher {
         persistSession: false,
       },
       db: {
-        schema: 'public',
-      },
+        schema: 'public' as any,
+      } as any,
     })
 
     this.startFlushTimer()
@@ -66,7 +66,7 @@ class AuditLogBatcher {
       // Use batch insert for better performance
       const { error } = await this.supabase
         .from('audit_logs')
-        .insert(batchToInsert)
+        .insert(batchToInsert as any)
 
       if (error) {
         console.error('Audit log batch insert error:', error)
@@ -88,7 +88,7 @@ class AuditLogBatcher {
   private async retryIndividualInserts(entries: AuditLogEntry[]): Promise<void> {
     for (const entry of entries) {
       try {
-        await this.supabase.from('audit_logs').insert(entry)
+        await this.supabase.from('audit_logs').insert(entry as any)
       } catch (error) {
         console.error('Failed to insert audit log:', entry, error)
         // In production, send to dead letter queue or alerting system
