@@ -92,7 +92,7 @@ export default function Sidebar({ role, companyId, isMenuOpen = false, onMenuClo
       {/* Mobile Overlay */}
       {isMenuOpen && (
         <div
-          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
+          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-[45]"
           onClick={onMenuClose}
         />
       )}
@@ -100,7 +100,7 @@ export default function Sidebar({ role, companyId, isMenuOpen = false, onMenuClo
       {/* Sidebar */}
       <aside
         className={cn(
-          'fixed lg:sticky top-0 left-0 z-40 w-64 bg-white border-r border-gray-200 h-screen transition-transform duration-300 ease-in-out',
+          'fixed lg:sticky top-0 left-0 z-50 w-64 bg-white border-r border-gray-200 h-screen transition-transform duration-300 ease-in-out',
           'lg:translate-x-0',
           isMenuOpen ? 'translate-x-0' : '-translate-x-full'
         )}
@@ -126,7 +126,12 @@ export default function Sidebar({ role, companyId, isMenuOpen = false, onMenuClo
         
         <nav className="p-4 space-y-1 overflow-y-auto h-[calc(100vh-80px)]">
           {navItems.map((item) => {
-            const isActive = pathname === item.href || pathname.startsWith(item.href + '/')
+            // For base dashboard routes, only match exactly
+            // For other routes, match if pathname starts with the href
+            const isBaseRoute = item.href === '/operator' || item.href === '/company' || item.href === '/platform'
+            const isActive = isBaseRoute 
+              ? pathname === item.href
+              : pathname === item.href || pathname.startsWith(item.href + '/')
             return (
               <Link
                 key={item.href}

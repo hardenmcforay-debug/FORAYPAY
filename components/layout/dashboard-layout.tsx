@@ -34,6 +34,24 @@ export default function DashboardLayout({
     setIsMenuOpen(false)
   }
 
+  // Handle clicking on empty space to open menu (mobile only)
+  const handleMainClick = (e: React.MouseEvent<HTMLElement>) => {
+    // Only on mobile (lg breakpoint and below)
+    // Only if menu is closed
+    if (typeof window !== 'undefined' && window.innerWidth < 1024 && !isMenuOpen) {
+      const target = e.target as HTMLElement
+      
+      // Don't open menu if clicking on interactive elements
+      const isInteractive = target.closest('button, a, input, select, textarea, label, [role="button"], [onClick]')
+      
+      if (!isInteractive) {
+        // Open menu when clicking on empty space
+        toggleMenu()
+        e.stopPropagation()
+      }
+    }
+  }
+
   return (
     <div className="flex h-screen bg-gray-50">
       <Sidebar role={role} companyId={companyId} isMenuOpen={isMenuOpen} onMenuClose={closeMenu} />
@@ -44,7 +62,11 @@ export default function DashboardLayout({
           onMenuToggle={toggleMenu}
           isMenuOpen={isMenuOpen}
         />
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6">
+        <main 
+          className="flex-1 overflow-y-auto p-4 sm:p-6 lg:cursor-default"
+          onClick={handleMainClick}
+          style={{ cursor: typeof window !== 'undefined' && window.innerWidth < 1024 && !isMenuOpen ? 'pointer' : 'default' }}
+        >
           <div className="max-w-7xl mx-auto w-full">
             {children}
           </div>

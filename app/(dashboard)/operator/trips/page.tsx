@@ -6,7 +6,7 @@ import DashboardLayout from '@/components/layout/dashboard-layout'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import Button from '@/components/ui/button'
-import { TrendingUp, Calendar, DollarSign, Ticket, Filter, Loader2 } from 'lucide-react'
+import { TrendingUp, Calendar, DollarSign, Ticket, Filter, Loader2, Download } from 'lucide-react'
 import { formatDate, formatCurrency } from '@/lib/utils'
 
 export default function TripsPage() {
@@ -262,6 +262,100 @@ export default function TripsPage() {
     setFilteredTickets(filtered)
   }, [filter, recentTickets])
 
+  const handleExport = () => {
+    try {
+      console.log('Export button clicked')
+      console.log('Filtered tickets:', filteredTickets.length)
+      
+      if (!filteredTickets || filteredTickets.length === 0) {
+        alert('No tickets to export. Please select a filter that has tickets.')
+        return
+      }
+
+      // Helper function to escape CSV values
+      const escapeCSV = (value: any): string => {
+        if (value === null || value === undefined) return ''
+        const stringValue = String(value)
+        // If value contains comma, quote, or newline, wrap in quotes and escape quotes
+        if (stringValue.includes(',') || stringValue.includes('"') || stringValue.includes('\n')) {
+          return `"${stringValue.replace(/"/g, '""')}"`
+        }
+        return stringValue
+      }
+
+      // Create summary statistics section
+      const summaryHeaders = ['Period', 'Validations', 'Revenue']
+      const summaryRows = [
+        ['Today', (todayCount || 0).toString(), formatCurrency(todayRevenue || 0)],
+        ['This Week', (weekCount || 0).toString(), formatCurrency(weekRevenue || 0)],
+        ['This Month', (monthCount || 0).toString(), formatCurrency(monthRevenue || 0)],
+        ['Total', (totalCount || 0).toString(), formatCurrency(totalRevenue || 0)],
+      ]
+
+      // Create ticket details section
+      const ticketHeaders = ['Date', 'Route', 'Origin → Destination', 'Passenger Phone', 'Fare', 'Ticket Code']
+      const ticketRows = filteredTickets.map((ticket: any) => {
+        const route = ticket.routes || {}
+        return [
+          ticket.used_at ? formatDate(ticket.used_at) : 'N/A',
+          route.name || 'N/A',
+          `${route.origin || 'N/A'} → ${route.destination || 'N/A'}`,
+          ticket.passenger_phone || 'N/A',
+          formatCurrency(route.fare || 0),
+          ticket.code || ticket.id || 'N/A',
+        ]
+      })
+
+      // Combine all sections
+      const csvRows = [
+        'Trip Dashboard Report',
+        `Filter: ${filter === 'all' ? 'All Time' : filter.charAt(0).toUpperCase() + filter.slice(1)}`,
+        `Generated: ${new Date().toLocaleString()}`,
+        '',
+        '=== SUMMARY STATISTICS ===',
+        summaryHeaders.map(escapeCSV).join(','),
+        ...summaryRows.map(row => row.map(escapeCSV).join(',')),
+        '',
+        '=== TICKET DETAILS ===',
+        ticketHeaders.map(escapeCSV).join(','),
+        ...ticketRows.map(row => row.map(escapeCSV).join(','))
+      ]
+
+      // Add BOM for Excel compatibility
+      const BOM = '\uFEFF'
+      const csvContent = BOM + csvRows.join('\n')
+
+      console.log('CSV content length:', csvContent.length)
+
+      // Create and download file
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+      const link = document.createElement('a')
+      const url = URL.createObjectURL(blob)
+      link.href = url
+      const dateStr = new Date().toISOString().split('T')[0]
+      const filterStr = filter === 'all' ? 'all' : filter
+      link.download = `trip-dashboard-${filterStr}-${dateStr}.csv`
+      
+      // Append to body and trigger download
+      document.body.appendChild(link)
+      link.click()
+      
+      // Cleanup
+      setTimeout(() => {
+        if (document.body.contains(link)) {
+          document.body.removeChild(link)
+        }
+        URL.revokeObjectURL(url)
+      }, 200)
+      
+      console.log('Export completed successfully')
+    } catch (error: any) {
+      console.error('Error exporting CSV:', error)
+      console.error('Error details:', error.message, error.stack)
+      alert(`Failed to export CSV: ${error.message || 'Unknown error'}. Please check the console for details.`)
+    }
+  }
+
   if (fetching) {
     return (
       <DashboardLayout
@@ -286,9 +380,21 @@ export default function TripsPage() {
       userEmail={userEmail}
     >
       <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Trip Dashboard</h1>
-          <p className="text-gray-600 mt-2">View your validation activity and trip statistics</p>
+        <div className="flex items-center justify-between flex-col sm:flex-row gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Trip Dashboard</h1>
+            <p className="text-gray-600 mt-2">View your validation activity and trip statistics</p>
+          </div>
+          <div className="flex items-center gap-3">
+            <Button
+              onClick={handleExport}
+              disabled={filteredTickets.length === 0}
+              className="flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white shadow-sm hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Download className="w-4 h-4" />
+              <span className="font-medium">Export CSV</span>
+            </Button>
+          </div>
         </div>
 
         {error && !operatorId && (
@@ -363,12 +469,12 @@ export default function TripsPage() {
         {/* Filter and Tickets List */}
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between flex-col sm:flex-row gap-4">
               <CardTitle className="flex items-center gap-2">
                 <Ticket className="w-5 h-5 text-primary-600" />
                 Trip History
               </CardTitle>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <Filter className="w-4 h-4 text-gray-500" />
                 <div className="flex gap-2">
                   <Button

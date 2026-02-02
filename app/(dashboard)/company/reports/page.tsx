@@ -153,33 +153,92 @@ export default function ReportsPage() {
   }
 
   const handleExport = () => {
-    // Create CSV content
-    const headers = ['Date', 'Route', 'Origin → Destination', 'Passenger', 'Amount', 'Commission', 'Net Revenue']
-    const rows = filteredTransactions.map((t: any) => [
-      formatDate(t.created_at),
-      t.tickets?.routes?.name || 'N/A',
-      `${t.tickets?.routes?.origin || 'N/A'} → ${t.tickets?.routes?.destination || 'N/A'}`,
-      t.tickets?.passenger_phone || 'N/A',
-      formatCurrency(t.amount),
-      formatCurrency(t.commission),
-      formatCurrency(t.net_amount),
-    ])
+    try {
+      if (filteredTransactions.length === 0) {
+        alert('No transactions to export')
+        return
+      }
 
-    const csvContent = [
-      headers.join(','),
-      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
-    ].join('\n')
+      // Helper function to escape CSV values
+      const escapeCSV = (value: any): string => {
+        if (value === null || value === undefined) return ''
+        const stringValue = String(value)
+        // If value contains comma, quote, or newline, wrap in quotes and escape quotes
+        if (stringValue.includes(',') || stringValue.includes('"') || stringValue.includes('\n')) {
+          return `"${stringValue.replace(/"/g, '""')}"`
+        }
+        return stringValue
+      }
 
-    // Create and download file
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
-    const link = document.createElement('a')
-    const url = URL.createObjectURL(blob)
-    link.setAttribute('href', url)
-    link.setAttribute('download', `transactions-${new Date().toISOString().split('T')[0]}.csv`)
-    link.style.visibility = 'hidden'
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
+      // Helper to get ticket data (handle both array and single object)
+      const getTicketData = (transaction: any) => {
+        const ticket = Array.isArray(transaction.tickets) 
+          ? transaction.tickets[0] 
+          : transaction.tickets
+        
+        if (!ticket) return { name: 'N/A', origin: 'N/A', destination: 'N/A', phone: 'N/A' }
+        
+        const route = Array.isArray(ticket.routes) 
+          ? ticket.routes[0] 
+          : ticket.routes
+        
+        return {
+          name: route?.name || 'N/A',
+          origin: route?.origin || 'N/A',
+          destination: route?.destination || 'N/A',
+          phone: ticket.passenger_phone || 'N/A'
+        }
+      }
+
+      // Create CSV headers
+      const headers = ['Date', 'Route', 'Origin → Destination', 'Passenger', 'Amount', 'Commission', 'Net Revenue']
+      
+      // Create CSV rows
+      const rows = filteredTransactions.map((t: any) => {
+        const ticketData = getTicketData(t)
+        return [
+          formatDate(t.created_at),
+          ticketData.name,
+          `${ticketData.origin} → ${ticketData.destination}`,
+          ticketData.phone,
+          t.amount ? formatCurrency(t.amount) : 'SLL 0',
+          t.commission ? formatCurrency(t.commission) : 'SLL 0',
+          t.net_amount ? formatCurrency(t.net_amount) : 'SLL 0',
+        ]
+      })
+
+      // Combine headers and rows
+      const csvRows = [
+        headers.map(escapeCSV).join(','),
+        ...rows.map(row => row.map(escapeCSV).join(','))
+      ]
+
+      // Add BOM for Excel compatibility
+      const BOM = '\uFEFF'
+      const csvContent = BOM + csvRows.join('\n')
+
+      // Create and download file
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+      const link = document.createElement('a')
+      const url = URL.createObjectURL(blob)
+      link.setAttribute('href', url)
+      const dateStr = new Date().toISOString().split('T')[0]
+      link.setAttribute('download', `transactions-${dateStr}.csv`)
+      link.style.visibility = 'hidden'
+      link.style.position = 'absolute'
+      link.style.left = '-9999px'
+      document.body.appendChild(link)
+      link.click()
+      
+      // Cleanup
+      setTimeout(() => {
+        document.body.removeChild(link)
+        URL.revokeObjectURL(url)
+      }, 100)
+    } catch (error) {
+      console.error('Error exporting CSV:', error)
+      alert('Failed to export CSV. Please try again.')
+    }
   }
 
   // Calculate summary statistics

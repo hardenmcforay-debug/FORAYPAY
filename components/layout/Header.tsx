@@ -65,28 +65,29 @@ export default function Header({ userEmail: propUserEmail, userName, onMenuToggl
   }
 
   return (
-    <header className="h-14 sm:h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 sm:px-6 lg:pl-6">
-      <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
+    <header className="h-14 sm:h-16 bg-white border-b border-gray-200 flex items-center justify-between px-3 sm:px-4 lg:px-6 z-30 relative">
+      <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
         {/* Hamburger Menu Button - Only on mobile/tablet */}
         {onMenuToggle && (
           <button
             onClick={onMenuToggle}
-            className="lg:hidden p-2 -ml-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="lg:hidden p-2 -ml-1 sm:-ml-2 hover:bg-gray-100 active:bg-gray-200 rounded-lg transition-colors flex-shrink-0 touch-manipulation"
             aria-label="Toggle menu"
+            type="button"
           >
             {isMenuOpen ? (
-              <X className="w-5 h-5 text-gray-700" />
+              <X className="w-5 h-5 sm:w-6 sm:h-6 text-gray-700" />
             ) : (
-              <Menu className="w-5 h-5 text-gray-700" />
+              <Menu className="w-5 h-5 sm:w-6 sm:h-6 text-gray-700" />
             )}
           </button>
         )}
-        <h1 className="text-base sm:text-lg font-semibold text-gray-900 break-words min-w-0">
+        <h1 className="text-sm sm:text-base lg:text-lg font-semibold text-gray-900 break-words min-w-0 truncate">
           {userName || 'Dashboard'}
         </h1>
       </div>
       
-      <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+      <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-4 flex-shrink-0">
         <div className="hidden sm:flex items-center gap-2 text-sm text-gray-600">
           <User className="w-4 h-4 flex-shrink-0" />
           <span className="truncate max-w-[150px] lg:max-w-none">{userEmail}</span>
@@ -95,7 +96,7 @@ export default function Header({ userEmail: propUserEmail, userName, onMenuToggl
           variant="ghost"
           size="sm"
           onClick={handleLogout}
-          className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm"
+          className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm p-1.5 sm:p-2"
         >
           <LogOut className="w-4 h-4" />
           <span className="hidden sm:inline">Logout</span>

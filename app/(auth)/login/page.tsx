@@ -289,7 +289,7 @@ export default function LoginPage() {
             <label className="block text-sm font-semibold text-gray-900 mb-3 text-center">
               Select your role
             </label>
-            <div className="flex flex-col sm:flex-row justify-center items-center gap-3 max-w-xl mx-auto">
+            <div className="flex flex-row justify-center items-center gap-2 sm:gap-3 lg:gap-2 max-w-xl mx-auto">
               {roles.map((role) => {
                 const Icon = role.icon
                 const isSelected = selectedRole === role.id
@@ -329,28 +329,28 @@ export default function LoginPage() {
                       setSuspendedCompanyName(null)
                     }}
                     className={cn(
-                      'relative bg-white rounded-lg border-2 p-3 flex flex-col items-center gap-2 transition-all cursor-pointer hover:shadow-md group',
+                      'relative bg-white rounded-lg border-2 p-2 sm:p-3 lg:p-2.5 flex flex-col items-center gap-1.5 sm:gap-2 lg:gap-1.5 transition-all cursor-pointer hover:shadow-md group flex-1 max-w-[140px] sm:max-w-none lg:max-w-[160px]',
                       isSelected 
                         ? `${colors.border} ${colors.bg} shadow-sm ring-2 ${colors.ring}` 
                         : 'border-gray-200 hover:border-gray-300'
                     )}
                   >
                     {isSelected && (
-                      <div className={cn('absolute top-2 right-2 w-5 h-5 rounded-full flex items-center justify-center shadow-sm', colors.selected)}>
-                        <Check className="w-3 h-3" />
+                      <div className={cn('absolute top-1.5 right-1.5 sm:top-2 sm:right-2 lg:top-1.5 lg:right-1.5 w-4 h-4 sm:w-5 sm:h-5 lg:w-4 lg:h-4 rounded-full flex items-center justify-center shadow-sm', colors.selected)}>
+                        <Check className="w-2.5 h-2.5 sm:w-3 sm:h-3 lg:w-2.5 lg:h-2.5" />
                       </div>
                     )}
                     <div className={cn(
-                      'w-10 h-10 rounded-lg flex items-center justify-center transition-transform group-hover:scale-105',
+                      'w-8 h-8 sm:w-10 sm:h-10 lg:w-9 lg:h-9 rounded-lg flex items-center justify-center transition-transform group-hover:scale-105',
                       isSelected ? colors.selected : colors.icon
                     )}>
-                      <Icon className="w-5 h-5" />
+                      <Icon className="w-4 h-4 sm:w-5 sm:h-5 lg:w-4 lg:h-4" />
                     </div>
                     <div className="text-center">
-                      <p className={cn('font-semibold text-sm mb-0.5', isSelected ? 'text-gray-900' : 'text-gray-900')}>
+                      <p className={cn('font-semibold text-xs sm:text-sm lg:text-xs mb-0.5', isSelected ? 'text-gray-900' : 'text-gray-900')}>
                         {role.name}
                       </p>
-                      <p className="text-xs text-gray-500">{role.description}</p>
+                      <p className="text-[10px] sm:text-xs lg:text-[10px] text-gray-500">{role.description}</p>
                     </div>
                   </button>
                 )
@@ -359,22 +359,22 @@ export default function LoginPage() {
               </div>
 
               {/* Login Form */}
-              <div className="max-w-md mx-auto">
-            <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-              <div className="bg-gradient-to-r from-primary-600 to-primary-700 p-6">
-                <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                  <Lock className="w-5 h-5" />
+              <div className="max-w-sm mx-auto">
+            <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+              <div className="bg-gradient-to-r from-primary-600 to-primary-700 p-4 sm:p-5">
+                <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+                  <Lock className="w-4 h-4 sm:w-5 sm:h-5" />
                   Sign In
                 </h2>
-                <p className="text-primary-100 text-sm mt-1">Enter your credentials to continue</p>
+                <p className="text-primary-100 text-xs sm:text-sm mt-0.5 sm:mt-1">Enter your credentials to continue</p>
               </div>
 
-              <form onSubmit={handleLogin} className="p-8 space-y-6">
+              <form onSubmit={handleLogin} className="p-5 sm:p-6 lg:p-5 space-y-4 sm:space-y-5">
                 {error && (
-                  <div className={`${isSuspended ? 'bg-warning-50 border-2 border-warning-300' : 'bg-error-50 border-2 border-error-200'} ${isSuspended ? 'text-warning-900' : 'text-error-700'} px-4 py-4 rounded-lg text-sm flex items-start gap-3`}>
-                    <div className={`w-6 h-6 rounded-full ${isSuspended ? 'bg-warning-200' : 'bg-error-200'} flex items-center justify-center flex-shrink-0 mt-0.5`}>
+                  <div className={`${isSuspended ? 'bg-warning-50 border-2 border-warning-300' : 'bg-error-50 border-2 border-error-200'} ${isSuspended ? 'text-warning-900' : 'text-error-700'} px-3 sm:px-4 py-3 sm:py-4 rounded-lg text-xs sm:text-sm flex items-start gap-2 sm:gap-3`}>
+                    <div className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full ${isSuspended ? 'bg-warning-200' : 'bg-error-200'} flex items-center justify-center flex-shrink-0 mt-0.5`}>
                       {isSuspended ? (
-                        <Ban className={`w-4 h-4 ${isSuspended ? 'text-warning-700' : 'text-error-700'}`} />
+                        <Ban className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${isSuspended ? 'text-warning-700' : 'text-error-700'}`} />
                       ) : (
                         <span className={`${isSuspended ? 'text-warning-700' : 'text-error-700'} text-xs font-bold`}>!</span>
                       )}
@@ -398,10 +398,10 @@ export default function LoginPage() {
                   </div>
                 )}
 
-                <div className="space-y-5">
+                <div className="space-y-4 sm:space-y-5">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                      <Mail className="w-4 h-4 text-gray-500" />
+                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2 flex items-center gap-1.5 sm:gap-2">
+                      <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-500" />
                       Email Address
                     </label>
                     <Input
@@ -410,13 +410,13 @@ export default function LoginPage() {
                       onChange={(e) => setEmail(e.target.value)}
                       required
                       placeholder="admin@company.com"
-                      className="w-full"
+                      className="w-full text-sm"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                      <Lock className="w-4 h-4 text-gray-500" />
+                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2 flex items-center gap-1.5 sm:gap-2">
+                      <Lock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-500" />
                       Password
                     </label>
                     <Input
@@ -425,20 +425,20 @@ export default function LoginPage() {
                       onChange={(e) => setPassword(e.target.value)}
                       required
                       placeholder="Enter your password"
-                      className="w-full"
+                      className="w-full text-sm"
                     />
                   </div>
                 </div>
 
                 <Button
                   type="submit"
-                  className="w-full"
-                  size="lg"
+                  className="w-full text-sm sm:text-base"
+                  size="sm"
                   disabled={loading || !selectedRole}
                 >
                   {loading ? (
                     <span className="flex items-center gap-2">
-                      <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <svg className="animate-spin h-4 w-4 sm:h-5 sm:w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
