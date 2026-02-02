@@ -7,10 +7,9 @@ const nextConfig = {
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 60,
-    // Security: Mitigate Image Optimizer DoS vulnerability (GHSA-9g9p-9gw9-jx7f)
+    // Security: Image Optimizer DoS vulnerability (GHSA-9g9p-9gw9-jx7f) fixed in Next.js 15.5.10+
     // Restrict remotePatterns to only trusted domains with specific paths
-    // Note: Next.js 14.x doesn't have built-in size limits, so we restrict domains strictly
-    // For full fix, upgrade to Next.js 15.5.10+ or 16.1.5+
+    // Note: Using Next.js 15.5.11 which includes the security fix
     remotePatterns: [
       {
         protocol: 'https',
@@ -26,9 +25,8 @@ const nextConfig = {
 }
 
 // Add Supabase storage to allowed image domains
-// Security: Only allow specific trusted domains with restricted paths to mitigate DoS
-// The Image Optimizer DoS vulnerability (GHSA-9g9p-9gw9-jx7f) affects Next.js 14.x
-// Full fix requires Next.js 15.5.10+ or 16.1.5+, but we mitigate by restricting domains
+// Security: Only allow specific trusted domains with restricted paths
+// Using Next.js 15.5.11 which includes the Image Optimizer DoS fix (GHSA-9g9p-9gw9-jx7f)
 const remotePatterns = [
   {
     protocol: 'https',
