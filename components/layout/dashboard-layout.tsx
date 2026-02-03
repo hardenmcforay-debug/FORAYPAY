@@ -1,8 +1,8 @@
 'use client'
 
 import { ReactNode, useState } from 'react'
-import Sidebar from './sidebar'
-import Header from './header'
+import Sidebar from '@/components/layout/sidebar'
+import Header from '@/components/layout/header'
 import { UserRole } from '@/types/database'
 import { useSuspensionCheck } from '@/hooks/use-suspension-check'
 
