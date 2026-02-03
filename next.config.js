@@ -5,6 +5,15 @@ const nextConfig = {
   experimental: {
     turbo: false,
   },
+  // Use webpack for better module resolution compatibility
+  webpack: (config, { isServer }) => {
+    // Ensure proper module resolution
+    config.resolve = {
+      ...config.resolve,
+      extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
+    }
+    return config
+  },
   images: {
     // Improve image quality
     formats: ['image/avif', 'image/webp'],
