@@ -25,9 +25,9 @@ export const securityHeaders = {
   'Content-Security-Policy': [
     "default-src 'self'",
     "script-src 'self' 'unsafe-eval' 'unsafe-inline'", // Next.js requires unsafe-eval and unsafe-inline
-    "style-src 'self' 'unsafe-inline'", // Next.js requires unsafe-inline for styles
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com", // Allow Google Fonts stylesheets
     "img-src 'self' data: https: blob:",
-    "font-src 'self' data:",
+    "font-src 'self' data: https://fonts.gstatic.com", // Allow Google Fonts font files
     "connect-src 'self' https://*.supabase.co https://*.supabase.in",
     "frame-ancestors 'none'",
     "base-uri 'self'",
