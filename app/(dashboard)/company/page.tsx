@@ -8,6 +8,9 @@ import Link from 'next/link'
 import Button from '@/components/ui/button'
 import RevenueChart from '@/components/analytics/revenue-chart'
 
+// Force dynamic rendering since this page uses cookies for authentication
+export const dynamic = 'force-dynamic'
+
 export default async function CompanyDashboard() {
   const user = await requireRole(['company_admin'])
   const supabase = createServerSupabaseClient()

@@ -2,25 +2,16 @@
 const nextConfig = {
   reactStrictMode: true,
   // Production optimizations
-  swcMinify: true,
   compress: true,
   poweredByHeader: false,
-  optimizeFonts: true,
   productionBrowserSourceMaps: false,
-  // Output standalone for better Vercel deployment
-  output: 'standalone',
-  // Disable Turbopack for production builds to ensure compatibility
+  // Configure Turbopack for Next.js 16 (default build system)
+  // Empty config allows Turbopack to work with webpack-style configs
   experimental: {
-    turbo: false,
-  },
-  // Use webpack for better module resolution compatibility
-  webpack: (config, { isServer }) => {
-    // Ensure proper module resolution
-    config.resolve = {
-      ...config.resolve,
-      extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
-    }
-    return config
+    turbopack: {
+      // Set root directory to prevent workspace root warnings
+      root: process.cwd(),
+    },
   },
   images: {
     // Improve image quality
