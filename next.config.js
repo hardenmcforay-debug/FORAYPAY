@@ -14,6 +14,9 @@ const nextConfig = {
     }
     return config
   },
+  // Optimize for production builds
+  swcMinify: true,
+  compress: true,
   images: {
     // Improve image quality
     formats: ['image/avif', 'image/webp'],
@@ -59,12 +62,12 @@ if (process.env.NEXT_PUBLIC_SUPABASE_URL) {
       // Restrict to only public storage paths - more secure than /**
       pathname: '/storage/v1/object/public/**',
     })
-    console.log('✓ Added Supabase storage domain to image config:', supabaseUrl.hostname)
   } catch (error) {
-    console.warn('⚠ Failed to parse NEXT_PUBLIC_SUPABASE_URL for image configuration:', error)
+    // Silently fail in production - environment variable will be validated at runtime
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('⚠ Failed to parse NEXT_PUBLIC_SUPABASE_URL for image configuration:', error)
+    }
   }
-} else {
-  console.warn('⚠ NEXT_PUBLIC_SUPABASE_URL not found in environment variables')
 }
 
 nextConfig.images.remotePatterns = remotePatterns
