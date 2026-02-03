@@ -1,18 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  // Production optimizations
+  // Minimal production config for maximum compatibility
   compress: true,
   poweredByHeader: false,
-  productionBrowserSourceMaps: false,
-  // Configure Turbopack for Next.js 16 (default build system)
-  // Empty config allows Turbopack to work with webpack-style configs
-  experimental: {
-    turbopack: {
-      // Set root directory to prevent workspace root warnings
-      root: process.cwd(),
-    },
-  },
   images: {
     // Improve image quality
     formats: ['image/avif', 'image/webp'],
