@@ -12,12 +12,22 @@ import RevenueChart from '@/components/analytics/revenue-chart'
 export const dynamic = 'force-dynamic'
 
 export default async function CompanyDashboard() {
-  const user = await requireRole(['company_admin'])
-  const supabase = createServerSupabaseClient()
+  try {
+    const user = await requireRole(['company_admin'])
+    const supabase = createServerSupabaseClient()
 
-  if (!user.company_id) {
-    return <div>No company assigned</div>
-  }
+    if (!user.company_id) {
+      return (
+        <div className="p-6">
+          <div className="bg-warning-50 border border-warning-200 rounded-lg p-4">
+            <h2 className="text-lg font-semibold text-warning-900 mb-2">No Company Assigned</h2>
+            <p className="text-warning-700">
+              Your account is not associated with a company. Please contact the platform administrator to assign you to a company.
+            </p>
+          </div>
+        </div>
+      )
+    }
 
   // Get company data
   const { data: company } = await supabase
@@ -532,5 +542,21 @@ export default async function CompanyDashboard() {
       </div>
     </DashboardLayout>
   )
+  } catch (error: any) {
+    console.error('Error in CompanyDashboard:', error)
+    return (
+      <div className="p-6">
+        <div className="bg-error-50 border border-error-200 rounded-lg p-4">
+          <h2 className="text-lg font-semibold text-error-900 mb-2">Authentication Error</h2>
+          <p className="text-error-700 mb-2">
+            {error?.message || 'Failed to load dashboard. Please try logging in again.'}
+          </p>
+          <p className="text-sm text-error-600">
+            If this problem persists, please contact the administrator.
+          </p>
+        </div>
+      </div>
+    )
+  }
 }
 
