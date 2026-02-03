@@ -98,8 +98,19 @@ export async function requireRole(allowedRoles: UserRole[]) {
   }
 
     return user
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error in requireRole:', error)
+    
+    // Provide more specific error information
+    const errorMessage = error?.message || 'Unknown error'
+    
+    // If it's an environment variable error, provide helpful message
+    if (errorMessage.includes('NEXT_PUBLIC_SUPABASE_URL') || 
+        errorMessage.includes('NEXT_PUBLIC_SUPABASE_ANON_KEY') ||
+        errorMessage.includes('not set')) {
+      console.error('Missing Supabase environment variables. Please configure them in Vercel.')
+    }
+    
     // If there's an error (e.g., missing env vars), redirect to login
     redirect('/login?error=auth_failed')
   }

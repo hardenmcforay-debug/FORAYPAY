@@ -43,15 +43,20 @@ export default function LoginPage() {
     checkUser()
   }, [router, supabase])
 
-  // Check for suspension message from URL
+  // Check for error messages from URL
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     const reason = params.get('reason')
     const message = params.get('message')
+    const error = params.get('error')
     
     if (reason === 'suspended' && message) {
       setIsSuspended(true)
       setError(decodeURIComponent(message))
+      // Clear URL parameters
+      router.replace('/login', { scroll: false })
+    } else if (error === 'auth_failed') {
+      setError('Authentication failed. This may be due to missing server configuration. Please contact the administrator or try again in a few moments.')
       // Clear URL parameters
       router.replace('/login', { scroll: false })
     }
