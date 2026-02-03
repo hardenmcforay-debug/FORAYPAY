@@ -1,6 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Disable Turbopack for production builds to ensure compatibility
+  experimental: {
+    turbo: false,
+  },
   images: {
     // Improve image quality
     formats: ['image/avif', 'image/webp'],
