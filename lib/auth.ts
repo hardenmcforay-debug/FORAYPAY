@@ -4,18 +4,33 @@ import { UserRole } from '@/types/database'
 import { redirect } from 'next/navigation'
 
 export async function getCurrentUser() {
-  const supabase = createServerSupabaseClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  
-  if (!user) return null
+  try {
+    const supabase = createServerSupabaseClient()
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    
+    if (authError) {
+      console.error('Auth error in getCurrentUser:', authError)
+      return null
+    }
+    
+    if (!user) return null
 
-  const { data: userProfile } = await supabase
-    .from('users')
-    .select('*')
-    .eq('id', user.id)
-    .single()
+    const { data: userProfile, error: profileError } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', user.id)
+      .single()
 
-  return userProfile
+    if (profileError) {
+      console.error('Profile fetch error in getCurrentUser:', profileError)
+      return null
+    }
+
+    return userProfile
+  } catch (error) {
+    console.error('Error in getCurrentUser:', error)
+    return null
+  }
 }
 
 export async function requireAuth() {
