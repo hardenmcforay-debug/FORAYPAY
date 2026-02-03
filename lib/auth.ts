@@ -53,14 +53,19 @@ export function getLoginPathForRole(role?: UserRole): string {
 }
 
 export async function requireRole(allowedRoles: UserRole[]) {
-  const user = await requireAuth()
-  if (!allowedRoles.includes(user.role)) {
-    redirect('/unauthorized')
-  }
+  try {
+    const user = await requireAuth()
+    if (!user) {
+      redirect('/login')
+    }
+    
+    if (!allowedRoles.includes(user.role)) {
+      redirect('/unauthorized')
+    }
 
-  // Check if company is suspended (for company_admin and park_operator)
-  let companyId = user.company_id
-  const supabase = createServerSupabaseClient()
+    // Check if company is suspended (for company_admin and park_operator)
+    let companyId = user.company_id
+    const supabase = createServerSupabaseClient()
   
   // For park operators, get company_id from park_operators table if not in users table
   if (user.role === 'park_operator' && !companyId) {
@@ -92,6 +97,11 @@ export async function requireRole(allowedRoles: UserRole[]) {
     }
   }
 
-  return user
+    return user
+  } catch (error) {
+    console.error('Error in requireRole:', error)
+    // If there's an error (e.g., missing env vars), redirect to login
+    redirect('/login?error=auth_failed')
+  }
 }
 

@@ -106,8 +106,25 @@ export default function AdminLoginPage() {
       console.log('Role:', userProfile.role)
       console.log('Redirecting to:', dashboardPath)
       
+      // Wait a moment for session to be fully established
+      await new Promise(resolve => setTimeout(resolve, 300))
+      
+      // Verify session is still valid before redirecting
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) {
+        setError('Session expired. Please try logging in again.')
+        return
+      }
+      
       // Force a hard navigation to ensure redirect works
-      window.location.href = dashboardPath
+      // Use window.location.replace to avoid adding to history
+      try {
+        window.location.replace(dashboardPath)
+      } catch (redirectError) {
+        console.error('Redirect error:', redirectError)
+        // Fallback: try router.push
+        router.push(dashboardPath)
+      }
     } catch (err: any) {
       console.error('Login error:', err)
       setError(err.message || 'Failed to sign in')
