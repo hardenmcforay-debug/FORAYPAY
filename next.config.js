@@ -54,15 +54,6 @@ if (process.env.NEXT_PUBLIC_SUPABASE_URL) {
   console.warn('⚠ NEXT_PUBLIC_SUPABASE_URL not found in environment variables')
 }
 
-// Add your specific Supabase domain (replace with your actual domain if different)
-// This is a fallback in case environment variable isn't loaded at build time
-// Security: Only allow public storage paths, not the entire domain
-remotePatterns.push({
-  protocol: 'https',
-  hostname: 'rwdjthkimcjbmhgorsxf.supabase.co',
-  pathname: '/storage/v1/object/public/**',
-})
-
 nextConfig.images.remotePatterns = remotePatterns
 
 module.exports = nextConfig
