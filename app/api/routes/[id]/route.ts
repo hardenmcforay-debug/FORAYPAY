@@ -1,13 +1,10 @@
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 
-interface RouteParams {
-  params: {
-    id: string
-  }
-}
-
-export async function DELETE(request: Request, { params }: RouteParams) {
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     // Verify the requester is authenticated
     const supabase = createServerSupabaseClient()
@@ -41,11 +38,12 @@ export async function DELETE(request: Request, { params }: RouteParams) {
       )
     }
 
+    const { id } = await params
     // Get route details before deletion for audit log
     const { data: route } = await supabase
       .from('routes')
       .select('id, name, origin, destination, fare, company_id')
-      .eq('id', params.id)
+      .eq('id', id)
       .single()
 
     if (!route) {
@@ -67,7 +65,7 @@ export async function DELETE(request: Request, { params }: RouteParams) {
     const { error: deleteError } = await supabase
       .from('routes')
       .delete()
-      .eq('id', params.id)
+      .eq('id', id)
       .eq('company_id', userProfile.company_id)
 
     if (deleteError) {

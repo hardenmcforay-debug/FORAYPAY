@@ -2,14 +2,13 @@ import { createServerSupabaseClient } from '@/lib/supabase/server'
 import { createSupabaseAdmin } from '@/lib/supabase/client'
 import { NextResponse } from 'next/server'
 
-interface RouteParams {
-  params: {
-    id: string
-  }
-}
-
-export async function DELETE(request: Request, { params }: RouteParams) {
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
+    const { id } = await params
+    
     // Verify the requester is a platform admin
     const supabase = createServerSupabaseClient()
     const { data: { user: authUser } } = await supabase.auth.getUser()
@@ -38,7 +37,7 @@ export async function DELETE(request: Request, { params }: RouteParams) {
     const { data: auditLog } = await supabase
       .from('audit_logs')
       .select('id, action, details')
-      .eq('id', params.id)
+      .eq('id', id)
       .single()
 
     if (!auditLog) {
@@ -55,7 +54,7 @@ export async function DELETE(request: Request, { params }: RouteParams) {
     const { data: existingLog, error: checkError } = await supabaseAdmin
       .from('audit_logs')
       .select('id')
-      .eq('id', params.id)
+      .eq('id', id)
       .single()
 
     if (checkError || !existingLog) {
@@ -70,7 +69,7 @@ export async function DELETE(request: Request, { params }: RouteParams) {
     const { data: deleteData, error: deleteError } = await supabaseAdmin
       .from('audit_logs')
       .delete()
-      .eq('id', params.id)
+      .eq('id', id)
       .select()
 
     if (deleteError) {
@@ -82,7 +81,7 @@ export async function DELETE(request: Request, { params }: RouteParams) {
       )
     }
 
-    console.log('Successfully deleted audit log:', params.id)
+    console.log('Successfully deleted audit log:', id)
     console.log('Deleted data:', deleteData)
 
     // Log the deletion action (optional - you might want to skip this to avoid infinite loops)
@@ -91,7 +90,7 @@ export async function DELETE(request: Request, { params }: RouteParams) {
       user_id: authUser.id,
       action: 'audit_log_deleted',
       details: {
-        deleted_log_id: params.id,
+        deleted_log_id: id,
         deleted_action: auditLog.action,
         deleted_details: auditLog.details,
       },

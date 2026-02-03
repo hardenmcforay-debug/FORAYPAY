@@ -4,16 +4,14 @@ import { NextResponse } from 'next/server'
 import { validateUUID, validateCompanyName, validateStatus } from '@/lib/security/input-validator'
 import { createErrorResponse } from '@/lib/security/error-handler'
 
-interface RouteParams {
-  params: {
-    id: string
-  }
-}
-
-export async function PATCH(request: Request, { params }: RouteParams) {
+export async function PATCH(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
+    const { id } = await params
     // Validate UUID parameter
-    const companyId = validateUUID(params.id)
+    const companyId = validateUUID(id)
     if (!companyId) {
       return NextResponse.json(
         { error: 'Invalid company ID format' },
@@ -114,7 +112,7 @@ export async function PATCH(request: Request, { params }: RouteParams) {
               if (operator.status !== 'suspended') {
                 await supabaseAdmin.from('audit_logs').insert({
                   user_id: authUser.id,
-                  company_id: params.id,
+                  company_id: id,
                   action: 'park_operator_suspended',
                   details: {
                     operator_id: operator.id,
@@ -154,7 +152,7 @@ export async function PATCH(request: Request, { params }: RouteParams) {
               if (operator.status !== 'active') {
                 await supabaseAdmin.from('audit_logs').insert({
                   user_id: authUser.id,
-                  company_id: params.id,
+                  company_id: id,
                   action: 'park_operator_activated',
                   details: {
                     operator_id: operator.id,
@@ -271,10 +269,14 @@ export async function PATCH(request: Request, { params }: RouteParams) {
   }
 }
 
-export async function DELETE(request: Request, { params }: RouteParams) {
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
+    const { id } = await params
     // Validate UUID parameter
-    const companyId = validateUUID(params.id)
+    const companyId = validateUUID(id)
     if (!companyId) {
       return NextResponse.json(
         { error: 'Invalid company ID format' },

@@ -2,13 +2,10 @@ import { createServerSupabaseClient } from '@/lib/supabase/server'
 import { createSupabaseAdmin } from '@/lib/supabase/client'
 import { NextResponse } from 'next/server'
 
-interface RouteParams {
-  params: {
-    id: string
-  }
-}
-
-export async function PATCH(request: Request, { params }: RouteParams) {
+export async function PATCH(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const supabase = createServerSupabaseClient()
     const { data: { user: authUser } } = await supabase.auth.getUser()
@@ -64,11 +61,12 @@ export async function PATCH(request: Request, { params }: RouteParams) {
     }
 
     // Update contact request using admin client
+    const { id } = await params
     const supabaseAdmin = createSupabaseAdmin()
     const { data, error } = await supabaseAdmin
       .from('contact_requests')
       .update(updateData)
-      .eq('id', params.id)
+      .eq('id', id)
       .select()
       .single()
 

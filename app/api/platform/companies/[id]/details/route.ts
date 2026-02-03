@@ -2,12 +2,12 @@ import { NextResponse } from 'next/server'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 import { createSupabaseAdmin } from '@/lib/supabase/client'
 
-interface RouteParams {
-  params: { id: string }
-}
-
-export async function GET(_request: Request, { params }: RouteParams) {
+export async function GET(
+  _request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
+    const { id } = await params
     const supabase = createServerSupabaseClient()
     const { data: { user } } = await supabase.auth.getUser()
 
@@ -29,7 +29,7 @@ export async function GET(_request: Request, { params }: RouteParams) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
-    const companyId = params.id
+    const companyId = id
     const admin = createSupabaseAdmin()
 
     const { data: company, error: companyError } = await admin

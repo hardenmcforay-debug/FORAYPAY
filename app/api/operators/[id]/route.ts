@@ -2,13 +2,10 @@ import { createServerSupabaseClient } from '@/lib/supabase/server'
 import { createSupabaseAdmin } from '@/lib/supabase/client'
 import { NextResponse } from 'next/server'
 
-interface RouteParams {
-  params: {
-    id: string
-  }
-}
-
-export async function PATCH(request: Request, { params }: RouteParams) {
+export async function PATCH(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     // Verify the requester is authenticated
     const supabase = createServerSupabaseClient()
@@ -52,11 +49,12 @@ export async function PATCH(request: Request, { params }: RouteParams) {
       )
     }
 
+    const { id } = await params
     // Get operator details before update for audit log
     const { data: operator } = await supabase
       .from('park_operators')
       .select('id, name, status, company_id')
-      .eq('id', params.id)
+      .eq('id', id)
       .single()
 
     if (!operator) {
@@ -78,7 +76,7 @@ export async function PATCH(request: Request, { params }: RouteParams) {
     const { error: updateError } = await supabase
       .from('park_operators')
       .update({ status })
-      .eq('id', params.id)
+      .eq('id', id)
       .eq('company_id', userProfile.company_id)
 
     if (updateError) {
@@ -115,7 +113,10 @@ export async function PATCH(request: Request, { params }: RouteParams) {
   }
 }
 
-export async function DELETE(request: Request, { params }: RouteParams) {
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     // Verify the requester is authenticated
     const supabase = createServerSupabaseClient()
@@ -149,11 +150,12 @@ export async function DELETE(request: Request, { params }: RouteParams) {
       )
     }
 
+    const { id } = await params
     // Get operator details before deletion for audit log
     const { data: operator } = await supabase
       .from('park_operators')
       .select('id, name, phone, user_id, company_id')
-      .eq('id', params.id)
+      .eq('id', id)
       .single()
 
     if (!operator) {
@@ -187,7 +189,7 @@ export async function DELETE(request: Request, { params }: RouteParams) {
     const { error: deleteOperatorError } = await supabaseAdmin
       .from('park_operators')
       .delete()
-      .eq('id', params.id)
+      .eq('id', id)
       .eq('company_id', userProfile.company_id)
 
     if (deleteOperatorError) {
