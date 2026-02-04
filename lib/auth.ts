@@ -8,42 +8,28 @@ export async function getCurrentUser() {
   try {
     const supabase = createServerSupabaseClient()
     
-    // First, try to get the session to check if cookies exist
-    const { data: { session }, error: sessionError } = await supabase.auth.getSession()
-    
-    if (sessionError) {
-      console.error('Session error in getCurrentUser:', sessionError)
-      console.error('Session error details:', {
-        message: sessionError.message,
-        status: sessionError.status,
-        name: sessionError.name
-      })
-      return null
-    }
-    
-    if (!session) {
-      console.log('No session found in getCurrentUser - user not authenticated')
-      return null
-    }
-    
-    // Validate the session by getting the user
-    // This ensures the session is still valid with Supabase
+    // Use getUser() directly - it validates the session and gets the user in one call
+    // This is the recommended approach for server-side auth with Supabase
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     
     if (authError) {
+      // Check if it's a JWT expired or invalid token error
+      if (authError.message?.includes('JWT') || authError.message?.includes('token') || authError.status === 401) {
+        console.log('Authentication token invalid or expired - user needs to re-authenticate')
+        return null
+      }
+      
       console.error('Auth error in getCurrentUser:', authError)
       console.error('Auth error details:', {
         message: authError.message,
         status: authError.status,
         name: authError.name
       })
-      // If getUser fails but we had a session, the session might be invalid
-      // Return null to trigger re-authentication
       return null
     }
     
     if (!user) {
-      console.log('No user found in getCurrentUser despite having a session')
+      console.log('No user found in getCurrentUser - user not authenticated')
       return null
     }
 

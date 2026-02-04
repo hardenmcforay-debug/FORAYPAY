@@ -116,22 +116,17 @@ export default function AdminLoginPage() {
       console.log('Role:', userProfile.role)
       console.log('Redirecting to:', dashboardPath)
       
-      // Wait a moment for session to be fully established and cookies to be set
-      await new Promise(resolve => setTimeout(resolve, 500))
-      
-      // Verify session is still valid before redirecting
-      // Try multiple times to ensure session is established
+      // Verify session is established - check multiple times
       let sessionValid = false
-      for (let i = 0; i < 3; i++) {
+      for (let i = 0; i < 5; i++) {
         const { data: { session }, error: sessionError } = await supabase.auth.getSession()
-        if (session && !sessionError) {
+        if (session && !sessionError && session.user) {
           sessionValid = true
+          console.log(`Session validated on attempt ${i + 1}`)
           break
         }
-        // Wait a bit before retrying
-        if (i < 2) {
-          await new Promise(resolve => setTimeout(resolve, 200))
-        }
+        // Wait before retrying (exponential backoff)
+        await new Promise(resolve => setTimeout(resolve, 100 * (i + 1)))
       }
       
       if (!sessionValid) {
@@ -140,19 +135,9 @@ export default function AdminLoginPage() {
         return
       }
       
-      // dashboardPath is already a full URL if we're not on admin domain, or a relative path if we are
-      // Use window.location.replace which handles both cases
-      try {
-        window.location.replace(dashboardPath)
-      } catch (redirectError) {
-        console.error('Redirect error:', redirectError)
-        // Fallback: if it's a full URL, use replace; if relative, use router
-        if (dashboardPath.startsWith('http')) {
-          window.location.href = dashboardPath
-        } else {
-          router.push(dashboardPath)
-        }
-      }
+      // Use window.location.href for a full page reload to ensure cookies are sent
+      // This ensures the server component can read the authentication cookies
+      window.location.href = dashboardPath
     } catch (err: any) {
       console.error('Login error:', err)
       setError(err.message || 'Failed to sign in')

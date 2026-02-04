@@ -201,22 +201,17 @@ export default function LoginPage() {
       console.log('Role:', userProfile.role)
       console.log('Redirecting to:', dashboardPath)
       
-      // Wait a moment for session to be fully established and cookies to be set
-      await new Promise(resolve => setTimeout(resolve, 500))
-      
-      // Verify session is still valid before redirecting
-      // Try multiple times to ensure session is established
+      // Verify session is established - check multiple times
       let sessionValid = false
-      for (let i = 0; i < 3; i++) {
+      for (let i = 0; i < 5; i++) {
         const { data: { session }, error: sessionError } = await supabase.auth.getSession()
-        if (session && !sessionError) {
+        if (session && !sessionError && session.user) {
           sessionValid = true
+          console.log(`Session validated on attempt ${i + 1}`)
           break
         }
-        // Wait a bit before retrying
-        if (i < 2) {
-          await new Promise(resolve => setTimeout(resolve, 200))
-        }
+        // Wait before retrying (exponential backoff)
+        await new Promise(resolve => setTimeout(resolve, 100 * (i + 1)))
       }
       
       if (!sessionValid) {
@@ -225,15 +220,9 @@ export default function LoginPage() {
         return
       }
       
-      // Force a hard navigation to ensure redirect works
-      // Use window.location.replace to avoid adding to history
-      try {
-        window.location.replace(dashboardPath)
-      } catch (redirectError) {
-        console.error('Redirect error:', redirectError)
-        // Fallback: try router.push
-        router.push(dashboardPath)
-      }
+      // Use window.location.href for a full page reload to ensure cookies are sent
+      // This ensures the server component can read the authentication cookies
+      window.location.href = dashboardPath
     } catch (err: any) {
       console.error('Login error:', err)
       setError(err.message || 'Failed to sign in')
