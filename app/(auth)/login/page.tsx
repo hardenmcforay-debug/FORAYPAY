@@ -12,7 +12,6 @@ import { Shield, Building2, UserCheck, Check, ArrowLeft, Lock, Mail, Ban, AlertT
 import { UserRole } from '@/types/database'
 import { cn } from '@/lib/utils'
 import { getImageUrl } from '@/lib/supabase/storage'
-import { getAdminUrl, isAdminDomain } from '@/lib/domain'
 
 export default function LoginPage() {
   const [selectedRole, setSelectedRole] = useState<UserRole | null>(null)
@@ -37,9 +36,8 @@ export default function LoginPage() {
           .single()
         
         if (profile?.role === 'platform_admin') {
-          // Redirect to admin domain login
-          const adminLoginUrl = getAdminUrl('/admin/login')
-          window.location.replace(adminLoginUrl)
+          // Redirect to admin login page
+          router.push('/admin/login')
         }
       }
     }
@@ -141,10 +139,9 @@ export default function LoginPage() {
         return
       }
 
-      // If user is platform admin, redirect to admin domain
+      // If user is platform admin, redirect to admin login page
       if (userProfile.role === 'platform_admin') {
-        const adminLoginUrl = getAdminUrl('/admin/login')
-        window.location.replace(adminLoginUrl)
+        router.push('/admin/login')
         return
       }
 
@@ -201,17 +198,17 @@ export default function LoginPage() {
       console.log('Role:', userProfile.role)
       console.log('Redirecting to:', dashboardPath)
       
-      // Verify session is established - check multiple times with longer waits
+      // Verify session is established - check multiple times
       let sessionValid = false
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < 5; i++) {
         const { data: { session }, error: sessionError } = await supabase.auth.getSession()
-        if (session && !sessionError && session.user && session.access_token) {
+        if (session && !sessionError && session.user) {
           sessionValid = true
           console.log(`Session validated on attempt ${i + 1}`)
           break
         }
-        // Wait longer before retrying (longer delays for cookie propagation)
-        await new Promise(resolve => setTimeout(resolve, 200 * (i + 1)))
+        // Wait before retrying (exponential backoff)
+        await new Promise(resolve => setTimeout(resolve, 100 * (i + 1)))
       }
       
       if (!sessionValid) {
@@ -219,9 +216,6 @@ export default function LoginPage() {
         console.error('Session validation failed after login')
         return
       }
-      
-      // Additional wait to ensure cookies are fully set and propagated
-      await new Promise(resolve => setTimeout(resolve, 1000))
       
       // Use window.location.href for a full page reload to ensure cookies are sent
       // This ensures the server component can read the authentication cookies

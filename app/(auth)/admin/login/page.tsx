@@ -10,7 +10,6 @@ import Image from 'next/image'
 import { Shield, Lock, Mail, Ban, AlertTriangle, MessageCircle, Phone } from 'lucide-react'
 import { UserRole } from '@/types/database'
 import { getImageUrl } from '@/lib/supabase/storage'
-import { isAdminDomain, getAdminUrl } from '@/lib/domain'
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState('')
@@ -19,14 +18,6 @@ export default function AdminLoginPage() {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
   const supabase = createSupabaseClient()
-
-  // Check if we're on the admin domain, redirect if not
-  useEffect(() => {
-    if (!isAdminDomain()) {
-      const adminLoginUrl = getAdminUrl('/admin/login')
-      window.location.replace(adminLoginUrl)
-    }
-  }, [])
 
   // Check if user is already logged in and redirect non-platform admins to regular login
   useEffect(() => {
@@ -40,8 +31,8 @@ export default function AdminLoginPage() {
           .single()
         
         if (profile && profile.role !== 'platform_admin') {
-          // Redirect to main domain login
-          window.location.replace('/login')
+          // Redirect to regular login
+          router.push('/login')
         }
       }
     }
@@ -116,17 +107,17 @@ export default function AdminLoginPage() {
       console.log('Role:', userProfile.role)
       console.log('Redirecting to:', dashboardPath)
       
-      // Verify session is established - check multiple times with longer waits
+      // Verify session is established - check multiple times
       let sessionValid = false
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < 5; i++) {
         const { data: { session }, error: sessionError } = await supabase.auth.getSession()
-        if (session && !sessionError && session.user && session.access_token) {
+        if (session && !sessionError && session.user) {
           sessionValid = true
           console.log(`Session validated on attempt ${i + 1}`)
           break
         }
-        // Wait longer before retrying (longer delays for cookie propagation)
-        await new Promise(resolve => setTimeout(resolve, 200 * (i + 1)))
+        // Wait before retrying (exponential backoff)
+        await new Promise(resolve => setTimeout(resolve, 100 * (i + 1)))
       }
       
       if (!sessionValid) {
@@ -134,9 +125,6 @@ export default function AdminLoginPage() {
         console.error('Session validation failed after admin login')
         return
       }
-      
-      // Additional wait to ensure cookies are fully set and propagated
-      await new Promise(resolve => setTimeout(resolve, 1000))
       
       // Use window.location.href for a full page reload to ensure cookies are sent
       // This ensures the server component can read the authentication cookies
