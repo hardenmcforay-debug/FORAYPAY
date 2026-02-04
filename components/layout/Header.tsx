@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { LogOut, User, Menu, X } from 'lucide-react'
 import { createSupabaseClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
@@ -64,26 +64,29 @@ export default function Header({ userEmail: propUserEmail, userName, onMenuToggl
     router.push(loginPath)
   }
 
+  // Stable handler for menu toggle
+  const handleMenuClick = useCallback(() => {
+    if (onMenuToggle) {
+      onMenuToggle()
+    }
+  }, [onMenuToggle])
+
   return (
-    <header className="h-14 sm:h-16 bg-white border-b border-gray-200 flex items-center justify-between px-3 sm:px-4 lg:px-6 z-40 relative">
+    <header className="h-14 sm:h-16 bg-white border-b border-gray-200 flex items-center justify-between px-3 sm:px-4 lg:px-6 z-50 relative">
       <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
         {/* Hamburger Menu Button - Always visible on mobile/tablet screens */}
         {onMenuToggle && (
           <button
-            onClick={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
-              onMenuToggle()
-            }}
-            className="lg:hidden p-2 -ml-1 sm:-ml-2 hover:bg-gray-100 active:bg-gray-200 rounded-lg transition-colors flex-shrink-0 touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center z-40 relative"
+            onClick={handleMenuClick}
+            className="lg:hidden p-2 -ml-1 sm:-ml-2 hover:bg-gray-100 active:bg-gray-200 rounded-lg transition-colors flex-shrink-0 touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center z-50 relative cursor-pointer"
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-            aria-expanded={isMenuOpen}
             type="button"
+            tabIndex={0}
           >
             {isMenuOpen ? (
-              <X className="w-6 h-6 sm:w-7 sm:h-7 text-gray-700" />
+              <X className="w-6 h-6 sm:w-7 sm:h-7 text-gray-700 pointer-events-none" />
             ) : (
-              <Menu className="w-6 h-6 sm:w-7 sm:h-7 text-gray-700" />
+              <Menu className="w-6 h-6 sm:w-7 sm:h-7 text-gray-700 pointer-events-none" />
             )}
           </button>
         )}
