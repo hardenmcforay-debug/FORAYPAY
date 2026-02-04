@@ -2,6 +2,7 @@
 import { createServerSupabaseClient } from './supabase/server'
 import { UserRole } from '@/types/database'
 import { redirect } from 'next/navigation'
+import { getAdminUrl } from '@/lib/domain'
 
 export async function getCurrentUser() {
   try {
@@ -68,7 +69,8 @@ export async function requireAuth() {
 export function getLoginPathForRole(role?: UserRole): string {
   switch (role) {
     case 'platform_admin':
-      return '/admin/login'
+      // Platform admin login should always be on admin domain
+      return getAdminUrl('/admin/login')
     case 'company_admin':
     case 'park_operator':
     default:
@@ -96,6 +98,10 @@ export async function requireRole(allowedRoles: UserRole[]) {
         userRole: user.role,
         allowedRoles
       })
+      // Redirect platform admins to admin domain for unauthorized
+      if (user.role === 'platform_admin') {
+        redirect(getAdminUrl('/unauthorized'))
+      }
       redirect('/unauthorized')
     }
 

@@ -10,6 +10,7 @@ import Image from 'next/image'
 import { Shield, Lock, Mail, Ban, AlertTriangle, MessageCircle, Phone } from 'lucide-react'
 import { UserRole } from '@/types/database'
 import { getImageUrl } from '@/lib/supabase/storage'
+import { isAdminDomain, getAdminUrl } from '@/lib/domain'
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState('')
@@ -18,6 +19,14 @@ export default function AdminLoginPage() {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
   const supabase = createSupabaseClient()
+
+  // Check if we're on the admin domain, redirect if not
+  useEffect(() => {
+    if (!isAdminDomain()) {
+      const adminLoginUrl = getAdminUrl('/admin/login')
+      window.location.replace(adminLoginUrl)
+    }
+  }, [])
 
   // Check if user is already logged in and redirect non-platform admins to regular login
   useEffect(() => {
@@ -31,7 +40,8 @@ export default function AdminLoginPage() {
           .single()
         
         if (profile && profile.role !== 'platform_admin') {
-          router.replace('/login')
+          // Redirect to main domain login
+          window.location.replace('/login')
         }
       }
     }
@@ -116,14 +126,18 @@ export default function AdminLoginPage() {
         return
       }
       
-      // Force a hard navigation to ensure redirect works
-      // Use window.location.replace to avoid adding to history
+      // dashboardPath is already a full URL if we're not on admin domain, or a relative path if we are
+      // Use window.location.replace which handles both cases
       try {
         window.location.replace(dashboardPath)
       } catch (redirectError) {
         console.error('Redirect error:', redirectError)
-        // Fallback: try router.push
-        router.push(dashboardPath)
+        // Fallback: if it's a full URL, use replace; if relative, use router
+        if (dashboardPath.startsWith('http')) {
+          window.location.href = dashboardPath
+        } else {
+          router.push(dashboardPath)
+        }
       }
     } catch (err: any) {
       console.error('Login error:', err)

@@ -48,6 +48,14 @@ NEXT_PUBLIC_APP_URL=https://foraypay.vercel.app
 ```
 (Or your custom domain if you have one)
 
+#### Admin Domain Configuration (REQUIRED)
+```
+NEXT_PUBLIC_ADMIN_DOMAIN=admin.foraypay.com
+```
+(Or your admin subdomain. For local development, use `admin.localhost`)
+
+**Note:** Platform Admin login and administration work is separated to a different domain for security. Set this to your admin subdomain (e.g., `admin.foraypay.com`).
+
 ### Step 3: Set Environment for All Environments
 
 For each variable:
@@ -66,10 +74,11 @@ After adding all variables:
 
 ## Verification Checklist
 
-✅ All 8 environment variables are set in Vercel
+✅ All 9 environment variables are set in Vercel
 ✅ Variables are set for **Production** environment (at minimum)
 ✅ You've redeployed after adding variables
 ✅ No typos in variable names (case-sensitive!)
+✅ Admin domain is configured and DNS is set up
 
 ## Common Issues
 

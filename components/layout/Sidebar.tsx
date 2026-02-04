@@ -53,13 +53,6 @@ const parkOperatorNav = [
   { name: 'Trip Dashboard', href: '/operator/trips', icon: TrendingUp },
 ]
 
-interface SidebarProps {
-  role: UserRole
-  companyId?: string | null
-  isMenuOpen?: boolean
-  onMenuClose?: () => void
-}
-
 export default function Sidebar({ role, companyId, isMenuOpen = false, onMenuClose }: SidebarProps) {
   const pathname = usePathname()
   
@@ -100,9 +93,9 @@ export default function Sidebar({ role, companyId, isMenuOpen = false, onMenuClo
       {/* Sidebar */}
       <aside
         className={cn(
-          'fixed lg:sticky top-0 left-0 z-50 w-64 bg-white border-r border-gray-200 h-screen transition-transform duration-300 ease-in-out',
+          'fixed lg:sticky top-0 left-0 z-[50] w-64 bg-white border-r border-gray-200 h-screen transition-transform duration-300 ease-in-out shadow-lg lg:shadow-none',
           'lg:translate-x-0',
-          isMenuOpen ? 'translate-x-0' : '-translate-x-full'
+          isMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         )}
       >
         <div className="p-4 lg:p-6 border-b border-gray-200">
@@ -124,7 +117,7 @@ export default function Sidebar({ role, companyId, isMenuOpen = false, onMenuClo
           </div>
         </div>
         
-        <nav className="p-4 space-y-1 overflow-y-auto h-[calc(100vh-80px)]">
+        <nav className="p-4 space-y-1 overflow-y-auto h-[calc(100vh-80px)]" aria-label="Main navigation">
           {navItems.map((item) => {
             // For base dashboard routes, only match exactly
             // For other routes, match if pathname starts with the href
@@ -138,13 +131,15 @@ export default function Sidebar({ role, companyId, isMenuOpen = false, onMenuClo
                 href={item.href}
                 onClick={onMenuClose}
                 className={cn(
-                  'flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors text-sm lg:text-base',
+                  'flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-sm lg:text-base min-h-[44px]',
+                  'touch-manipulation active:bg-gray-100',
                   isActive
                     ? 'bg-primary-50 text-primary-700 font-medium'
                     : 'text-gray-700 hover:bg-gray-50'
                 )}
+                aria-current={isActive ? 'page' : undefined}
               >
-                <item.icon className="w-5 h-5 flex-shrink-0" />
+                <item.icon className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
                 <span className="whitespace-nowrap">{item.name}</span>
               </Link>
             )

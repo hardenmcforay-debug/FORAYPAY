@@ -12,6 +12,7 @@ import { Shield, Building2, UserCheck, Check, ArrowLeft, Lock, Mail, Ban, AlertT
 import { UserRole } from '@/types/database'
 import { cn } from '@/lib/utils'
 import { getImageUrl } from '@/lib/supabase/storage'
+import { getAdminUrl, isAdminDomain } from '@/lib/domain'
 
 export default function LoginPage() {
   const [selectedRole, setSelectedRole] = useState<UserRole | null>(null)
@@ -36,7 +37,9 @@ export default function LoginPage() {
           .single()
         
         if (profile?.role === 'platform_admin') {
-          router.replace('/admin/login')
+          // Redirect to admin domain login
+          const adminLoginUrl = getAdminUrl('/admin/login')
+          window.location.replace(adminLoginUrl)
         }
       }
     }
@@ -135,6 +138,13 @@ export default function LoginPage() {
 
       if (!userProfile.role) {
         setError('User role not assigned. Please contact administrator.')
+        return
+      }
+
+      // If user is platform admin, redirect to admin domain
+      if (userProfile.role === 'platform_admin') {
+        const adminLoginUrl = getAdminUrl('/admin/login')
+        window.location.replace(adminLoginUrl)
         return
       }
 
