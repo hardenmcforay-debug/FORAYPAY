@@ -55,9 +55,14 @@ export default function CompanyDetailsPage() {
   const [recentTickets, setRecentTickets] = useState<any[]>([])
 
   const loadData = useCallback(async () => {
-    if (!companyId) return
+    if (!companyId) {
+      setError('Company ID is missing')
+      setFetching(false)
+      return
+    }
 
     try {
+      setFetching(true)
       setError(null)
       const res = await fetch(`/api/platform/companies/${companyId}/details`, {
         method: 'GET',
@@ -138,6 +143,8 @@ export default function CompanyDetailsPage() {
         loadData()
       } catch (err: any) {
         console.error('Error fetching user:', err)
+        setError(err.message || 'Failed to authenticate user')
+        setFetching(false)
       }
     }
 

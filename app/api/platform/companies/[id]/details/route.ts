@@ -54,7 +54,7 @@ export async function GET(
       operators,
       admins,
       recentTickets,
-    ] = await Promise.all([
+    ] = await Promise.allSettled([
       admin.from('tickets').select('*', { count: 'exact', head: true }).eq('company_id', companyId),
       admin.from('routes').select('*', { count: 'exact', head: true }).eq('company_id', companyId),
       admin.from('routes').select('*', { count: 'exact', head: true }).eq('company_id', companyId).eq('status', 'active'),
@@ -76,6 +76,33 @@ export async function GET(
         .order('created_at', { ascending: false })
         .limit(10),
     ])
+
+    // Extract data from Promise.allSettled results
+    const getData = (result: PromiseSettledResult<any>) => {
+      if (result.status === 'fulfilled') {
+        const value = result.value
+        // Handle Supabase response structure
+        if (value.error) {
+          console.error('Query error:', value.error)
+          return { data: null, count: 0, error: value.error }
+        }
+        return value
+      }
+      console.error('Query failed:', result.reason)
+      return { data: null, count: 0, error: result.reason }
+    }
+
+    const ticketsCountResult = getData(ticketsCount)
+    const routesCountResult = getData(routesCount)
+    const activeRoutesCountResult = getData(activeRoutesCount)
+    const operatorsCountResult = getData(operatorsCount)
+    const activeOperatorsCountResult = getData(activeOperatorsCount)
+    const usedTicketsCountResult = getData(usedTicketsCount)
+    const pendingTicketsCountResult = getData(pendingTicketsCount)
+    const routesResult = getData(routes)
+    const operatorsResult = getData(operators)
+    const adminsResult = getData(admins)
+    const recentTicketsResult = getData(recentTickets)
 
     const thirtyDaysAgo = new Date()
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
@@ -100,18 +127,18 @@ export async function GET(
 
     return NextResponse.json({
       company,
-      routes: routes.data || [],
-      operators: operators.data || [],
-      admins: admins.data || [],
-      recentTickets: recentTickets.data || [],
+      routes: routesResult.data || [],
+      operators: operatorsResult.data || [],
+      admins: adminsResult.data || [],
+      recentTickets: recentTicketsResult.data || [],
       stats: {
-        totalTickets: ticketsCount.count || 0,
-        totalRoutes: routesCount.count || 0,
-        activeRoutes: activeRoutesCount.count || 0,
-        totalOperators: operatorsCount.count || 0,
-        activeOperators: activeOperatorsCount.count || 0,
-        usedTickets: usedTicketsCount.count || 0,
-        pendingTickets: pendingTicketsCount.count || 0,
+        totalTickets: ticketsCountResult.count || 0,
+        totalRoutes: routesCountResult.count || 0,
+        activeRoutes: activeRoutesCountResult.count || 0,
+        totalOperators: operatorsCountResult.count || 0,
+        activeOperators: activeOperatorsCountResult.count || 0,
+        usedTickets: usedTicketsCountResult.count || 0,
+        pendingTickets: pendingTicketsCountResult.count || 0,
         platformRevenue30d,
         totalPlatformRevenue,
         companyRevenue30d,
