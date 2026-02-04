@@ -333,7 +333,7 @@ export default function OperatorDashboard() {
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="text-center">
             <div className="w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading dashboard...</p>
+            <p className="text-blue-400">Loading dashboard...</p>
           </div>
         </div>
       </DashboardLayout>
@@ -349,8 +349,8 @@ export default function OperatorDashboard() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-            <p className="text-gray-600 mt-2">View your statistics and recent activity</p>
+            <h1 className="text-3xl font-bold text-blue-500">Dashboard</h1>
+            <p className="text-blue-400 mt-2">View your statistics and recent activity</p>
           </div>
           <Button
             onClick={() => router.push('/operator/validate')}
@@ -373,9 +373,9 @@ export default function OperatorDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">Today&apos;s Validations</p>
-                  <p className="text-3xl font-bold text-gray-900">{todayCount}</p>
-                  <p className="text-xs text-gray-500 mt-1">{formatCurrency(todayRevenue)}</p>
+                  <p className="text-sm text-blue-400 mb-1">Today&apos;s Validations</p>
+                  <p className="text-3xl font-bold text-blue-500">{todayCount}</p>
+                  <p className="text-xs text-blue-400 mt-1">{formatCurrency(todayRevenue)}</p>
                 </div>
                 <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center">
                   <Calendar className="w-6 h-6 text-primary-600" />
@@ -388,9 +388,9 @@ export default function OperatorDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">This Week</p>
-                  <p className="text-3xl font-bold text-gray-900">{weekCount}</p>
-                  <p className="text-xs text-gray-500 mt-1">{formatCurrency(weekRevenue)}</p>
+                  <p className="text-sm text-blue-400 mb-1">This Week</p>
+                  <p className="text-3xl font-bold text-blue-500">{weekCount}</p>
+                  <p className="text-xs text-blue-400 mt-1">{formatCurrency(weekRevenue)}</p>
                 </div>
                 <div className="w-12 h-12 bg-success-100 rounded-lg flex items-center justify-center">
                   <TrendingUp className="w-6 h-6 text-success-600" />
@@ -403,9 +403,9 @@ export default function OperatorDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">This Month</p>
-                  <p className="text-3xl font-bold text-gray-900">{monthCount}</p>
-                  <p className="text-xs text-gray-500 mt-1">{formatCurrency(monthRevenue)}</p>
+                  <p className="text-sm text-blue-400 mb-1">This Month</p>
+                  <p className="text-3xl font-bold text-blue-500">{monthCount}</p>
+                  <p className="text-xs text-blue-400 mt-1">{formatCurrency(monthRevenue)}</p>
                 </div>
                 <div className="w-12 h-12 bg-warning-100 rounded-lg flex items-center justify-center">
                   <DollarSign className="w-6 h-6 text-warning-600" />
@@ -418,8 +418,8 @@ export default function OperatorDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">Total Validations</p>
-                  <p className="text-3xl font-bold text-gray-900">{totalCount}</p>
+                  <p className="text-sm text-blue-400 mb-1">Total Validations</p>
+                  <p className="text-3xl font-bold text-blue-500">{totalCount}</p>
                 </div>
                 <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
                   <Ticket className="w-6 h-6 text-blue-600" />
@@ -435,9 +435,9 @@ export default function OperatorDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">Tickets Issued Today</p>
-                  <p className="text-3xl font-bold text-gray-900">{todayGenerated}</p>
-                  <p className="text-xs text-gray-500 mt-1">{todayGeneratedTickets} tickets</p>
+                  <p className="text-sm text-blue-400 mb-1">Tickets Issued Today</p>
+                  <p className="text-3xl font-bold text-blue-500">{todayGenerated}</p>
+                  <p className="text-xs text-blue-400 mt-1">{todayGeneratedTickets} tickets</p>
                 </div>
                 <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
                   <QrCode className="w-6 h-6 text-purple-600" />
@@ -450,9 +450,9 @@ export default function OperatorDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">Tickets Issued This Week</p>
-                  <p className="text-3xl font-bold text-gray-900">{weekGenerated}</p>
-                  <p className="text-xs text-gray-500 mt-1">{weekGeneratedTickets} tickets</p>
+                  <p className="text-sm text-blue-400 mb-1">Tickets Issued This Week</p>
+                  <p className="text-3xl font-bold text-blue-500">{weekGenerated}</p>
+                  <p className="text-xs text-blue-400 mt-1">{weekGeneratedTickets} tickets</p>
                 </div>
                 <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center">
                   <QrCode className="w-6 h-6 text-indigo-600" />
@@ -465,9 +465,9 @@ export default function OperatorDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">Tickets Issued This Month</p>
-                  <p className="text-3xl font-bold text-gray-900">{monthGenerated}</p>
-                  <p className="text-xs text-gray-500 mt-1">{monthGeneratedTickets} tickets</p>
+                  <p className="text-sm text-blue-400 mb-1">Tickets Issued This Month</p>
+                  <p className="text-3xl font-bold text-blue-500">{monthGenerated}</p>
+                  <p className="text-xs text-blue-400 mt-1">{monthGeneratedTickets} tickets</p>
                 </div>
                 <div className="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center">
                   <QrCode className="w-6 h-6 text-pink-600" />
@@ -480,9 +480,9 @@ export default function OperatorDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">Total Tickets Issued</p>
-                  <p className="text-3xl font-bold text-gray-900">{totalGenerated}</p>
-                  <p className="text-xs text-gray-500 mt-1">{totalGeneratedTickets} tickets</p>
+                  <p className="text-sm text-blue-400 mb-1">Total Tickets Issued</p>
+                  <p className="text-3xl font-bold text-blue-500">{totalGenerated}</p>
+                  <p className="text-xs text-blue-400 mt-1">{totalGeneratedTickets} tickets</p>
                 </div>
                 <div className="w-12 h-12 bg-cyan-100 rounded-lg flex items-center justify-center">
                   <QrCode className="w-6 h-6 text-cyan-600" />
@@ -527,7 +527,7 @@ export default function OperatorDashboard() {
                   ))}
                 </div>
               ) : (
-                <p className="text-gray-600 text-center py-8">No tickets issued yet</p>
+                <p className="text-blue-400 text-center py-8">No tickets issued yet</p>
               )}
             </CardContent>
           </Card>
@@ -574,7 +574,7 @@ export default function OperatorDashboard() {
                   ))}
                 </div>
               ) : (
-                <p className="text-gray-600 text-center py-8">No codes generated yet</p>
+                <p className="text-blue-400 text-center py-8">No codes generated yet</p>
               )}
             </CardContent>
           </Card>
