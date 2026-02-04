@@ -116,17 +116,17 @@ export default function AdminLoginPage() {
       console.log('Role:', userProfile.role)
       console.log('Redirecting to:', dashboardPath)
       
-      // Verify session is established - check multiple times
+      // Verify session is established - check multiple times with longer waits
       let sessionValid = false
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < 10; i++) {
         const { data: { session }, error: sessionError } = await supabase.auth.getSession()
-        if (session && !sessionError && session.user) {
+        if (session && !sessionError && session.user && session.access_token) {
           sessionValid = true
           console.log(`Session validated on attempt ${i + 1}`)
           break
         }
-        // Wait before retrying (exponential backoff)
-        await new Promise(resolve => setTimeout(resolve, 100 * (i + 1)))
+        // Wait longer before retrying (longer delays for cookie propagation)
+        await new Promise(resolve => setTimeout(resolve, 200 * (i + 1)))
       }
       
       if (!sessionValid) {
@@ -134,6 +134,9 @@ export default function AdminLoginPage() {
         console.error('Session validation failed after admin login')
         return
       }
+      
+      // Additional wait to ensure cookies are fully set and propagated
+      await new Promise(resolve => setTimeout(resolve, 1000))
       
       // Use window.location.href for a full page reload to ensure cookies are sent
       // This ensures the server component can read the authentication cookies

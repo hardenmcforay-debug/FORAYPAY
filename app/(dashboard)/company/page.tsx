@@ -7,6 +7,7 @@ import { formatCurrency } from '@/lib/utils'
 import Link from 'next/link'
 import Button from '@/components/ui/button'
 import RevenueChart from '@/components/analytics/revenue-chart'
+import AuthRetry from '@/components/auth-retry'
 
 // Force dynamic rendering since this page uses cookies for authentication
 export const dynamic = 'force-dynamic'
@@ -550,6 +551,20 @@ export default async function CompanyDashboard() {
     }
     
     console.error('Error in CompanyDashboard:', error)
+    
+    // Check if it's an authentication error (cookies not available yet)
+    const errorMessage = error?.message || ''
+    const isAuthError = errorMessage.includes('auth') || 
+                        errorMessage.includes('session') || 
+                        errorMessage.includes('cookie') ||
+                        errorMessage.includes('JWT') ||
+                        errorMessage.includes('token')
+    
+    if (isAuthError) {
+      // Return a component that will retry on client side
+      return <AuthRetry />
+    }
+    
     return (
       <div className="p-6">
         <div className="bg-error-50 border border-error-200 rounded-lg p-4">
