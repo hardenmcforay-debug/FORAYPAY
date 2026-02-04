@@ -48,14 +48,6 @@ NEXT_PUBLIC_APP_URL=https://foraypay.vercel.app
 ```
 (Or your custom domain if you have one)
 
-#### Platform Admin Domain (OPTIONAL)
-```
-NEXT_PUBLIC_ADMIN_APP_URL=https://admin.foraypay.com
-```
-**Only set this if Platform Admin uses a different domain.** If not set, Platform Admin will use `NEXT_PUBLIC_APP_URL`.
-
-**Important:** If you set a separate admin domain, you must configure Supabase redirect URLs. See [PLATFORM_ADMIN_DOMAIN_SETUP.md](./PLATFORM_ADMIN_DOMAIN_SETUP.md) for instructions.
-
 ### Step 3: Set Environment for All Environments
 
 For each variable:
@@ -74,7 +66,7 @@ After adding all variables:
 
 ## Verification Checklist
 
-✅ All required environment variables are set in Vercel (8 required + 1 optional for admin domain)
+✅ All 8 environment variables are set in Vercel
 ✅ Variables are set for **Production** environment (at minimum)
 ✅ You've redeployed after adding variables
 ✅ No typos in variable names (case-sensitive!)
@@ -87,7 +79,7 @@ After adding all variables:
 
 **Solution:**
 1. Check Vercel dashboard → Settings → Environment Variables
-2. Verify all required variables are present (8 required + 1 optional for admin domain)
+2. Verify all 8 variables are present
 3. Check for typos (especially `NEXT_PUBLIC_` prefix)
 4. Redeploy after adding variables
 

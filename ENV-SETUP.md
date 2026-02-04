@@ -20,12 +20,6 @@ MONIME_WEBHOOK_SECRET=your_monime_webhook_secret
 
 # Application Configuration
 NEXT_PUBLIC_APP_URL=http://localhost:3000
-
-# Platform Admin Domain (Optional - for separate admin domain)
-# If Platform Admin should login from a different domain, set this variable
-# Example: NEXT_PUBLIC_ADMIN_APP_URL=https://admin.foraypay.com
-# If not set, Platform Admin will use NEXT_PUBLIC_APP_URL
-NEXT_PUBLIC_ADMIN_APP_URL=http://localhost:3000
 ```
 
 ## How to Obtain These Values
@@ -61,24 +55,19 @@ NEXT_PUBLIC_ADMIN_APP_URL=http://localhost:3000
 ## Environment-Specific Configuration
 
 ### Development
-
 - Use development Supabase project
 - Set `NEXT_PUBLIC_APP_URL=http://localhost:3000`
 
 ### Production
-
 - Use production Supabase project
 - Set `NEXT_PUBLIC_APP_URL=https://your-production-domain.com`
-- If Platform Admin uses a different domain, set `NEXT_PUBLIC_ADMIN_APP_URL=https://admin.your-domain.com`
 - Ensure all secrets are set in your hosting platform's environment variables
-- **Important:** Configure Supabase to allow redirect URLs from both domains (see [PLATFORM_ADMIN_DOMAIN_SETUP.md](./PLATFORM_ADMIN_DOMAIN_SETUP.md))
 
 ## Verification
 
 After setting up your environment variables:
 
 1. Restart your development server:
-
    ```bash
    npm run dev
    ```
@@ -90,20 +79,16 @@ After setting up your environment variables:
 ## Troubleshooting
 
 ### Missing Environment Variables
-
 If you see errors about missing environment variables:
-
 - Verify `.env.local` exists in the root directory
 - Check that all required variables are set
 - Restart the development server after making changes
 
 ### Authentication Issues
-
 - Verify `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` are correct
 - Check that your Supabase project is active
 
 ### Service Role Key Issues
-
 - Ensure `SUPABASE_SERVICE_ROLE_KEY` is the **service_role** key (not the anon key)
 - Verify the key hasn't expired or been rotated
 - Check that the key has the correct permissions
@@ -113,3 +98,4 @@ If you see errors about missing environment variables:
 - [Supabase Documentation](https://supabase.com/docs)
 - [Next.js Environment Variables](https://nextjs.org/docs/basic-features/environment-variables)
 - See [DEPLOYMENT.md](./DEPLOYMENT.md) for production deployment instructions
+

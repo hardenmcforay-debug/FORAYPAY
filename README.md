@@ -159,24 +159,6 @@ See `supabase/schema.sql` for complete database schema including:
 - Platform admin bypass for system management
 - Audit logging for all critical actions
 
-## Documentation
-
-### Setup & Configuration
-- [Environment Variables Setup](./ENV-SETUP.md) - Configure environment variables
-- [Platform Admin Setup](./PLATFORM_ADMIN_LOGIN_LOCALHOST.md) - Set up Platform Admin account
-- [Supabase Storage Setup](./SUPABASE_STORAGE_SETUP.md) - Configure image storage
-
-### Deployment
-- [Deployment Guide](./DEPLOYMENT.md) - Complete deployment instructions
-- [Platform Admin Domain Setup](./PLATFORM_ADMIN_DOMAIN_SETUP.md) - Configure separate admin domain
-- [Vercel Environment Setup](./VERCEL_ENV_SETUP.md) - Vercel-specific configuration
-- [Alternative Deployment](./ALTERNATIVE_DEPLOYMENT.md) - Other deployment options
-
-### Security & Performance
-- [Security Audit Report](./SECURITY_AUDIT_REPORT.md) - Security assessment
-- [Security Hardening Summary](./SECURITY_HARDENING_SUMMARY.md) - Security measures
-- [Scalability Guide](./SCALABILITY_GUIDE.md) - Performance optimization
-
 ## License
 
 Proprietary - ForayPay Platform
