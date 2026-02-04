@@ -56,6 +56,11 @@ module.exports = {
           800: '#991b1b',
           900: '#7f1d1d',
         },
+        neon: {
+          blue: '#00F0FF',
+          'blue-light': '#00D9FF',
+          'blue-dark': '#00BFFF',
+        },
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
