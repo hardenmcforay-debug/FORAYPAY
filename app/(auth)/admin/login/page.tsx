@@ -116,13 +116,27 @@ export default function AdminLoginPage() {
       console.log('Role:', userProfile.role)
       console.log('Redirecting to:', dashboardPath)
       
-      // Wait a moment for session to be fully established
-      await new Promise(resolve => setTimeout(resolve, 300))
+      // Wait a moment for session to be fully established and cookies to be set
+      await new Promise(resolve => setTimeout(resolve, 500))
       
       // Verify session is still valid before redirecting
-      const { data: { session } } = await supabase.auth.getSession()
-      if (!session) {
-        setError('Session expired. Please try logging in again.')
+      // Try multiple times to ensure session is established
+      let sessionValid = false
+      for (let i = 0; i < 3; i++) {
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+        if (session && !sessionError) {
+          sessionValid = true
+          break
+        }
+        // Wait a bit before retrying
+        if (i < 2) {
+          await new Promise(resolve => setTimeout(resolve, 200))
+        }
+      }
+      
+      if (!sessionValid) {
+        setError('Session could not be established. Please try logging in again.')
+        console.error('Session validation failed after admin login')
         return
       }
       

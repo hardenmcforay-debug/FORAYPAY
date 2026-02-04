@@ -543,6 +543,12 @@ export default async function CompanyDashboard() {
     </DashboardLayout>
   )
   } catch (error: any) {
+    // Re-throw redirect errors so Next.js can handle them properly
+    // Next.js redirect() throws a special error that should not be caught
+    if (error?.digest?.startsWith('NEXT_REDIRECT') || error?.message === 'NEXT_REDIRECT') {
+      throw error
+    }
+    
     console.error('Error in CompanyDashboard:', error)
     return (
       <div className="p-6">

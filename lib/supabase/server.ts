@@ -20,9 +20,15 @@ export const createServerSupabaseClient = () => {
   }
 
   try {
+    // createServerComponentClient expects the cookies function from next/headers
     return createServerComponentClient({ cookies })
   } catch (error: any) {
     console.error('Failed to create Supabase server client:', error)
+    console.error('Error details:', {
+      message: error?.message,
+      stack: error?.stack,
+      name: error?.name
+    })
     const errorMessage = error?.message || 'Unknown error'
     throw new Error(`Failed to initialize Supabase client: ${errorMessage}. Please check your environment variables in Vercel.`)
   }

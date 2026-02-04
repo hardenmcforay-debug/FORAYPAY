@@ -7,6 +7,27 @@ import { getAdminUrl } from '@/lib/domain'
 export async function getCurrentUser() {
   try {
     const supabase = createServerSupabaseClient()
+    
+    // First, try to get the session to check if cookies exist
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+    
+    if (sessionError) {
+      console.error('Session error in getCurrentUser:', sessionError)
+      console.error('Session error details:', {
+        message: sessionError.message,
+        status: sessionError.status,
+        name: sessionError.name
+      })
+      return null
+    }
+    
+    if (!session) {
+      console.log('No session found in getCurrentUser - user not authenticated')
+      return null
+    }
+    
+    // Validate the session by getting the user
+    // This ensures the session is still valid with Supabase
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     
     if (authError) {
@@ -16,14 +37,17 @@ export async function getCurrentUser() {
         status: authError.status,
         name: authError.name
       })
+      // If getUser fails but we had a session, the session might be invalid
+      // Return null to trigger re-authentication
       return null
     }
     
     if (!user) {
-      console.log('No user found in getCurrentUser')
+      console.log('No user found in getCurrentUser despite having a session')
       return null
     }
 
+    // Get user profile from database
     const { data: userProfile, error: profileError } = await supabase
       .from('users')
       .select('*')
@@ -48,6 +72,11 @@ export async function getCurrentUser() {
 
     return userProfile
   } catch (error: any) {
+    // Re-throw redirect errors so Next.js can handle them properly
+    if (error?.digest?.startsWith('NEXT_REDIRECT') || error?.message === 'NEXT_REDIRECT') {
+      throw error
+    }
+    
     console.error('Error in getCurrentUser:', error)
     console.error('Error details:', {
       message: error?.message,
@@ -155,6 +184,12 @@ export async function requireRole(allowedRoles: UserRole[]) {
 
     return user
   } catch (error: any) {
+    // Re-throw redirect errors so Next.js can handle them properly
+    // Next.js redirect() throws a special error that should not be caught
+    if (error?.digest?.startsWith('NEXT_REDIRECT') || error?.message === 'NEXT_REDIRECT') {
+      throw error
+    }
+    
     console.error('Error in requireRole:', error)
     console.error('Error stack:', error?.stack)
     
