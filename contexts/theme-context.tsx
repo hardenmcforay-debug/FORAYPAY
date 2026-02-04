@@ -10,7 +10,14 @@ interface ThemeContextType {
   setTheme: (theme: Theme) => void
 }
 
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
+// Default context value for SSR
+const defaultContextValue: ThemeContextType = {
+  theme: 'light',
+  toggleTheme: () => {},
+  setTheme: () => {},
+}
+
+const ThemeContext = createContext<ThemeContextType>(defaultContextValue)
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<Theme>('light')
@@ -19,26 +26,32 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     setMounted(true)
     // Check for saved theme preference or default to light mode
-    const savedTheme = localStorage.getItem('theme') as Theme | null
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    
-    const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light')
-    setThemeState(initialTheme)
-    applyTheme(initialTheme)
+    if (typeof window !== 'undefined') {
+      const savedTheme = localStorage.getItem('theme') as Theme | null
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+      
+      const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light')
+      setThemeState(initialTheme)
+      applyTheme(initialTheme)
+    }
   }, [])
 
   const applyTheme = (newTheme: Theme) => {
-    const root = document.documentElement
-    if (newTheme === 'dark') {
-      root.classList.add('dark')
-    } else {
-      root.classList.remove('dark')
+    if (typeof document !== 'undefined') {
+      const root = document.documentElement
+      if (newTheme === 'dark') {
+        root.classList.add('dark')
+      } else {
+        root.classList.remove('dark')
+      }
     }
   }
 
   const setTheme = (newTheme: Theme) => {
     setThemeState(newTheme)
-    localStorage.setItem('theme', newTheme)
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('theme', newTheme)
+    }
     applyTheme(newTheme)
   }
 
@@ -47,11 +60,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     setTheme(newTheme)
   }
 
-  // Prevent hydration mismatch by not rendering until mounted
-  if (!mounted) {
-    return <>{children}</>
-  }
-
+  // Always provide context value, even during SSR
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme, setTheme }}>
       {children}
@@ -60,10 +69,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 }
 
 export function useTheme() {
-  const context = useContext(ThemeContext)
-  if (context === undefined) {
-    throw new Error('useTheme must be used within a ThemeProvider')
-  }
-  return context
+  return useContext(ThemeContext)
 }
 
