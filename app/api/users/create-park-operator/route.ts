@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server'
 export async function POST(request: Request) {
   try {
     // Verify the requester is a company admin
-    const supabase = createServerSupabaseClient()
+    const supabase = await createServerSupabaseClient()
     const { data: { user: authUser } } = await supabase.auth.getUser()
     
     if (!authUser) {

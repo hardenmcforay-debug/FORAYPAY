@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation'
 
 export async function getCurrentUser() {
   try {
-    const supabase = createServerSupabaseClient()
+    const supabase = await createServerSupabaseClient()
     
     // Use getUser() directly - it validates the session and gets the user in one call
     // This is the recommended approach for server-side auth with Supabase
@@ -116,7 +116,7 @@ export async function requireRole(allowedRoles: UserRole[]) {
 
     // Check if company is suspended (for company_admin and park_operator)
     let companyId = user.company_id
-    const supabase = createServerSupabaseClient()
+    const supabase = await createServerSupabaseClient()
   
     // For park operators, get company_id from park_operators table if not in users table
     if (user.role === 'park_operator' && !companyId) {

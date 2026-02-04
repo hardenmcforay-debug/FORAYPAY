@@ -19,7 +19,7 @@ export async function PATCH(
       )
     }
 
-    const supabase = createServerSupabaseClient()
+    const supabase = await createServerSupabaseClient()
     const { data: { user: authUser } } = await supabase.auth.getUser()
     
     if (!authUser) {
@@ -285,7 +285,7 @@ export async function DELETE(
     }
 
     // Verify the requester is a platform admin
-    const supabase = createServerSupabaseClient()
+    const supabase = await createServerSupabaseClient()
     const { data: { user: authUser } } = await supabase.auth.getUser()
     
     if (!authUser) {
