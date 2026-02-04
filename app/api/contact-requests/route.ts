@@ -70,7 +70,7 @@ export async function POST(request: Request) {
 
 export async function GET(request: Request) {
   try {
-    const supabase = await createServerSupabaseClient()
+    const supabase = createServerSupabaseClient()
     const { data: { user: authUser } } = await supabase.auth.getUser()
     
     if (!authUser) {

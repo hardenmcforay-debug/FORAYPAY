@@ -1,7 +1,7 @@
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 
-export const createServerSupabaseClient = async () => {
+export const createServerSupabaseClient = () => {
   // Validate environment variables
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
     const error = new Error(
@@ -20,11 +20,11 @@ export const createServerSupabaseClient = async () => {
   }
 
   try {
-    // In Next.js 15+, cookies() is async and returns a promise
-    // We await it here and then pass a synchronous function that returns the resolved cookie store
-    const cookieStore = await cookies()
+    // In Next.js 16, cookies() is synchronous and returns ReadonlyRequestCookies
+    // createServerComponentClient expects a cookies function that returns Promise<ReadonlyRequestCookies>
+    // We wrap it to return a Promise for compatibility
     return createServerComponentClient({ 
-      cookies: () => cookieStore
+      cookies: async () => cookies()
     })
   } catch (error: any) {
     console.error('Failed to create Supabase server client:', error)

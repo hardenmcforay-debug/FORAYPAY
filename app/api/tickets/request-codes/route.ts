@@ -5,7 +5,7 @@ import { requireAuth } from '@/lib/auth'
 export async function POST(request: NextRequest) {
   try {
     const user = await requireAuth()
-    const supabase = await createServerSupabaseClient()
+    const supabase = createServerSupabaseClient()
 
     // Verify user is a park operator
     const { data: operator } = await supabase

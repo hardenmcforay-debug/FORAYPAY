@@ -7,7 +7,7 @@ export async function DELETE(
 ) {
   try {
     // Verify the requester is authenticated
-    const supabase = await createServerSupabaseClient()
+    const supabase = createServerSupabaseClient()
     const { data: { user: authUser } } = await supabase.auth.getUser()
     
     if (!authUser) {

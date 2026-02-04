@@ -21,7 +21,7 @@ export const dynamic = 'force-dynamic'
 
 export default async function PlatformSettingsPage() {
   const user = await requireRole(['platform_admin'])
-  const supabase = await createServerSupabaseClient()
+  const supabase = createServerSupabaseClient()
 
   // Get platform statistics
   const { count: totalCompanies } = await supabase
