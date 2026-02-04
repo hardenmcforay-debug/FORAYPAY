@@ -1,24 +1,364 @@
-import { createServerSupabaseClient } from '@/lib/supabase/server'
-import { requireRole } from '@/lib/auth'
+'use client'
+
+import { useState, useEffect, useCallback } from 'react'
+import { useRouter } from 'next/navigation'
 import DashboardLayout from '@/components/layout/dashboard-layout'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { TrendingUp, Route, Users, DollarSign, BarChart3, Ticket } from 'lucide-react'
 import { formatCurrency } from '@/lib/utils'
 import Link from 'next/link'
 import Button from '@/components/ui/button'
 import RevenueChart from '@/components/analytics/revenue-chart'
-import AuthRetry from '@/components/auth-retry'
 
-// Force dynamic rendering since this page uses cookies for authentication
-export const dynamic = 'force-dynamic'
+export default function CompanyDashboard() {
+  const router = useRouter()
+  const supabase = createClientComponentClient()
+  const [fetching, setFetching] = useState(true)
+  const [userEmail, setUserEmail] = useState<string>('')
+  const [companyId, setCompanyId] = useState<string | null>(null)
+  const [company, setCompany] = useState<any>(null)
+  const [totalRevenue, setTotalRevenue] = useState(0)
+  const [totalCommission, setTotalCommission] = useState(0)
+  const [netRevenue, setNetRevenue] = useState(0)
+  const [routesCount, setRoutesCount] = useState(0)
+  const [operatorsCount, setOperatorsCount] = useState(0)
+  const [totalTickets, setTotalTickets] = useState(0)
+  const [routeRevenueMap1d, setRouteRevenueMap1d] = useState(new Map())
+  const [routeRevenueMap7d, setRouteRevenueMap7d] = useState(new Map())
+  const [routeRevenueMap30d, setRouteRevenueMap30d] = useState(new Map())
+  const [routeTicketsMap1d, setRouteTicketsMap1d] = useState(new Map())
+  const [routeTicketsMap7d, setRouteTicketsMap7d] = useState(new Map())
+  const [routeTicketsMap30d, setRouteTicketsMap30d] = useState(new Map())
+  const [transactions, setTransactions] = useState<any[]>([])
 
-export default async function CompanyDashboard() {
-  try {
-    const user = await requireRole(['company_admin'])
-    const supabase = createServerSupabaseClient()
+  const loadDashboardData = useCallback(async () => {
+    if (!companyId) return
 
-    if (!user.company_id) {
-      return (
+    try {
+      // Get company data
+      const { data: companyData } = await supabase
+        .from('companies')
+        .select('*')
+        .eq('id', companyId)
+        .single()
+      setCompany(companyData)
+
+      // Get revenue data (last 12 months for analytics)
+      const twelveMonthsAgo = new Date()
+      twelveMonthsAgo.setMonth(twelveMonthsAgo.getMonth() - 12)
+      
+      const { data: transactionsData } = await supabase
+        .from('transactions')
+        .select('amount, commission, net_amount, created_at, ticket_id')
+        .eq('company_id', companyId)
+        .eq('status', 'completed')
+        .gte('created_at', twelveMonthsAgo.toISOString())
+        .order('created_at', { ascending: false })
+
+      setTransactions(transactionsData || [])
+      const revenue = transactionsData?.reduce((sum, t) => sum + (t.amount || 0), 0) || 0
+      const commission = transactionsData?.reduce((sum, t) => sum + (t.commission || 0), 0) || 0
+      const net = transactionsData?.reduce((sum, t) => sum + (t.net_amount || 0), 0) || 0
+      setTotalRevenue(revenue)
+      setTotalCommission(commission)
+      setNetRevenue(net)
+
+      // Get routes count
+      const { data: routes } = await supabase
+        .from('routes')
+        .select('id')
+        .eq('company_id', companyId)
+        .eq('status', 'active')
+      setRoutesCount(routes?.length || 0)
+
+      // Get operators count
+      const { data: operators } = await supabase
+        .from('park_operators')
+        .select('id')
+        .eq('company_id', companyId)
+        .eq('status', 'active')
+      setOperatorsCount(operators?.length || 0)
+
+      // Get total tickets issued
+      const { count: ticketsCount } = await supabase
+        .from('tickets')
+        .select('*', { count: 'exact', head: true })
+        .eq('company_id', companyId)
+      setTotalTickets(ticketsCount || 0)
+
+      // Get revenue by route (last 1 day)
+      const oneDayAgo = new Date()
+      oneDayAgo.setDate(oneDayAgo.getDate() - 1)
+      
+      const { data: transactions1d } = await supabase
+        .from('transactions')
+        .select(`
+          amount,
+          ticket_id,
+          tickets!inner(
+            route_id,
+            routes!inner(
+              id,
+              name,
+              origin,
+              destination
+            )
+          )
+        `)
+        .eq('company_id', companyId)
+        .eq('status', 'completed')
+        .gte('created_at', oneDayAgo.toISOString())
+
+      const map1d = new Map()
+      transactions1d?.forEach((transaction: any) => {
+        const route = transaction.tickets?.routes
+        if (route && transaction.amount) {
+          const routeId = route.id
+          const current = map1d.get(routeId) || { revenue: 0, name: route.name || 'Unknown Route', origin: route.origin || '', destination: route.destination || '' }
+          map1d.set(routeId, {
+            ...current,
+            revenue: current.revenue + (Number(transaction.amount) || 0)
+          })
+        }
+      })
+      setRouteRevenueMap1d(map1d)
+
+      // Get revenue by route (last 7 days)
+      const sevenDaysAgo = new Date()
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
+      
+      const { data: transactions7d } = await supabase
+        .from('transactions')
+        .select(`
+          amount,
+          ticket_id,
+          tickets!inner(
+            route_id,
+            routes!inner(
+              id,
+              name,
+              origin,
+              destination
+            )
+          )
+        `)
+        .eq('company_id', companyId)
+        .eq('status', 'completed')
+        .gte('created_at', sevenDaysAgo.toISOString())
+
+      const map7d = new Map()
+      transactions7d?.forEach((transaction: any) => {
+        const route = transaction.tickets?.routes
+        if (route && transaction.amount) {
+          const routeId = route.id
+          const current = map7d.get(routeId) || { revenue: 0, name: route.name || 'Unknown Route', origin: route.origin || '', destination: route.destination || '' }
+          map7d.set(routeId, {
+            ...current,
+            revenue: current.revenue + (Number(transaction.amount) || 0)
+          })
+        }
+      })
+      setRouteRevenueMap7d(map7d)
+
+      // Get revenue by route (last 30 days)
+      const thirtyDaysAgo = new Date()
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
+      
+      const { data: transactions30d } = await supabase
+        .from('transactions')
+        .select(`
+          amount,
+          ticket_id,
+          tickets!inner(
+            route_id,
+            routes!inner(
+              id,
+              name,
+              origin,
+              destination
+            )
+          )
+        `)
+        .eq('company_id', companyId)
+        .eq('status', 'completed')
+        .gte('created_at', thirtyDaysAgo.toISOString())
+
+      const map30d = new Map()
+      transactions30d?.forEach((transaction: any) => {
+        const route = transaction.tickets?.routes
+        if (route && transaction.amount) {
+          const routeId = route.id
+          const current = map30d.get(routeId) || { revenue: 0, name: route.name || 'Unknown Route', origin: route.origin || '', destination: route.destination || '' }
+          map30d.set(routeId, {
+            ...current,
+            revenue: current.revenue + (Number(transaction.amount) || 0)
+          })
+        }
+      })
+      setRouteRevenueMap30d(map30d)
+
+      // Get tickets issued by route (last 1 day)
+      const { data: tickets1d } = await supabase
+        .from('tickets')
+        .select(`
+          route_id,
+          routes!inner(
+            id,
+            name,
+            origin,
+            destination
+          )
+        `)
+        .eq('company_id', companyId)
+        .gte('created_at', oneDayAgo.toISOString())
+
+      const ticketsMap1d = new Map()
+      tickets1d?.forEach((ticket: any) => {
+        const route = ticket.routes
+        if (route) {
+          const routeId = route.id
+          const current = ticketsMap1d.get(routeId) || { count: 0, name: route.name || 'Unknown Route', origin: route.origin || '', destination: route.destination || '' }
+          ticketsMap1d.set(routeId, {
+            ...current,
+            count: current.count + 1
+          })
+        }
+      })
+      setRouteTicketsMap1d(ticketsMap1d)
+
+      // Get tickets issued by route (last 7 days)
+      const { data: tickets7d } = await supabase
+        .from('tickets')
+        .select(`
+          route_id,
+          routes!inner(
+            id,
+            name,
+            origin,
+            destination
+          )
+        `)
+        .eq('company_id', companyId)
+        .gte('created_at', sevenDaysAgo.toISOString())
+
+      const ticketsMap7d = new Map()
+      tickets7d?.forEach((ticket: any) => {
+        const route = ticket.routes
+        if (route) {
+          const routeId = route.id
+          const current = ticketsMap7d.get(routeId) || { count: 0, name: route.name || 'Unknown Route', origin: route.origin || '', destination: route.destination || '' }
+          ticketsMap7d.set(routeId, {
+            ...current,
+            count: current.count + 1
+          })
+        }
+      })
+      setRouteTicketsMap7d(ticketsMap7d)
+
+      // Get tickets issued by route (last 30 days)
+      const { data: tickets30d } = await supabase
+        .from('tickets')
+        .select(`
+          route_id,
+          routes!inner(
+            id,
+            name,
+            origin,
+            destination
+          )
+        `)
+        .eq('company_id', companyId)
+        .gte('created_at', thirtyDaysAgo.toISOString())
+
+      const ticketsMap30d = new Map()
+      tickets30d?.forEach((ticket: any) => {
+        const route = ticket.routes
+        if (route) {
+          const routeId = route.id
+          const current = ticketsMap30d.get(routeId) || { count: 0, name: route.name || 'Unknown Route', origin: route.origin || '', destination: route.destination || '' }
+          ticketsMap30d.set(routeId, {
+            ...current,
+            count: current.count + 1
+          })
+        }
+      })
+      setRouteTicketsMap30d(ticketsMap30d)
+    } catch (err: any) {
+      console.error('Error loading dashboard data:', err)
+    } finally {
+      setFetching(false)
+    }
+  }, [supabase, companyId])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user) {
+          router.push('/login')
+          return
+        }
+
+        setUserEmail(user.email || '')
+
+        const { data: profile } = await supabase
+          .from('users')
+          .select('role, company_id')
+          .eq('id', user.id)
+          .single()
+
+        if (profile?.role !== 'company_admin') {
+          router.push('/unauthorized')
+          return
+        }
+
+        if (!profile.company_id) {
+          setFetching(false)
+          return
+        }
+
+        setCompanyId(profile.company_id)
+      } catch (err: any) {
+        console.error('Error fetching user data:', err)
+        router.push('/login')
+      }
+    }
+
+    fetchData()
+  }, [supabase, router])
+
+  useEffect(() => {
+    if (companyId) {
+      loadDashboardData()
+    }
+  }, [companyId, loadDashboardData])
+
+  if (fetching) {
+    return (
+      <DashboardLayout
+        role="company_admin"
+        companyId={companyId || undefined}
+        userEmail={userEmail}
+        userName={company?.name || 'Company Dashboard'}
+      >
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="text-center">
+            <div className="w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading dashboard...</p>
+          </div>
+        </div>
+      </DashboardLayout>
+    )
+  }
+
+  if (!companyId) {
+    return (
+      <DashboardLayout
+        role="company_admin"
+        userEmail={userEmail}
+        userName="Company Dashboard"
+      >
         <div className="p-6">
           <div className="bg-warning-50 border border-warning-200 rounded-lg p-4">
             <h2 className="text-lg font-semibold text-warning-900 mb-2">No Company Assigned</h2>
@@ -27,249 +367,15 @@ export default async function CompanyDashboard() {
             </p>
           </div>
         </div>
-      )
-    }
-
-  // Get company data
-  const { data: company } = await supabase
-    .from('companies')
-    .select('*')
-    .eq('id', user.company_id)
-    .single()
-
-  // Get revenue data (last 12 months for analytics)
-  const twelveMonthsAgo = new Date()
-  twelveMonthsAgo.setMonth(twelveMonthsAgo.getMonth() - 12)
-  
-  const { data: transactions } = await supabase
-    .from('transactions')
-    .select('amount, commission, net_amount, created_at, ticket_id')
-    .eq('company_id', user.company_id)
-    .eq('status', 'completed')
-    .gte('created_at', twelveMonthsAgo.toISOString())
-    .order('created_at', { ascending: false })
-
-  const totalRevenue = transactions?.reduce((sum, t) => sum + (t.amount || 0), 0) || 0
-  const totalCommission = transactions?.reduce((sum, t) => sum + (t.commission || 0), 0) || 0
-  const netRevenue = transactions?.reduce((sum, t) => sum + (t.net_amount || 0), 0) || 0
-
-  // Get routes count
-  const { data: routes } = await supabase
-    .from('routes')
-    .select('id')
-    .eq('company_id', user.company_id)
-    .eq('status', 'active')
-
-  // Get operators count
-  const { data: operators } = await supabase
-    .from('park_operators')
-    .select('id')
-    .eq('company_id', user.company_id)
-    .eq('status', 'active')
-
-  // Get total tickets issued
-  const { count: totalTickets } = await supabase
-    .from('tickets')
-    .select('*', { count: 'exact', head: true })
-    .eq('company_id', user.company_id)
-
-  // Get revenue by route (last 1 day)
-  const oneDayAgo = new Date()
-  oneDayAgo.setDate(oneDayAgo.getDate() - 1)
-  
-  const { data: transactions1d } = await supabase
-    .from('transactions')
-    .select(`
-      amount,
-      ticket_id,
-      tickets!inner(
-        route_id,
-        routes!inner(
-          id,
-          name,
-          origin,
-          destination
-        )
-      )
-    `)
-    .eq('company_id', user.company_id)
-    .eq('status', 'completed')
-    .gte('created_at', oneDayAgo.toISOString())
-
-  const routeRevenueMap1d = new Map<string, { revenue: number; name: string; origin: string; destination: string }>()
-  transactions1d?.forEach((transaction: any) => {
-    const route = transaction.tickets?.routes
-    if (route && transaction.amount) {
-      const routeId = route.id
-      const current = routeRevenueMap1d.get(routeId) || { revenue: 0, name: route.name || 'Unknown Route', origin: route.origin || '', destination: route.destination || '' }
-      routeRevenueMap1d.set(routeId, {
-        ...current,
-        revenue: current.revenue + (Number(transaction.amount) || 0)
-      })
-    }
-  })
-
-  // Get revenue by route (last 7 days)
-  const sevenDaysAgo = new Date()
-  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
-  
-  const { data: transactions7d } = await supabase
-    .from('transactions')
-    .select(`
-      amount,
-      ticket_id,
-      tickets!inner(
-        route_id,
-        routes!inner(
-          id,
-          name,
-          origin,
-          destination
-        )
-      )
-    `)
-    .eq('company_id', user.company_id)
-    .eq('status', 'completed')
-    .gte('created_at', sevenDaysAgo.toISOString())
-
-  const routeRevenueMap7d = new Map<string, { revenue: number; name: string; origin: string; destination: string }>()
-  transactions7d?.forEach((transaction: any) => {
-    const route = transaction.tickets?.routes
-    if (route && transaction.amount) {
-      const routeId = route.id
-      const current = routeRevenueMap7d.get(routeId) || { revenue: 0, name: route.name || 'Unknown Route', origin: route.origin || '', destination: route.destination || '' }
-      routeRevenueMap7d.set(routeId, {
-        ...current,
-        revenue: current.revenue + (Number(transaction.amount) || 0)
-      })
-    }
-  })
-
-  // Get revenue by route (last 30 days)
-  const thirtyDaysAgo = new Date()
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
-  
-  const { data: transactions30d } = await supabase
-    .from('transactions')
-    .select(`
-      amount,
-      ticket_id,
-      tickets!inner(
-        route_id,
-        routes!inner(
-          id,
-          name,
-          origin,
-          destination
-        )
-      )
-    `)
-    .eq('company_id', user.company_id)
-    .eq('status', 'completed')
-    .gte('created_at', thirtyDaysAgo.toISOString())
-
-  const routeRevenueMap30d = new Map<string, { revenue: number; name: string; origin: string; destination: string }>()
-  transactions30d?.forEach((transaction: any) => {
-    const route = transaction.tickets?.routes
-    if (route && transaction.amount) {
-      const routeId = route.id
-      const current = routeRevenueMap30d.get(routeId) || { revenue: 0, name: route.name || 'Unknown Route', origin: route.origin || '', destination: route.destination || '' }
-      routeRevenueMap30d.set(routeId, {
-        ...current,
-        revenue: current.revenue + (Number(transaction.amount) || 0)
-      })
-    }
-  })
-
-  // Get tickets issued by route (last 1 day)
-  const { data: tickets1d } = await supabase
-    .from('tickets')
-    .select(`
-      route_id,
-      routes!inner(
-        id,
-        name,
-        origin,
-        destination
-      )
-    `)
-    .eq('company_id', user.company_id)
-    .gte('created_at', oneDayAgo.toISOString())
-
-  const routeTicketsMap1d = new Map<string, { count: number; name: string; origin: string; destination: string }>()
-  tickets1d?.forEach((ticket: any) => {
-    const route = ticket.routes
-    if (route) {
-      const routeId = route.id
-      const current = routeTicketsMap1d.get(routeId) || { count: 0, name: route.name || 'Unknown Route', origin: route.origin || '', destination: route.destination || '' }
-      routeTicketsMap1d.set(routeId, {
-        ...current,
-        count: current.count + 1
-      })
-    }
-  })
-
-  // Get tickets issued by route (last 7 days)
-  const { data: tickets7d } = await supabase
-    .from('tickets')
-    .select(`
-      route_id,
-      routes!inner(
-        id,
-        name,
-        origin,
-        destination
-      )
-    `)
-    .eq('company_id', user.company_id)
-    .gte('created_at', sevenDaysAgo.toISOString())
-
-  const routeTicketsMap7d = new Map<string, { count: number; name: string; origin: string; destination: string }>()
-  tickets7d?.forEach((ticket: any) => {
-    const route = ticket.routes
-    if (route) {
-      const routeId = route.id
-      const current = routeTicketsMap7d.get(routeId) || { count: 0, name: route.name || 'Unknown Route', origin: route.origin || '', destination: route.destination || '' }
-      routeTicketsMap7d.set(routeId, {
-        ...current,
-        count: current.count + 1
-      })
-    }
-  })
-
-  // Get tickets issued by route (last 30 days)
-  const { data: tickets30d } = await supabase
-    .from('tickets')
-    .select(`
-      route_id,
-      routes!inner(
-        id,
-        name,
-        origin,
-        destination
-      )
-    `)
-    .eq('company_id', user.company_id)
-    .gte('created_at', thirtyDaysAgo.toISOString())
-
-  const routeTicketsMap30d = new Map<string, { count: number; name: string; origin: string; destination: string }>()
-  tickets30d?.forEach((ticket: any) => {
-    const route = ticket.routes
-    if (route) {
-      const routeId = route.id
-      const current = routeTicketsMap30d.get(routeId) || { count: 0, name: route.name || 'Unknown Route', origin: route.origin || '', destination: route.destination || '' }
-      routeTicketsMap30d.set(routeId, {
-        ...current,
-        count: current.count + 1
-      })
-    }
-  })
+      </DashboardLayout>
+    )
+  }
 
   return (
     <DashboardLayout
       role="company_admin"
-      companyId={user.company_id}
-      userEmail={user.email}
+      companyId={companyId}
+      userEmail={userEmail}
       userName={company?.name || 'Company Dashboard'}
     >
       <div className="space-y-6">
@@ -333,7 +439,7 @@ export default async function CompanyDashboard() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600 mb-1">Total Tickets Issued</p>
-                  <p className="text-3xl font-bold text-gray-900">{totalTickets || 0}</p>
+                  <p className="text-3xl font-bold text-gray-900">{totalTickets}</p>
                 </div>
                 <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
                   <Ticket className="w-6 h-6 text-blue-600" />
@@ -347,7 +453,7 @@ export default async function CompanyDashboard() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600 mb-1">Active Routes</p>
-                  <p className="text-3xl font-bold text-gray-900">{routes?.length || 0}</p>
+                  <p className="text-3xl font-bold text-gray-900">{routesCount}</p>
                 </div>
                 <div className="w-12 h-12 bg-error-100 rounded-lg flex items-center justify-center">
                   <Route className="w-6 h-6 text-error-600" />
@@ -367,7 +473,7 @@ export default async function CompanyDashboard() {
                 <div className="space-y-4">
                   {Array.from(routeRevenueMap1d.entries())
                     .sort((a, b) => b[1].revenue - a[1].revenue)
-                    .map(([routeId, routeData]) => (
+                    .map(([routeId, routeData]: [string, any]) => (
                       <div key={routeId} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                         <div className="flex-1">
                           <p className="font-medium text-gray-900">{routeData.name}</p>
@@ -394,7 +500,7 @@ export default async function CompanyDashboard() {
                 <div className="space-y-4">
                   {Array.from(routeRevenueMap7d.entries())
                     .sort((a, b) => b[1].revenue - a[1].revenue)
-                    .map(([routeId, routeData]) => (
+                    .map(([routeId, routeData]: [string, any]) => (
                       <div key={routeId} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                         <div className="flex-1">
                           <p className="font-medium text-gray-900">{routeData.name}</p>
@@ -422,7 +528,7 @@ export default async function CompanyDashboard() {
               <div className="space-y-4">
                 {Array.from(routeRevenueMap30d.entries())
                   .sort((a, b) => b[1].revenue - a[1].revenue)
-                  .map(([routeId, routeData]) => (
+                  .map(([routeId, routeData]: [string, any]) => (
                     <div key={routeId} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                       <div className="flex-1">
                         <p className="font-medium text-gray-900">{routeData.name}</p>
@@ -450,7 +556,7 @@ export default async function CompanyDashboard() {
                 <div className="space-y-4">
                   {Array.from(routeTicketsMap1d.entries())
                     .sort((a, b) => b[1].count - a[1].count)
-                    .map(([routeId, routeData]) => (
+                    .map(([routeId, routeData]: [string, any]) => (
                       <div key={routeId} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                         <div className="flex-1">
                           <p className="font-medium text-gray-900">{routeData.name}</p>
@@ -477,7 +583,7 @@ export default async function CompanyDashboard() {
                 <div className="space-y-4">
                   {Array.from(routeTicketsMap7d.entries())
                     .sort((a, b) => b[1].count - a[1].count)
-                    .map(([routeId, routeData]) => (
+                    .map(([routeId, routeData]: [string, any]) => (
                       <div key={routeId} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                         <div className="flex-1">
                           <p className="font-medium text-gray-900">{routeData.name}</p>
@@ -505,7 +611,7 @@ export default async function CompanyDashboard() {
               <div className="space-y-4">
                 {Array.from(routeTicketsMap30d.entries())
                   .sort((a, b) => b[1].count - a[1].count)
-                  .map(([routeId, routeData]) => (
+                  .map(([routeId, routeData]: [string, any]) => (
                     <div key={routeId} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                       <div className="flex-1">
                         <p className="font-medium text-gray-900">{routeData.name}</p>
@@ -533,51 +639,14 @@ export default async function CompanyDashboard() {
           </CardHeader>
           <CardContent>
             <RevenueChart 
-              transactions={transactions?.map(t => ({
+              transactions={transactions.map(t => ({
                 amount: t.amount || 0,
                 created_at: t.created_at
-              })) || []} 
+              }))} 
             />
           </CardContent>
         </Card>
       </div>
     </DashboardLayout>
   )
-  } catch (error: any) {
-    // Re-throw redirect errors so Next.js can handle them properly
-    // Next.js redirect() throws a special error that should not be caught
-    if (error?.digest?.startsWith('NEXT_REDIRECT') || error?.message === 'NEXT_REDIRECT') {
-      throw error
-    }
-    
-    console.error('Error in CompanyDashboard:', error)
-    
-    // Check if it's an authentication error (cookies not available yet)
-    const errorMessage = error?.message || ''
-    const isAuthError = errorMessage.includes('auth') || 
-                        errorMessage.includes('session') || 
-                        errorMessage.includes('cookie') ||
-                        errorMessage.includes('JWT') ||
-                        errorMessage.includes('token')
-    
-    if (isAuthError) {
-      // Return a component that will retry on client side
-      return <AuthRetry />
-    }
-    
-    return (
-      <div className="p-6">
-        <div className="bg-error-50 border border-error-200 rounded-lg p-4">
-          <h2 className="text-lg font-semibold text-error-900 mb-2">Authentication Error</h2>
-          <p className="text-error-700 mb-2">
-            {error?.message || 'Failed to load dashboard. Please try logging in again.'}
-          </p>
-          <p className="text-sm text-error-600">
-            If this problem persists, please contact the administrator.
-          </p>
-        </div>
-      </div>
-    )
-  }
 }
-
