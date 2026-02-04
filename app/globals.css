@@ -48,11 +48,6 @@ body {
   background: #f9fafb;
 }
 
-/* Dashboard neon blue background */
-.dashboard-background {
-  background: linear-gradient(135deg, #00F0FF 0%, #00D9FF 50%, #00BFFF 100%);
-}
-
 /* Improve image rendering quality */
 img {
   image-rendering: -webkit-optimize-contrast;

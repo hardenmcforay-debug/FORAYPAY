@@ -53,7 +53,7 @@ export default function DashboardLayout({
   }
 
   return (
-    <div className="flex h-screen bg-[#0a1929]">
+    <div className="flex h-screen bg-gray-50">
       <Sidebar role={role} companyId={companyId} isMenuOpen={isMenuOpen} onMenuClose={closeMenu} />
       <div className="flex-1 flex flex-col overflow-hidden w-full lg:w-auto">
         <Header 
