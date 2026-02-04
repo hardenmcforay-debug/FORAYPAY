@@ -11,9 +11,24 @@
 
 ### 1. Database Setup
 
+**Option A: Complete Setup (Recommended for new installations)**
+
 1. Go to your Supabase project dashboard
 2. Navigate to SQL Editor
-3. Run the SQL schema from `supabase/schema.sql`
+3. Run the complete setup script from `supabase/complete-setup.sql`
+   - This single script sets up everything: tables, indexes, RLS policies, functions, and triggers
+   - Safe to run multiple times (idempotent)
+4. Verify setup using the verification queries at the end of the script
+
+**Option B: Step-by-Step Setup (For existing installations or troubleshooting)**
+
+1. Go to your Supabase project dashboard
+2. Navigate to SQL Editor
+3. Run scripts in this order:
+   - `supabase/schema.sql` - Core tables and basic setup
+   - `supabase/transfer-schema.sql` - Commission transfers table
+   - `supabase/add-payment-codes-table.sql` - Payment codes table
+   - `supabase/performance-indexes-complete.sql` - Performance indexes
 4. Verify all tables and policies are created
 
 ### 2. Environment Variables
@@ -29,6 +44,12 @@ MONIME_API_KEY=your_monime_api_key
 MONIME_PLATFORM_ACCOUNT_ID=your_platform_monime_account_id
 MONIME_WEBHOOK_SECRET=your_monime_webhook_secret
 NEXT_PUBLIC_APP_URL=http://localhost:3000
+
+# Platform Admin Domain (Optional - for separate admin domain)
+# If Platform Admin should login from a different domain, set this variable
+# Example: NEXT_PUBLIC_ADMIN_APP_URL=https://admin.foraypay.com
+# If not set, Platform Admin will use NEXT_PUBLIC_APP_URL
+NEXT_PUBLIC_ADMIN_APP_URL=http://localhost:3000
 ```
 
 ### 3. Install Dependencies
@@ -45,7 +66,25 @@ npm run dev
 
 Visit `http://localhost:3000` to see the application.
 
-### 5. Initial Setup
+### 5. Supabase Multi-Domain Configuration (If Using Separate Admin Domain)
+
+If you want Platform Admin to login from a different domain (e.g., `admin.foraypay.com`), you need to configure Supabase to allow authentication from both domains:
+
+1. Go to your Supabase project dashboard
+2. Navigate to **Authentication** → **URL Configuration**
+3. Add both domains to **Redirect URLs**:
+   - Main app domain: `https://yourdomain.com/**`
+   - Admin domain: `https://admin.yourdomain.com/**`
+4. Add both domains to **Site URL** (comma-separated or add separately):
+   - Main app: `https://yourdomain.com`
+   - Admin app: `https://admin.yourdomain.com`
+5. Save the configuration
+
+**Note:** If Platform Admin uses the same domain as the main app, you can skip this step.
+
+For detailed instructions, see [PLATFORM_ADMIN_DOMAIN_SETUP.md](./PLATFORM_ADMIN_DOMAIN_SETUP.md).
+
+### 6. Initial Setup
 
 1. Create a platform admin user:
    - Sign up through Supabase Auth
@@ -68,7 +107,7 @@ Visit `http://localhost:3000` to see the application.
    - Add routes
    - Add park operators
 
-### 6. MoniMe Integration
+### 7. MoniMe Integration
 
 1. Configure MoniMe API credentials:
    - `MONIME_API_URL`: MoniMe API base URL (default: `https://api.monime.com`)
@@ -123,6 +162,9 @@ Ensure all environment variables are set in your hosting platform:
 - `MONIME_PLATFORM_ACCOUNT_ID`
 - `MONIME_WEBHOOK_SECRET`
 - `NEXT_PUBLIC_APP_URL` (your production URL)
+- `NEXT_PUBLIC_ADMIN_APP_URL` (optional - Platform Admin domain, defaults to `NEXT_PUBLIC_APP_URL`)
+
+**Important:** If using a separate admin domain, configure Supabase redirect URLs as described in step 5.
 
 ### Security Checklist
 
@@ -132,6 +174,7 @@ Ensure all environment variables are set in your hosting platform:
 - [ ] HTTPS is enabled
 - [ ] Environment variables are secure
 - [ ] Database backups are configured
+- [ ] Supabase redirect URLs configured for all domains (if using separate admin domain)
 
 ## Troubleshooting
 
