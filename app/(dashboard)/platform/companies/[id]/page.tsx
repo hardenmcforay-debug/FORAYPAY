@@ -34,6 +34,7 @@ export default function CompanyDetailsPage() {
   const companyId = params.id as string
 
   const [fetching, setFetching] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [userEmail, setUserEmail] = useState<string>('')
   const [company, setCompany] = useState<any>(null)
   const [routes, setRoutes] = useState<any[]>([])
@@ -57,6 +58,7 @@ export default function CompanyDetailsPage() {
     if (!companyId) return
 
     try {
+      setError(null)
       const res = await fetch(`/api/platform/companies/${companyId}/details`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
@@ -76,22 +78,40 @@ export default function CompanyDetailsPage() {
           return
         }
         const payload = await res.json().catch(() => null)
-        throw new Error(payload?.error || 'Failed to load company details')
+        const errorMessage = payload?.error || 'Failed to load company details'
+        setError(errorMessage)
+        throw new Error(errorMessage)
       }
 
       const payload = await res.json()
+      if (!payload.company) {
+        setError('Company data not found in response')
+        return
+      }
       setCompany(payload.company)
       setRoutes(payload.routes || [])
       setOperators(payload.operators || [])
       setAdmins(payload.admins || [])
       setRecentTickets(payload.recentTickets || [])
-      setStats(payload.stats)
+      setStats(payload.stats || {
+        totalTickets: 0,
+        totalRoutes: 0,
+        activeRoutes: 0,
+        totalOperators: 0,
+        activeOperators: 0,
+        usedTickets: 0,
+        pendingTickets: 0,
+        platformRevenue30d: 0,
+        totalPlatformRevenue: 0,
+        companyRevenue30d: 0,
+      })
     } catch (err: any) {
       console.error('Error loading company data:', err)
+      setError(err.message || 'Failed to load company details')
     } finally {
       setFetching(false)
     }
-  }, [supabase, companyId, router])
+  }, [companyId, router])
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -124,7 +144,7 @@ export default function CompanyDetailsPage() {
     fetchUser()
   }, [supabase, router, loadData])
 
-  if (fetching || !company) {
+  if (fetching) {
     return (
       <DashboardLayout
         role="platform_admin"
@@ -135,6 +155,43 @@ export default function CompanyDetailsPage() {
           <div className="text-center">
             <Loader2 className="w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
             <p className="text-gray-600">Loading company details...</p>
+          </div>
+        </div>
+      </DashboardLayout>
+    )
+  }
+
+  if (error || !company) {
+    return (
+      <DashboardLayout
+        role="platform_admin"
+        userEmail={userEmail}
+        userName="Platform Admin"
+      >
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="text-center max-w-md">
+            <XCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">Failed to Load Company Details</h2>
+            <p className="text-gray-600 mb-4">{error || 'Company not found'}</p>
+            <div className="flex gap-2 justify-center">
+              <Button
+                variant="outline"
+                onClick={() => router.push('/platform/companies')}
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to Companies
+              </Button>
+              <Button
+                onClick={() => {
+                  setFetching(true)
+                  setError(null)
+                  loadData()
+                }}
+              >
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Retry
+              </Button>
+            </div>
           </div>
         </div>
       </DashboardLayout>

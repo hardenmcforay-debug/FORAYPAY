@@ -93,12 +93,12 @@ export default function Sidebar({ role, companyId, isMenuOpen = false, onMenuClo
       {/* Sidebar */}
       <aside
         className={cn(
-          'fixed lg:sticky top-0 left-0 z-[50] w-64 bg-white border-r border-gray-200 h-screen transition-transform duration-300 ease-in-out shadow-lg lg:shadow-none',
+          'fixed lg:sticky top-0 left-0 z-[50] w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 h-screen transition-transform duration-300 ease-in-out shadow-lg lg:shadow-none',
           'lg:translate-x-0',
           isMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         )}
       >
-        <div className="p-4 lg:p-6 border-b border-gray-200">
+        <div className="p-4 lg:p-6 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center gap-2">
             <div className="w-10 h-10 rounded-lg flex items-center justify-center overflow-hidden relative flex-shrink-0">
               <Image 
@@ -111,8 +111,8 @@ export default function Sidebar({ role, companyId, isMenuOpen = false, onMenuClo
               />
             </div>
             <span className="text-lg lg:text-xl font-bold whitespace-nowrap">
-              <span className="text-primary-600">Foray</span>
-              <span className="text-success-600">Pay</span>
+              <span className="text-gray-900 dark:text-gray-100">Foray</span>
+              <span className="text-success-600 dark:text-success-400">Pay</span>
             </span>
           </div>
         </div>
@@ -132,10 +132,10 @@ export default function Sidebar({ role, companyId, isMenuOpen = false, onMenuClo
                 onClick={onMenuClose}
                 className={cn(
                   'flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-sm lg:text-base min-h-[44px]',
-                  'touch-manipulation active:bg-gray-100',
+                  'touch-manipulation active:bg-gray-100 dark:active:bg-gray-700',
                   isActive
-                    ? 'bg-primary-50 text-primary-700 font-medium'
-                    : 'text-gray-700 hover:bg-gray-50'
+                    ? 'bg-primary-50 dark:bg-primary-900/30 text-gray-900 dark:text-gray-100 font-medium'
+                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50'
                 )}
                 aria-current={isActive ? 'page' : undefined}
               >
