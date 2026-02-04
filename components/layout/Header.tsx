@@ -65,20 +65,25 @@ export default function Header({ userEmail: propUserEmail, userName, onMenuToggl
   }
 
   return (
-    <header className="h-14 sm:h-16 bg-white border-b border-gray-200 flex items-center justify-between px-3 sm:px-4 lg:px-6 z-30 relative">
+    <header className="h-14 sm:h-16 bg-white border-b border-gray-200 flex items-center justify-between px-3 sm:px-4 lg:px-6 z-40 relative">
       <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
-        {/* Hamburger Menu Button - Only on mobile/tablet */}
+        {/* Hamburger Menu Button - Always visible on mobile/tablet screens */}
         {onMenuToggle && (
           <button
-            onClick={onMenuToggle}
-            className="lg:hidden p-2 -ml-1 sm:-ml-2 hover:bg-gray-100 active:bg-gray-200 rounded-lg transition-colors flex-shrink-0 touch-manipulation"
-            aria-label="Toggle menu"
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              onMenuToggle()
+            }}
+            className="lg:hidden p-2 -ml-1 sm:-ml-2 hover:bg-gray-100 active:bg-gray-200 rounded-lg transition-colors flex-shrink-0 touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center z-40 relative"
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isMenuOpen}
             type="button"
           >
             {isMenuOpen ? (
-              <X className="w-5 h-5 sm:w-6 sm:h-6 text-gray-700" />
+              <X className="w-6 h-6 sm:w-7 sm:h-7 text-gray-700" />
             ) : (
-              <Menu className="w-5 h-5 sm:w-6 sm:h-6 text-gray-700" />
+              <Menu className="w-6 h-6 sm:w-7 sm:h-7 text-gray-700" />
             )}
           </button>
         )}
