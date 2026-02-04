@@ -569,7 +569,7 @@ export default function SettingsPage() {
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Role
                     </label>
-                    <span className="inline-block px-2 py-1 text-xs rounded-full bg-primary-100 text-primary-700 capitalize">
+                    <span className="inline-block px-2 py-1 text-xs rounded-full bg-primary-100 text-gray-900 dark:text-gray-100 capitalize">
                       {userProfile.role.replace('_', ' ')}
                     </span>
                   </div>

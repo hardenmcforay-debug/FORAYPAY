@@ -22,7 +22,7 @@ export default function AboutPage() {
               />
             </div>
             <span className="text-2xl font-bold">
-              <span className="text-primary-600">Foray</span>
+              <span className="text-gray-900 dark:text-gray-100">Foray</span>
               <span className="text-success-600">Pay</span>
             </span>
           </Link>

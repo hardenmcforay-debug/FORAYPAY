@@ -69,7 +69,7 @@ export default function TicketRetrievePage() {
               />
             </div>
             <span className="text-3xl font-bold">
-              <span className="text-primary-600">Foray</span>
+              <span className="text-gray-900 dark:text-gray-100">Foray</span>
               <span className="text-success-600">Pay</span>
             </span>
           </div>
@@ -133,7 +133,7 @@ export default function TicketRetrievePage() {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">OTP Code:</span>
-                      <span className="font-mono font-bold text-lg text-primary-600">{ticket.monime_otp}</span>
+                      <span className="font-mono font-bold text-lg text-gray-900 dark:text-gray-100">{ticket.monime_otp}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Purchased:</span>

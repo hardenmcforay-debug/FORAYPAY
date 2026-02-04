@@ -428,7 +428,7 @@ export default function ValidateTicketsPage() {
             </CardHeader>
             <CardContent>
               <div className="text-center py-6">
-                <p className="text-4xl font-bold text-primary-600">{todayCount}</p>
+                <p className="text-4xl font-bold text-gray-900 dark:text-gray-100">{todayCount}</p>
                 <p className="text-sm text-gray-600 mt-2">Validations Today</p>
               </div>
             </CardContent>

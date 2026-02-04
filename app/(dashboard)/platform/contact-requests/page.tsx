@@ -262,7 +262,7 @@ export default function ContactRequestsPage() {
                         {request.website && (
                           <div className="flex items-center gap-2 text-gray-600">
                             <Globe className="w-4 h-4" />
-                            <a href={request.website} target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline truncate">
+                            <a href={request.website} target="_blank" rel="noopener noreferrer" className="text-gray-900 dark:text-gray-100 hover:underline truncate">
                               {request.website}
                             </a>
                           </div>
@@ -331,7 +331,7 @@ export default function ContactRequestsPage() {
                     <div>
                       <label className="text-sm font-medium text-gray-500">Website</label>
                       <p className="text-gray-900">
-                        <a href={selectedRequest.website} target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline">
+                        <a href={selectedRequest.website} target="_blank" rel="noopener noreferrer" className="text-gray-900 dark:text-gray-100 hover:underline">
                           {selectedRequest.website}
                         </a>
                       </p>
@@ -356,7 +356,7 @@ export default function ContactRequestsPage() {
                   <div>
                     <label className="text-sm font-medium text-gray-500">Email</label>
                     <p className="text-gray-900">
-                      <a href={`mailto:${selectedRequest.email}`} className="text-primary-600 hover:underline">
+                      <a href={`mailto:${selectedRequest.email}`} className="text-gray-900 dark:text-gray-100 hover:underline">
                         {selectedRequest.email}
                       </a>
                     </p>
@@ -364,7 +364,7 @@ export default function ContactRequestsPage() {
                   <div>
                     <label className="text-sm font-medium text-gray-500">Phone</label>
                     <p className="text-gray-900">
-                      <a href={`tel:${selectedRequest.phone}`} className="text-primary-600 hover:underline">
+                      <a href={`tel:${selectedRequest.phone}`} className="text-gray-900 dark:text-gray-100 hover:underline">
                         {selectedRequest.phone}
                       </a>
                     </p>

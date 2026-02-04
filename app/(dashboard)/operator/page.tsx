@@ -333,7 +333,7 @@ export default function OperatorDashboard() {
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="text-center">
             <div className="w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-blue-400">Loading dashboard...</p>
+            <p className="text-gray-600 dark:text-gray-400">Loading dashboard...</p>
           </div>
         </div>
       </DashboardLayout>
@@ -349,8 +349,8 @@ export default function OperatorDashboard() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-blue-500">Dashboard</h1>
-            <p className="text-blue-400 mt-2">View your statistics and recent activity</p>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Dashboard</h1>
+            <p className="text-gray-600 dark:text-gray-400 mt-2">View your statistics and recent activity</p>
           </div>
           <Button
             onClick={() => router.push('/operator/validate')}
@@ -373,9 +373,9 @@ export default function OperatorDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-blue-400 mb-1">Today&apos;s Validations</p>
-                  <p className="text-3xl font-bold text-blue-500">{todayCount}</p>
-                  <p className="text-xs text-blue-400 mt-1">{formatCurrency(todayRevenue)}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Today&apos;s Validations</p>
+                  <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{todayCount}</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">{formatCurrency(todayRevenue)}</p>
                 </div>
                 <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center">
                   <Calendar className="w-6 h-6 text-primary-600" />
@@ -388,9 +388,9 @@ export default function OperatorDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-blue-400 mb-1">This Week</p>
-                  <p className="text-3xl font-bold text-blue-500">{weekCount}</p>
-                  <p className="text-xs text-blue-400 mt-1">{formatCurrency(weekRevenue)}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">This Week</p>
+                  <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{weekCount}</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">{formatCurrency(weekRevenue)}</p>
                 </div>
                 <div className="w-12 h-12 bg-success-100 rounded-lg flex items-center justify-center">
                   <TrendingUp className="w-6 h-6 text-success-600" />
@@ -403,9 +403,9 @@ export default function OperatorDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-blue-400 mb-1">This Month</p>
-                  <p className="text-3xl font-bold text-blue-500">{monthCount}</p>
-                  <p className="text-xs text-blue-400 mt-1">{formatCurrency(monthRevenue)}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">This Month</p>
+                  <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{monthCount}</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">{formatCurrency(monthRevenue)}</p>
                 </div>
                 <div className="w-12 h-12 bg-warning-100 rounded-lg flex items-center justify-center">
                   <DollarSign className="w-6 h-6 text-warning-600" />
@@ -418,11 +418,11 @@ export default function OperatorDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-blue-400 mb-1">Total Validations</p>
-                  <p className="text-3xl font-bold text-blue-500">{totalCount}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Total Validations</p>
+                  <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{totalCount}</p>
                 </div>
                 <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <Ticket className="w-6 h-6 text-blue-600" />
+                  <Ticket className="w-6 h-6 text-gray-900 dark:text-gray-100" />
                 </div>
               </div>
             </CardContent>
@@ -435,9 +435,9 @@ export default function OperatorDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-blue-400 mb-1">Tickets Issued Today</p>
-                  <p className="text-3xl font-bold text-blue-500">{todayGenerated}</p>
-                  <p className="text-xs text-blue-400 mt-1">{todayGeneratedTickets} tickets</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Tickets Issued Today</p>
+                  <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{todayGenerated}</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">{todayGeneratedTickets} tickets</p>
                 </div>
                 <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
                   <QrCode className="w-6 h-6 text-purple-600" />
@@ -450,9 +450,9 @@ export default function OperatorDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-blue-400 mb-1">Tickets Issued This Week</p>
-                  <p className="text-3xl font-bold text-blue-500">{weekGenerated}</p>
-                  <p className="text-xs text-blue-400 mt-1">{weekGeneratedTickets} tickets</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Tickets Issued This Week</p>
+                  <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{weekGenerated}</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">{weekGeneratedTickets} tickets</p>
                 </div>
                 <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center">
                   <QrCode className="w-6 h-6 text-indigo-600" />
@@ -465,9 +465,9 @@ export default function OperatorDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-blue-400 mb-1">Tickets Issued This Month</p>
-                  <p className="text-3xl font-bold text-blue-500">{monthGenerated}</p>
-                  <p className="text-xs text-blue-400 mt-1">{monthGeneratedTickets} tickets</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Tickets Issued This Month</p>
+                  <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{monthGenerated}</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">{monthGeneratedTickets} tickets</p>
                 </div>
                 <div className="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center">
                   <QrCode className="w-6 h-6 text-pink-600" />
@@ -480,9 +480,9 @@ export default function OperatorDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-blue-400 mb-1">Total Tickets Issued</p>
-                  <p className="text-3xl font-bold text-blue-500">{totalGenerated}</p>
-                  <p className="text-xs text-blue-400 mt-1">{totalGeneratedTickets} tickets</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Total Tickets Issued</p>
+                  <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{totalGenerated}</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">{totalGeneratedTickets} tickets</p>
                 </div>
                 <div className="w-12 h-12 bg-cyan-100 rounded-lg flex items-center justify-center">
                   <QrCode className="w-6 h-6 text-cyan-600" />
@@ -511,23 +511,23 @@ export default function OperatorDashboard() {
                       className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
                     >
                       <div className="flex-1">
-                        <p className="font-medium text-blue-500">{ticket.routes?.name}</p>
-                        <p className="text-sm text-blue-400">
+                        <p className="font-medium text-gray-900 dark:text-gray-100">{ticket.routes?.name}</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
                           {ticket.routes?.origin} → {ticket.routes?.destination}
                         </p>
-                        <p className="text-xs text-blue-400 mt-1">
+                        <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
                           {ticket.used_at && formatDate(ticket.used_at)}
                         </p>
                       </div>
                       <div className="text-right ml-4">
-                        <p className="font-semibold text-blue-500">{formatCurrency(ticket.routes?.fare || 0)}</p>
-                        <p className="text-xs text-blue-400">{ticket.passenger_phone}</p>
+                        <p className="font-semibold text-gray-900 dark:text-gray-100">{formatCurrency(ticket.routes?.fare || 0)}</p>
+                        <p className="text-xs text-gray-600 dark:text-gray-400">{ticket.passenger_phone}</p>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p className="text-blue-400 text-center py-8">No tickets issued yet</p>
+                <p className="text-gray-600 dark:text-gray-400 text-center py-8">No tickets issued yet</p>
               )}
             </CardContent>
           </Card>
@@ -549,24 +549,24 @@ export default function OperatorDashboard() {
                       className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
                     >
                       <div className="flex-1">
-                        <p className="font-medium text-blue-500">{code.routes?.name || 'Unknown Route'}</p>
-                        <p className="text-sm text-blue-400">
+                        <p className="font-medium text-gray-900 dark:text-gray-100">{code.routes?.name || 'Unknown Route'}</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
                           {code.routes?.origin || 'N/A'} → {code.routes?.destination || 'N/A'}
                         </p>
                         <div className="flex items-center gap-3 mt-2">
-                          <p className="text-xs text-blue-400">
+                          <p className="text-xs text-gray-600 dark:text-gray-400">
                             Code: <span className="font-mono font-semibold">{code.monime_code}</span>
                           </p>
-                          <p className="text-xs text-blue-400">
+                          <p className="text-xs text-gray-600 dark:text-gray-400">
                             {code.created_at && formatDate(code.created_at)}
                           </p>
                         </div>
                       </div>
                       <div className="text-right ml-4">
-                        <p className="font-semibold text-blue-500">
+                        <p className="font-semibold text-gray-900 dark:text-gray-100">
                           {code.used_tickets} / {code.total_tickets}
                         </p>
-                        <p className="text-xs text-blue-400">
+                        <p className="text-xs text-gray-600 dark:text-gray-400">
                           {code.status === 'active' ? 'Active' : code.status === 'expired' ? 'Expired' : 'Cancelled'}
                         </p>
                       </div>
@@ -574,7 +574,7 @@ export default function OperatorDashboard() {
                   ))}
                 </div>
               ) : (
-                <p className="text-blue-400 text-center py-8">No codes generated yet</p>
+                <p className="text-gray-600 dark:text-gray-400 text-center py-8">No codes generated yet</p>
               )}
             </CardContent>
           </Card>

@@ -269,7 +269,7 @@ export default function LoginPage() {
                     />
                   </div>
                   <span className="text-4xl font-bold">
-                    <span className="text-primary-600">Foray</span>
+                    <span className="text-gray-900 dark:text-gray-100">Foray</span>
                     <span className="text-success-600">Pay</span>
                   </span>
                 </div>

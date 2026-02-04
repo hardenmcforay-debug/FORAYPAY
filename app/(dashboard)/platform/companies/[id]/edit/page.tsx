@@ -262,8 +262,8 @@ export default function EditCompanyPage() {
                   />
                   <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                     <div className="flex items-start gap-2">
-                      <Info className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
-                      <p className="text-sm text-blue-700">
+                      <Info className="w-4 h-4 text-gray-900 dark:text-gray-100 mt-0.5 flex-shrink-0" />
+                      <p className="text-sm text-gray-700 dark:text-gray-300">
                         <strong>Note:</strong> Company admins can also edit the company name from their settings page. 
                         Click &quot;Refresh&quot; to see the latest updates.
                       </p>

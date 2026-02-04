@@ -312,7 +312,7 @@ export default function GenerateTicketsPage() {
                   <div className="flex items-center justify-between p-4 bg-white border-2 border-primary-200 rounded-lg hover:border-primary-300 transition-colors">
                     <div className="flex items-center gap-3">
                       <span className="text-sm font-medium text-gray-600">Payment Code:</span>
-                      <span className="font-mono font-bold text-2xl text-primary-600">{generatedCode}</span>
+                      <span className="font-mono font-bold text-2xl text-gray-900 dark:text-gray-100">{generatedCode}</span>
                     </div>
                     <button
                       onClick={() => copyToClipboard(generatedCode)}
@@ -329,8 +329,8 @@ export default function GenerateTicketsPage() {
                   
                   <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-blue-800">Usage Status:</span>
-                      <span className="text-sm font-bold text-blue-900">
+                      <span className="text-sm font-medium text-gray-900 dark:text-gray-100">Usage Status:</span>
+                      <span className="text-sm font-bold text-gray-900 dark:text-gray-100">
                         {codeInfo.used_tickets} / {codeInfo.total_tickets} tickets used
                       </span>
                     </div>
@@ -340,15 +340,15 @@ export default function GenerateTicketsPage() {
                         style={{ width: `${(codeInfo.used_tickets / codeInfo.total_tickets) * 100}%` }}
                       ></div>
                     </div>
-                    <p className="text-xs text-blue-700 mt-2">
+                    <p className="text-xs text-gray-700 dark:text-gray-300 mt-2">
                       Code will expire after {codeInfo.total_tickets} ticket(s) are paid for
                     </p>
                   </div>
                 </div>
 
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <p className="text-sm text-blue-800 font-medium mb-2">Important Instructions:</p>
-                  <ul className="text-sm text-blue-700 space-y-1">
+                  <p className="text-sm text-gray-900 dark:text-gray-100 font-medium mb-2">Important Instructions:</p>
+                  <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
                     <li>• Give this payment code to passengers (can be used {codeInfo.total_tickets} time(s))</li>
                     <li>• Each passenger uses the same code to pay via USSD</li>
                     <li>• After each payment, MoniMe confirms via webhook</li>
@@ -420,7 +420,7 @@ export default function GenerateTicketsPage() {
                   {formData.amount ? (
                     <div className="flex items-center justify-between">
                       <span className="text-gray-600">Route Fare:</span>
-                      <span className="text-2xl font-bold text-primary-600">{formData.amount} SLL</span>
+                      <span className="text-2xl font-bold text-gray-900 dark:text-gray-100">{formData.amount} SLL</span>
                     </div>
                   ) : (
                     <span className="text-gray-400">Select a route to see amount</span>
@@ -480,39 +480,39 @@ export default function GenerateTicketsPage() {
           <CardContent>
             <ul className="space-y-2 text-sm text-gray-600">
               <li className="flex items-start gap-2">
-                <span className="text-primary-600 mt-0.5">•</span>
+                <span className="text-gray-900 dark:text-gray-100 mt-0.5">•</span>
                 <span>Select the route - amount is automatically set from route fare (fixed by company admin)</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-primary-600 mt-0.5">•</span>
+                <span className="text-gray-900 dark:text-gray-100 mt-0.5">•</span>
                 <span>Request one reusable payment code from MoniMe (for offline USSD use case)</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-primary-600 mt-0.5">•</span>
+                <span className="text-gray-900 dark:text-gray-100 mt-0.5">•</span>
                 <span>Give the same payment code to multiple passengers (up to the amount set)</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-primary-600 mt-0.5">•</span>
+                <span className="text-gray-900 dark:text-gray-100 mt-0.5">•</span>
                 <span>The code expires automatically after the full amount of tickets is used</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-primary-600 mt-0.5">•</span>
+                <span className="text-gray-900 dark:text-gray-100 mt-0.5">•</span>
                 <span>Passengers pay using the code via USSD</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-primary-600 mt-0.5">•</span>
+                <span className="text-gray-900 dark:text-gray-100 mt-0.5">•</span>
                 <span>MoniMe confirms payment via webhook - ticket is automatically created</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-primary-600 mt-0.5">•</span>
+                <span className="text-gray-900 dark:text-gray-100 mt-0.5">•</span>
                 <span>Passengers receive OTP code after payment</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-primary-600 mt-0.5">•</span>
+                <span className="text-gray-900 dark:text-gray-100 mt-0.5">•</span>
                 <span>Park inspectors validate tickets using the OTP code before boarding</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-primary-600 mt-0.5">•</span>
+                <span className="text-gray-900 dark:text-gray-100 mt-0.5">•</span>
                 <span className="font-medium">The database is the source of truth - not SMS messages</span>
               </li>
             </ul>

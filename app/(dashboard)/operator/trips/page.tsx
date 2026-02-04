@@ -459,7 +459,7 @@ export default function TripsPage() {
                   <p className="text-xs text-gray-500 mt-1">{formatCurrency(totalRevenue)}</p>
                 </div>
                 <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <Ticket className="w-6 h-6 text-blue-600" />
+                  <Ticket className="w-6 h-6 text-gray-900 dark:text-gray-100" />
                 </div>
               </div>
             </CardContent>

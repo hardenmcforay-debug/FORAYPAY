@@ -250,7 +250,7 @@ export default function PlatformDashboard() {
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="text-center">
             <div className="w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-blue-400">Loading dashboard...</p>
+            <p className="text-gray-600 dark:text-gray-400">Loading dashboard...</p>
           </div>
         </div>
       </DashboardLayout>
@@ -266,15 +266,15 @@ export default function PlatformDashboard() {
       <div className="space-y-4 sm:space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-blue-500">Platform Dashboard</h1>
-            <p className="text-sm sm:text-base text-blue-400 mt-1 sm:mt-2">Overview of all companies and system metrics</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">Platform Dashboard</h1>
+            <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mt-1 sm:mt-2">Overview of all companies and system metrics</p>
           </div>
           <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             <div className="flex items-center gap-2 px-2 sm:px-3 py-2 rounded-lg bg-gray-100">
               {isOnline ? (
                 <>
                   <Wifi className="w-4 h-4 text-success-600" />
-                  <span className="text-xs sm:text-sm text-blue-400">Online</span>
+                  <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Online</span>
                 </>
               ) : (
                 <>
@@ -310,8 +310,8 @@ export default function PlatformDashboard() {
         <Card>
           <CardContent className="p-4 sm:p-6">
             <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
-              <Calendar className="w-5 h-5 text-blue-400 flex-shrink-0" />
-              <label className="text-sm font-medium text-blue-400 whitespace-nowrap">Time Period:</label>
+              <Calendar className="w-5 h-5 text-gray-600 dark:text-gray-400 flex-shrink-0" />
+              <label className="text-sm font-medium text-gray-600 dark:text-gray-400 whitespace-nowrap">Time Period:</label>
               <select
                 value={dateRange}
                 onChange={(e) => setDateRange(e.target.value as '24h' | '7d' | '30d' | '90d' | 'all')}
@@ -332,8 +332,8 @@ export default function PlatformDashboard() {
             <CardContent className="p-4 sm:p-6">
               <div className="flex items-center justify-between">
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs sm:text-sm text-blue-400 mb-1">Active Companies</p>
-                  <p className="text-2xl sm:text-3xl font-bold text-blue-500">{stats.activeCompanies}</p>
+                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">Active Companies</p>
+                  <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">{stats.activeCompanies}</p>
                 </div>
                 <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0 ml-2">
                   <Building2 className="w-5 h-5 sm:w-6 sm:h-6 text-primary-600" />
@@ -346,8 +346,8 @@ export default function PlatformDashboard() {
             <CardContent className="p-4 sm:p-6">
               <div className="flex items-center justify-between">
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs sm:text-sm text-blue-400 mb-1">Total Revenue</p>
-                  <p className="text-2xl sm:text-3xl font-bold text-blue-500 truncate">{formatCurrency(stats.totalRevenue)}</p>
+                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">Total Revenue</p>
+                  <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 truncate">{formatCurrency(stats.totalRevenue)}</p>
                 </div>
                 <div className="w-10 h-10 sm:w-12 sm:h-12 bg-success-100 rounded-lg flex items-center justify-center flex-shrink-0 ml-2">
                   <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-success-600" />
@@ -360,8 +360,8 @@ export default function PlatformDashboard() {
             <CardContent className="p-4 sm:p-6">
               <div className="flex items-center justify-between">
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs sm:text-sm text-blue-400 mb-1">Platform Commission</p>
-                  <p className="text-2xl sm:text-3xl font-bold text-blue-500 truncate">{formatCurrency(stats.totalCommission)}</p>
+                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">Platform Commission</p>
+                  <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 truncate">{formatCurrency(stats.totalCommission)}</p>
                 </div>
                 <div className="w-10 h-10 sm:w-12 sm:h-12 bg-warning-100 rounded-lg flex items-center justify-center flex-shrink-0 ml-2">
                   <DollarSign className="w-5 h-5 sm:w-6 sm:h-6 text-warning-600" />
@@ -374,8 +374,8 @@ export default function PlatformDashboard() {
             <CardContent className="p-4 sm:p-6">
               <div className="flex items-center justify-between">
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs sm:text-sm text-blue-400 mb-1">Total Tickets Issued</p>
-                  <p className="text-2xl sm:text-3xl font-bold text-blue-500">{stats.totalTickets}</p>
+                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">Total Tickets Issued</p>
+                  <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">{stats.totalTickets}</p>
                 </div>
                 <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0 ml-2">
                   <Ticket className="w-5 h-5 sm:w-6 sm:h-6 text-primary-600" />
@@ -392,7 +392,7 @@ export default function PlatformDashboard() {
               <Ticket className="w-5 h-5 text-primary-600" />
               Total Tickets Issued by Company
               {dateRange !== 'all' && (
-                <span className="text-sm font-normal text-blue-400">
+                <span className="text-sm font-normal text-gray-600 dark:text-gray-400">
                   ({dateRange === '24h' ? 'Last 24 Hours' : `Last ${dateRange === '7d' ? '7' : dateRange === '30d' ? '30' : '90'} Days`})
                 </span>
               )}
@@ -410,28 +410,28 @@ export default function PlatformDashboard() {
                       <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
                         <Building2 className="w-5 h-5 text-primary-600" />
                       </div>
-                      <span className="font-medium text-blue-500">{stat.name}</span>
+                      <span className="font-medium text-gray-900 dark:text-gray-100">{stat.name}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-2xl font-bold text-blue-500">{stat.tickets}</span>
-                      <span className="text-sm text-blue-400">tickets</span>
+                      <span className="text-2xl font-bold text-gray-900 dark:text-gray-100">{stat.tickets}</span>
+                      <span className="text-sm text-gray-600 dark:text-gray-400">tickets</span>
                     </div>
                   </div>
                 ))}
                 <div className="pt-3 border-t border-gray-200 mt-4">
                   <div className="flex items-center justify-between">
-                    <span className="font-semibold text-blue-500">Total</span>
+                    <span className="font-semibold text-gray-900 dark:text-gray-100">Total</span>
                     <div className="flex items-center gap-2">
-                      <span className="text-2xl font-bold text-primary-600">
+                      <span className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                         {companyTicketStats.reduce((sum, s) => sum + s.tickets, 0)}
                       </span>
-                      <span className="text-sm text-blue-400">tickets</span>
+                      <span className="text-sm text-gray-600 dark:text-gray-400">tickets</span>
                     </div>
                   </div>
                 </div>
               </div>
             ) : (
-              <p className="text-blue-400 text-center py-8">No tickets issued in the selected period</p>
+              <p className="text-gray-600 dark:text-gray-400 text-center py-8">No tickets issued in the selected period</p>
             )}
           </CardContent>
         </Card>
@@ -443,7 +443,7 @@ export default function PlatformDashboard() {
               <TrendingUp className="w-5 h-5 text-success-600" />
               Total Revenue Generated from each company
               {dateRange !== 'all' && (
-                <span className="text-sm font-normal text-blue-400">
+                <span className="text-sm font-normal text-gray-600 dark:text-gray-400">
                   ({dateRange === '24h' ? 'Last 24 Hours' : `Last ${dateRange === '7d' ? '7' : dateRange === '30d' ? '30' : '90'} Days`})
                 </span>
               )}
@@ -461,19 +461,19 @@ export default function PlatformDashboard() {
                       <div className="w-10 h-10 bg-success-100 rounded-lg flex items-center justify-center">
                         <Building2 className="w-5 h-5 text-success-600" />
                       </div>
-                      <span className="font-medium text-blue-500">{stat.name}</span>
+                      <span className="font-medium text-gray-900 dark:text-gray-100">{stat.name}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-2xl font-bold text-blue-500">
+                      <span className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                         {formatCurrency(stat.revenue)}
                       </span>
-                      <span className="text-sm text-blue-400">platform commission</span>
+                      <span className="text-sm text-gray-600 dark:text-gray-400">platform commission</span>
                     </div>
                   </div>
                 ))}
                 <div className="pt-3 border-t border-gray-200 mt-4">
                   <div className="flex items-center justify-between">
-                    <span className="font-semibold text-blue-500">Total Platform Revenue</span>
+                    <span className="font-semibold text-gray-900 dark:text-gray-100">Total Platform Revenue</span>
                     <div className="flex items-center gap-2">
                       <span className="text-2xl font-bold text-success-600">
                         {formatCurrency(companyRevenueStats.reduce((sum, s) => sum + s.revenue, 0))}
@@ -483,7 +483,7 @@ export default function PlatformDashboard() {
                 </div>
               </div>
             ) : (
-              <p className="text-blue-400 text-center py-8">No platform revenue in the selected period</p>
+              <p className="text-gray-600 dark:text-gray-400 text-center py-8">No platform revenue in the selected period</p>
             )}
           </CardContent>
         </Card>

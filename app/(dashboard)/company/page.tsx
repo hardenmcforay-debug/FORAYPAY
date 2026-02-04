@@ -345,7 +345,7 @@ export default function CompanyDashboard() {
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="text-center">
             <div className="w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-blue-400">Loading dashboard...</p>
+            <p className="text-gray-600 dark:text-gray-400">Loading dashboard...</p>
           </div>
         </div>
       </DashboardLayout>
@@ -381,8 +381,8 @@ export default function CompanyDashboard() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-blue-500">Revenue Dashboard</h1>
-            <p className="text-blue-400 mt-2">Real-time revenue and route performance</p>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Revenue Dashboard</h1>
+            <p className="text-gray-600 dark:text-gray-400 mt-2">Real-time revenue and route performance</p>
           </div>
           <div className="flex items-center gap-3">
             <Link href="/company/reports">
@@ -396,8 +396,8 @@ export default function CompanyDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-blue-400 mb-1">Gross Revenue</p>
-                  <p className="text-3xl font-bold text-blue-500">{formatCurrency(totalRevenue)}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Gross Revenue</p>
+                  <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{formatCurrency(totalRevenue)}</p>
                 </div>
                 <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center">
                   <TrendingUp className="w-6 h-6 text-primary-600" />
@@ -410,8 +410,8 @@ export default function CompanyDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-blue-400 mb-1">Net Revenue</p>
-                  <p className="text-3xl font-bold text-blue-500">{formatCurrency(netRevenue)}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Net Revenue</p>
+                  <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{formatCurrency(netRevenue)}</p>
                 </div>
                 <div className="w-12 h-12 bg-success-100 rounded-lg flex items-center justify-center">
                   <DollarSign className="w-6 h-6 text-success-600" />
@@ -424,8 +424,8 @@ export default function CompanyDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-blue-400 mb-1">Commission Paid</p>
-                  <p className="text-3xl font-bold text-blue-500">{formatCurrency(totalCommission)}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Commission Paid</p>
+                  <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{formatCurrency(totalCommission)}</p>
                 </div>
                 <div className="w-12 h-12 bg-warning-100 rounded-lg flex items-center justify-center">
                   <DollarSign className="w-6 h-6 text-warning-600" />
@@ -438,11 +438,11 @@ export default function CompanyDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-blue-400 mb-1">Total Tickets Issued</p>
-                  <p className="text-3xl font-bold text-blue-500">{totalTickets}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Total Tickets Issued</p>
+                  <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{totalTickets}</p>
                 </div>
                 <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <Ticket className="w-6 h-6 text-blue-600" />
+                  <Ticket className="w-6 h-6 text-gray-900 dark:text-gray-100" />
                 </div>
               </div>
             </CardContent>
@@ -452,8 +452,8 @@ export default function CompanyDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-blue-400 mb-1">Active Routes</p>
-                  <p className="text-3xl font-bold text-blue-500">{routesCount}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Active Routes</p>
+                  <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{routesCount}</p>
                 </div>
                 <div className="w-12 h-12 bg-error-100 rounded-lg flex items-center justify-center">
                   <Route className="w-6 h-6 text-error-600" />
@@ -476,17 +476,17 @@ export default function CompanyDashboard() {
                     .map(([routeId, routeData]: [string, any]) => (
                       <div key={routeId} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                         <div className="flex-1">
-                          <p className="font-medium text-blue-500">{routeData.name}</p>
-                          <p className="text-xs text-blue-400 mt-0.5">
+                          <p className="font-medium text-gray-900 dark:text-gray-100">{routeData.name}</p>
+                          <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
                             {routeData.origin} → {routeData.destination}
                           </p>
                         </div>
-                        <span className="font-semibold text-blue-500 ml-4">{formatCurrency(routeData.revenue)}</span>
+                        <span className="font-semibold text-gray-900 dark:text-gray-100 ml-4">{formatCurrency(routeData.revenue)}</span>
                       </div>
                     ))}
                 </div>
               ) : (
-                <p className="text-blue-400">No revenue data for the last 24 hours</p>
+                <p className="text-gray-600 dark:text-gray-400">No revenue data for the last 24 hours</p>
               )}
             </CardContent>
           </Card>
@@ -503,17 +503,17 @@ export default function CompanyDashboard() {
                     .map(([routeId, routeData]: [string, any]) => (
                       <div key={routeId} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                         <div className="flex-1">
-                          <p className="font-medium text-blue-500">{routeData.name}</p>
-                          <p className="text-xs text-blue-400 mt-0.5">
+                          <p className="font-medium text-gray-900 dark:text-gray-100">{routeData.name}</p>
+                          <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
                             {routeData.origin} → {routeData.destination}
                           </p>
                         </div>
-                        <span className="font-semibold text-blue-500 ml-4">{formatCurrency(routeData.revenue)}</span>
+                        <span className="font-semibold text-gray-900 dark:text-gray-100 ml-4">{formatCurrency(routeData.revenue)}</span>
                       </div>
                     ))}
                 </div>
               ) : (
-                <p className="text-blue-400">No revenue data for the last 7 days</p>
+                <p className="text-gray-600 dark:text-gray-400">No revenue data for the last 7 days</p>
               )}
             </CardContent>
           </Card>
@@ -541,7 +541,7 @@ export default function CompanyDashboard() {
                   ))}
               </div>
             ) : (
-              <p className="text-blue-400">No revenue data for the last 30 days</p>
+              <p className="text-gray-600 dark:text-gray-400">No revenue data for the last 30 days</p>
             )}
           </CardContent>
         </Card>
@@ -564,12 +564,12 @@ export default function CompanyDashboard() {
                             {routeData.origin} → {routeData.destination}
                           </p>
                         </div>
-                        <span className="font-semibold text-blue-500 ml-4">{routeData.count} tickets</span>
+                        <span className="font-semibold text-gray-900 dark:text-gray-100 ml-4">{routeData.count} tickets</span>
                       </div>
                     ))}
                 </div>
               ) : (
-                <p className="text-blue-400">No tickets issued in the last 24 hours</p>
+                <p className="text-gray-600 dark:text-gray-400">No tickets issued in the last 24 hours</p>
               )}
             </CardContent>
           </Card>
@@ -591,12 +591,12 @@ export default function CompanyDashboard() {
                             {routeData.origin} → {routeData.destination}
                           </p>
                         </div>
-                        <span className="font-semibold text-blue-500 ml-4">{routeData.count} tickets</span>
+                        <span className="font-semibold text-gray-900 dark:text-gray-100 ml-4">{routeData.count} tickets</span>
                       </div>
                     ))}
                 </div>
               ) : (
-                <p className="text-blue-400">No tickets issued in the last 7 days</p>
+                <p className="text-gray-600 dark:text-gray-400">No tickets issued in the last 7 days</p>
               )}
             </CardContent>
           </Card>
@@ -624,7 +624,7 @@ export default function CompanyDashboard() {
                   ))}
               </div>
             ) : (
-              <p className="text-blue-400">No tickets issued in the last 30 days</p>
+              <p className="text-gray-600 dark:text-gray-400">No tickets issued in the last 30 days</p>
             )}
           </CardContent>
         </Card>
@@ -635,7 +635,7 @@ export default function CompanyDashboard() {
               <BarChart3 className="w-5 h-5 text-primary-600" />
               Monthly Revenue Analytics
             </CardTitle>
-            <p className="text-sm text-blue-400 mt-1">Real-time revenue trends by month (Last 12 months)</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Real-time revenue trends by month (Last 12 months)</p>
           </CardHeader>
           <CardContent>
             <RevenueChart 
