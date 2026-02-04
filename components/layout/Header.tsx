@@ -6,6 +6,7 @@ import { createSupabaseClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import Button from '@/components/ui/button'
 import { getLoginPath } from '@/lib/auth-client'
+import ThemeToggle from '@/components/theme-toggle'
 
 interface HeaderProps {
   userEmail?: string
@@ -72,34 +73,35 @@ export default function Header({ userEmail: propUserEmail, userName, onMenuToggl
   }, [onMenuToggle])
 
   return (
-    <header className="h-14 sm:h-16 bg-white border-b border-gray-200 flex items-center justify-between px-3 sm:px-4 lg:px-6 z-50 relative">
+    <header className="h-14 sm:h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between px-3 sm:px-4 lg:px-6 z-50 relative">
       <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
         {/* Hamburger Menu Button - Always visible on mobile/tablet screens */}
         {onMenuToggle && (
           <button
             onClick={handleMenuClick}
-            className="lg:hidden p-2 -ml-1 sm:-ml-2 hover:bg-gray-100 active:bg-gray-200 rounded-lg transition-colors flex-shrink-0 touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center z-50 relative cursor-pointer"
+            className="lg:hidden p-2 -ml-1 sm:-ml-2 hover:bg-gray-100 dark:hover:bg-gray-700 active:bg-gray-200 dark:active:bg-gray-600 rounded-lg transition-colors flex-shrink-0 touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center z-50 relative cursor-pointer"
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
             type="button"
             tabIndex={0}
           >
             {isMenuOpen ? (
-              <X className="w-6 h-6 sm:w-7 sm:h-7 text-gray-700 pointer-events-none" />
+              <X className="w-6 h-6 sm:w-7 sm:h-7 text-gray-700 dark:text-gray-200 pointer-events-none" />
             ) : (
-              <Menu className="w-6 h-6 sm:w-7 sm:h-7 text-gray-700 pointer-events-none" />
+              <Menu className="w-6 h-6 sm:w-7 sm:h-7 text-gray-700 dark:text-gray-200 pointer-events-none" />
             )}
           </button>
         )}
-        <h1 className="text-sm sm:text-base lg:text-lg font-semibold text-gray-900 break-words min-w-0 truncate">
+        <h1 className="text-sm sm:text-base lg:text-lg font-semibold text-gray-900 dark:text-gray-100 break-words min-w-0 truncate">
           {userName || 'Dashboard'}
         </h1>
       </div>
       
       <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-4 flex-shrink-0">
-        <div className="hidden sm:flex items-center gap-2 text-sm text-gray-600">
+        <div className="hidden sm:flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
           <User className="w-4 h-4 flex-shrink-0" />
           <span className="truncate max-w-[150px] lg:max-w-none">{userEmail}</span>
         </div>
+        <ThemeToggle />
         <Button
           variant="ghost"
           size="sm"
