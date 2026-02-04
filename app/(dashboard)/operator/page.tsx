@@ -511,17 +511,17 @@ export default function OperatorDashboard() {
                       className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
                     >
                       <div className="flex-1">
-                        <p className="font-medium text-gray-900">{ticket.routes?.name}</p>
-                        <p className="text-sm text-gray-600">
+                        <p className="font-medium text-blue-500">{ticket.routes?.name}</p>
+                        <p className="text-sm text-blue-400">
                           {ticket.routes?.origin} → {ticket.routes?.destination}
                         </p>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-xs text-blue-400 mt-1">
                           {ticket.used_at && formatDate(ticket.used_at)}
                         </p>
                       </div>
                       <div className="text-right ml-4">
-                        <p className="font-semibold text-gray-900">{formatCurrency(ticket.routes?.fare || 0)}</p>
-                        <p className="text-xs text-gray-500">{ticket.passenger_phone}</p>
+                        <p className="font-semibold text-blue-500">{formatCurrency(ticket.routes?.fare || 0)}</p>
+                        <p className="text-xs text-blue-400">{ticket.passenger_phone}</p>
                       </div>
                     </div>
                   ))}
@@ -549,24 +549,24 @@ export default function OperatorDashboard() {
                       className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
                     >
                       <div className="flex-1">
-                        <p className="font-medium text-gray-900">{code.routes?.name || 'Unknown Route'}</p>
-                        <p className="text-sm text-gray-600">
+                        <p className="font-medium text-blue-500">{code.routes?.name || 'Unknown Route'}</p>
+                        <p className="text-sm text-blue-400">
                           {code.routes?.origin || 'N/A'} → {code.routes?.destination || 'N/A'}
                         </p>
                         <div className="flex items-center gap-3 mt-2">
-                          <p className="text-xs text-gray-500">
+                          <p className="text-xs text-blue-400">
                             Code: <span className="font-mono font-semibold">{code.monime_code}</span>
                           </p>
-                          <p className="text-xs text-gray-500">
+                          <p className="text-xs text-blue-400">
                             {code.created_at && formatDate(code.created_at)}
                           </p>
                         </div>
                       </div>
                       <div className="text-right ml-4">
-                        <p className="font-semibold text-gray-900">
+                        <p className="font-semibold text-blue-500">
                           {code.used_tickets} / {code.total_tickets}
                         </p>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-blue-400">
                           {code.status === 'active' ? 'Active' : code.status === 'expired' ? 'Expired' : 'Cancelled'}
                         </p>
                       </div>
